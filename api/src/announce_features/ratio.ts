@@ -3,7 +3,7 @@ import { getConfig } from '../services/configService.js';
 
 const prisma = new PrismaClient();
 
-export async function updateUserRatio(userId: string, uploaded: bigint, downloaded: bigint, peerId: string, torrentId: string) {
+export async function updateUserRatio(userId: string, uploaded: bigint, downloaded: bigint, peerId: string, _torrentId: string) {
   // Find last announce for this user/peer combination (not including torrentId)
   const lastAnnounce = await prisma.announce.findFirst({
     where: { userId, peerId },

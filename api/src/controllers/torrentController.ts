@@ -382,7 +382,7 @@ export async function getNfoHandler(request: FastifyRequest, reply: FastifyReply
     reply.header('Content-Type', file.mimeType || 'text/plain; charset=utf-8');
     reply.header('Content-Disposition', `inline; filename="${torrent.name}.nfo"`);
     return reply.send(nfoBuffer);
-  } catch (err) {
+  } catch (_err) {
     return reply.status(500).send({ error: 'Could not read NFO file' });
   }
 }
@@ -456,7 +456,9 @@ export async function rejectTorrentHandler(request: FastifyRequest, reply: Fasti
       const file = await prisma.uploadedFile.findUnique({ where: { id: torrent.posterFileId } });
       if (file) await deleteFile({ file, config });
     }
-  } catch {}
+  } catch {
+    // Ignore deletion errors
+  }
   await prisma.torrent.delete({ where: { id } });
   return reply.send({ success: true });
 }
@@ -591,7 +593,7 @@ export async function recalculateUserStatsHandler(request: FastifyRequest, reply
       });
 
       // Calculate totals for each peer
-      for (const [peerId, peerAnnounces] of Object.entries(peerGroups)) {
+      for (const [_peerId, peerAnnounces] of Object.entries(peerGroups)) {
         peerAnnounces.sort((a, b) => a.lastAnnounceAt.getTime() - b.lastAnnounceAt.getTime());
         
         let lastUploaded = BigInt(0);

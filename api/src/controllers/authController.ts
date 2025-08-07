@@ -241,7 +241,7 @@ export async function requestPasswordResetHandler(request: FastifyRequest, reply
     const { text, html } = getResetPasswordEmail({ username: user.username, link });
     try {
       await sendEmail({ to: user.email, subject: 'Password Reset Request', text, html });
-    } catch (err) {
+    } catch (_err) {
       // Do not reveal error to user
     }
   }
@@ -369,10 +369,12 @@ export async function uploadAvatarHandler(request: FastifyRequest, reply: Fastif
             if (oldFile) {
               await deleteFile({ file: oldFile, config });
             }
-          } catch {}
+          } catch {
+            // Ignore deletion errors
+          }
         }
         const avatarUrl = `/uploads/${uploaded.storageKey}`;
-        const updated = await prisma.user.update({
+        await prisma.user.update({
           where: { id: user.id },
           data: { avatarFileId: uploaded.id, avatarUrl }
         });
@@ -394,9 +396,11 @@ export async function uploadAvatarHandler(request: FastifyRequest, reply: Fastif
         if (oldFile) {
           await deleteFile({ file: oldFile, config });
         }
-      } catch {}
+              } catch {
+          // Ignore deletion errors
+        }
     }
-    const updated = await prisma.user.update({
+    await prisma.user.update({
       where: { id: user.id },
       data: { avatarFileId: null, avatarUrl: url }
     });

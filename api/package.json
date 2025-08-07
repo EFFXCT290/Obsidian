@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "npm run lint && tsc",
     "start": "node dist/index.js",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev"
   },
@@ -34,11 +36,15 @@
     "typescript": "^5.8.3"
   },
   "devDependencies": {
+    "@eslint/js": "^9.32.0",
     "@types/bencode": "^2.0.4",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.0.13",
     "@types/nodemailer": "^6.4.17",
     "@types/parse-torrent": "^5.8.7",
+    "@typescript-eslint/eslint-plugin": "^8.39.0",
+    "@typescript-eslint/parser": "^8.39.0",
+    "eslint": "^9.32.0",
     "ts-node-dev": "^2.0.0",
     "tsx": "^4.20.3"
   }

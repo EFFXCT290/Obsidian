@@ -13,7 +13,7 @@ export async function requireAuth(request: FastifyRequest, reply: FastifyReply) 
     const payload = jwt.verify(token, JWT_SECRET);
     // Attach user info to request for downstream handlers
     (request as any).user = payload;
-  } catch (err) {
+  } catch (_err) {
     return reply.status(401).send({ error: 'Invalid or expired token.' });
   }
 } 

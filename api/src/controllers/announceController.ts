@@ -273,9 +273,9 @@ export async function announceHandler(request: FastifyRequest, reply: FastifyRep
     // IPv6 peers: 16 bytes IP + 2 bytes port
     const bufArray6 = ipv6Peers.map((p: Peer) => {
       const ipBuf = Buffer.alloc(16);
-      const ipParts = p.ip.split(':');
+      const _ipParts = p.ip.split(':');
       // Use Node.js to parse IPv6 string to buffer
-      const filled = ipBuf.write(p.ip, 0, 16, 'utf8');
+      const _filled = ipBuf.write(p.ip, 0, 16, 'utf8');
       // If not filled, leave as zeros
       const port = Number(p.port);
       const buf = Buffer.alloc(18);

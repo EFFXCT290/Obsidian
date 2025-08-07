@@ -85,7 +85,7 @@ export async function updateHitAndRun(userId: string, torrentId: string, left: n
   // Update seeding time when user is seeding (left == 0)
   let totalSeedingTime = record.totalSeedingTime;
   let lastSeededAt = record.lastSeededAt;
-  let wasSeedingBefore = lastSeededAt !== null;
+  const wasSeedingBefore = lastSeededAt !== null;
   
   if (left === 0) {
     console.log(`[updateHitAndRun] User is currently seeding (left = 0)`);

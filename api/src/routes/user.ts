@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { requireAuth } from '../middleware/authMiddleware.js';
 import { getUserNotificationsHandler, markNotificationReadHandler, markAllNotificationsReadHandler, clearNotificationsHandler } from '../controllers/user/notificationController.js';
-import { listAllCategoriesHandler, listTorrentsByCategoryHandler, listTorrentsByCategoryTitleHandler } from '../controllers/user/categoryController.js';
+import { listAllCategoriesHandler, listTorrentsByCategoryTitleHandler } from '../controllers/user/categoryController.js';
 import { listRequestsHandler, createRequestHandler, getRequestHandler, fillRequestHandler, listCommentsForRequestHandler, createCommentForRequestHandler } from '../controllers/user/requestController.js';
 import { listAnnouncementsHandler, getAnnouncementHandler } from '../controllers/user/announcementController.js';
 import { listWikiPagesHandler, getWikiPageHandler } from '../controllers/user/wikiController.js';
