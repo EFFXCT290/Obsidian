@@ -558,7 +558,7 @@ export async function createDownloadTokenHandler(request: FastifyRequest, reply:
   const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
   
   // Store token in database
-  const downloadToken = await prisma.downloadToken.create({
+  const _downloadToken = await prisma.downloadToken.create({
     data: {
       token,
       userId: user.id,
