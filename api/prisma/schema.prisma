@@ -1,0 +1,397 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String    @id @default(uuid())
+  email          String    @unique
+  passwordHash   String
+  username       String    @unique
+  role           UserRole  @default(USER)
+  status         UserStatus @default(ACTIVE)
+  upload         BigInt    @default(0)
+  download       BigInt    @default(0)
+  inviteCode     String?
+  emailVerified  Boolean   @default(false)
+  passkey        String    @unique
+  torrents       Torrent[] @relation("UserTorrents")
+  announces      Announce[]
+  invitesCreated Invite[]  @relation("InvitesCreated")
+  invitesUsed    Invite[]  @relation("InvitesUsed")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  hitAndRuns     HitAndRun[]
+  bonusPoints    Int       @default(0)
+  announceRateLimits AnnounceRateLimit[]
+  bannedUsers    PeerBan[]
+  notifications  Notification[] @relation("UserNotificationUser")
+  adminNotifications Notification[] @relation("UserNotificationAdmin")
+  requestsCreated Request[] @relation("RequestCreatedBy")
+  requestsFilled  Request[] @relation("RequestFilledBy")
+  announcements  Announcement[]
+  wikiPagesCreated WikiPage[] @relation("WikiPageCreatedBy")
+  wikiPagesUpdated WikiPage[] @relation("WikiPageUpdatedBy")
+  bookmarks      Bookmark[]
+  rssToken       String?   @unique
+  rssEnabled     Boolean   @default(true)
+  emailVerificationTokens EmailVerificationToken[]
+  passwordResetTokens PasswordResetToken[]
+  avatarFile     UploadedFile? @relation("UserAvatarFile", fields: [avatarFileId], references: [id])
+  avatarFileId   String? @unique
+  avatarUrl      String?
+  comments       Comment[]
+  commentVotes   CommentVote[]
+
+  @@index([rssToken])
+}
+
+enum UserRole {
+  USER
+  MOD
+  ADMIN
+  OWNER
+}
+
+enum UserStatus {
+  ACTIVE
+  BANNED
+  DISABLED
+}
+
+model Category {
+  id          String      @id @default(uuid())
+  name        String      @unique
+  description String?
+  icon        String?
+  order       Int?
+  parent      Category?   @relation("CategoryParent", fields: [parentId], references: [id])
+  parentId    String?
+  children    Category[]  @relation("CategoryParent")
+  torrents    Torrent[]
+  requests    Request[]
+}
+
+model Torrent {
+  id          String     @id @default(uuid())
+  infoHash    String     @unique
+  name        String
+  description String?
+  uploader    User       @relation("UserTorrents", fields: [uploaderId], references: [id])
+  uploaderId  String
+  filePath    String
+  nfoPath     String?
+  size        BigInt
+  isApproved  Boolean    @default(false)
+  announces   Announce[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  hitAndRuns  HitAndRun[]
+  category    Category   @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  requests    Request[]
+  bookmarks   Bookmark[]
+  posterFile  UploadedFile? @relation("TorrentPosterFile", fields: [posterFileId], references: [id])
+  posterFileId String? @unique
+  posterUrl   String?
+  comments    Comment[]
+}
+
+model Announce {
+  id             String   @id @default(uuid())
+  torrent        Torrent  @relation(fields: [torrentId], references: [id])
+  torrentId      String
+  user           User?    @relation(fields: [userId], references: [id])
+  userId         String?
+  peerId         String
+  ip             String
+  port           Int
+  uploaded       BigInt   @default(0)
+  downloaded     BigInt   @default(0)
+  left           BigInt   @default(0)
+  event          String?
+  lastAnnounceAt DateTime @default(now())
+
+  @@unique([torrentId, peerId])
+}
+
+model Invite {
+  id           String   @id @default(uuid())
+  code         String   @unique
+  createdBy    User     @relation("InvitesCreated", fields: [createdById], references: [id])
+  createdById  String
+  usedBy       User?    @relation("InvitesUsed", fields: [usedById], references: [id])
+  usedById     String?
+  createdAt    DateTime @default(now())
+  usedAt       DateTime?
+  expiresAt    DateTime?
+}
+
+model Config {
+  id               Int      @id @default(1)
+  registrationMode RegMode  @default(OPEN)
+  storageType      StorageType @default(LOCAL)
+  requireTorrentApproval Boolean @default(true)
+  requiredSeedingMinutes Int @default(4320) // 72 hours
+  minRatio Float @default(0.5)
+  bonusPointsPerHour Int @default(1)
+  hitAndRunThreshold Int @default(5)
+  enableGhostLeechingCheck Boolean @default(true)
+  enableCheatingClientCheck Boolean @default(true)
+  enableIpAbuseCheck Boolean @default(true)
+  enableAnnounceRateCheck Boolean @default(true)
+  enableInvalidStatsCheck Boolean @default(true)
+  enablePeerBanCheck Boolean @default(true)
+  whitelistedClients String[] @default([])
+  blacklistedClients String[] @default([])
+  allowedFingerprints String[] @default([])
+  // Announce interval settings (seconds)
+  defaultAnnounceInterval Int @default(1800) // 30 minutes
+  minAnnounceInterval Int @default(300) // 5 minutes
+  // Invalid stats anti-cheat
+  maxStatsJumpMultiplier Int @default(10) // Max allowed jump in upload/download per announce (times torrent size)
+  // SMTP config for notifications
+  smtpHost String?
+  smtpPort Int?
+  smtpUser String?
+  smtpPass String?
+  smtpFrom String?
+  // RSS config
+  rssDefaultCount Int @default(20)
+  s3Bucket         String?
+  s3Region         String?
+  s3AccessKeyId    String?
+  s3SecretAccessKey String?
+}
+
+enum RegMode {
+  OPEN
+  INVITE
+  CLOSED
+}
+
+enum StorageType {
+  LOCAL
+  S3
+  DB
+}
+
+enum RequestStatus {
+  OPEN
+  FILLED
+  CLOSED
+  REJECTED
+}
+
+model Request {
+  id             String        @id @default(uuid())
+  user           User          @relation("RequestCreatedBy", fields: [userId], references: [id])
+  userId         String
+  title          String
+  description    String?
+  status         RequestStatus @default(OPEN)
+  filledBy       User?         @relation("RequestFilledBy", fields: [filledById], references: [id])
+  filledById     String?
+  filledTorrent  Torrent?      @relation(fields: [filledTorrentId], references: [id])
+  filledTorrentId String?
+  category       Category?     @relation(fields: [categoryId], references: [id])
+  categoryId     String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  comments       Comment[]
+}
+
+model HitAndRun {
+  id              String   @id @default(uuid())
+  user            User     @relation(fields: [userId], references: [id])
+  userId          String
+  torrent         Torrent  @relation(fields: [torrentId], references: [id])
+  torrentId       String
+  downloadedAt    DateTime @default(now())
+  lastSeededAt    DateTime?
+  totalSeedingTime Int     @default(0) // in minutes
+  isHitAndRun     Boolean  @default(false)
+  // Add more fields as needed (e.g., requiredSeedingTime)
+}
+
+model AnnounceRateLimit {
+  id            String   @id @default(uuid())
+  user          User     @relation(fields: [userId], references: [id])
+  userId        String
+  lastCheckedAt DateTime @default(now())
+  announceCount Int      @default(0)
+  cooldownUntil DateTime?
+  reason        String?
+
+  @@index([userId])
+}
+
+model PeerBan {
+  id         String   @id @default(uuid())
+  userId     String?
+  passkey    String?
+  peerId     String?
+  ip         String?
+  reason     String
+  expiresAt  DateTime?
+  createdAt  DateTime @default(now())
+  bannedBy   User     @relation(fields: [bannedById], references: [id])
+  bannedById String
+  notifications Notification[]
+
+  @@index([userId])
+  @@index([passkey])
+  @@index([peerId])
+  @@index([ip])
+  @@index([bannedById])
+}
+
+model Notification {
+  id          String   @id @default(uuid())
+  user        User     @relation("UserNotificationUser", fields: [userId], references: [id])
+  userId      String
+  type        String
+  message     String
+  read        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  relatedBan  PeerBan? @relation(fields: [relatedBanId], references: [id])
+  relatedBanId String?
+  admin       User?    @relation("UserNotificationAdmin", fields: [adminId], references: [id])
+  adminId     String?
+
+  @@index([userId])
+  @@index([read])
+}
+
+model Announcement {
+  id          String   @id @default(uuid())
+  title       String
+  body        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdById String
+  pinned      Boolean  @default(false)
+  visible     Boolean  @default(true)
+
+  @@index([pinned])
+  @@index([visible])
+}
+
+model WikiPage {
+  id          String     @id @default(uuid())
+  slug        String     @unique
+  title       String
+  content     String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  createdBy   User       @relation("WikiPageCreatedBy", fields: [createdById], references: [id])
+  createdById String
+  updatedBy   User       @relation("WikiPageUpdatedBy", fields: [updatedById], references: [id])
+  updatedById String
+  visible     Boolean    @default(true)
+  locked      Boolean    @default(false)
+  parent      WikiPage?  @relation("WikiPageParent", fields: [parentId], references: [id])
+  parentId    String?
+  children    WikiPage[] @relation("WikiPageParent")
+
+  @@index([slug])
+  @@index([visible])
+  @@index([locked])
+}
+
+model Bookmark {
+  id         String   @id @default(uuid())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  torrent    Torrent  @relation(fields: [torrentId], references: [id])
+  torrentId  String
+  createdAt  DateTime @default(now())
+  note       String?
+
+  @@unique([userId, torrentId])
+}
+
+model EmailVerificationToken {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  token     String   @unique
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  used      Boolean  @default(false)
+
+  @@index([userId])
+  @@index([token])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  token     String   @unique
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  used      Boolean  @default(false)
+
+  @@index([userId])
+  @@index([token])
+}
+
+model UploadedFile {
+  id         String   @id @default(uuid())
+  type       String   // e.g., 'torrent', 'nfo', 'image', etc.
+  ext        String   // e.g., '.torrent', '.nfo', '.jpg'
+  storageKey String   // relative path, S3 key, or DB marker
+  size       Int
+  mimeType   String
+  data       Bytes?   // Only used for DB storage
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  userAvatar User?    @relation("UserAvatarFile")
+  torrentPoster Torrent? @relation("TorrentPosterFile")
+}
+
+model Comment {
+  id          String   @id @default(cuid())
+  content     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deleted     Boolean  @default(false)
+  // Threading
+  parentId    String?
+  parent      Comment? @relation("CommentToReplies", fields: [parentId], references: [id])
+  replies     Comment[] @relation("CommentToReplies")
+  // Association (one of these will be set)
+  torrentId   String?
+  torrent     Torrent? @relation(fields: [torrentId], references: [id])
+  requestId   String?
+  request     Request? @relation(fields: [requestId], references: [id])
+  // Author
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  // Voting
+  votes       CommentVote[]
+}
+
+model CommentVote {
+  id        String   @id @default(cuid())
+  userId    String
+  commentId String
+  value     Int      // 1 for upvote, -1 for downvote
+  createdAt DateTime @default(now())
+  // Relations
+  user      User     @relation(fields: [userId], references: [id])
+  comment   Comment  @relation(fields: [commentId], references: [id])
+  @@unique([userId, commentId])
+}
