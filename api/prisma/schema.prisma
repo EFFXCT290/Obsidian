@@ -52,6 +52,7 @@ model User {
   avatarUrl      String?
   comments       Comment[]
   commentVotes   CommentVote[]
+  downloadTokens DownloadToken[]
 
   @@index([rssToken])
 }
@@ -98,6 +99,7 @@ model Torrent {
   updatedAt   DateTime   @updatedAt
   hitAndRuns  HitAndRun[]
   category    Category   @relation(fields: [categoryId], references: [id])
+  downloadTokens DownloadToken[]
   categoryId  String
   requests    Request[]
   bookmarks   Bookmark[]
@@ -394,4 +396,19 @@ model CommentVote {
   user      User     @relation(fields: [userId], references: [id])
   comment   Comment  @relation(fields: [commentId], references: [id])
   @@unique([userId, commentId])
+}
+
+model DownloadToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  torrent   Torrent  @relation(fields: [torrentId], references: [id], onDelete: Cascade)
+  torrentId String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([expiresAt])
 }

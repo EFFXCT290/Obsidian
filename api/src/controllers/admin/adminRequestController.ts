@@ -12,16 +12,23 @@ export async function closeRequestHandler(request: FastifyRequest, reply: Fastif
   const user = (request as any).user;
   if (!isAdminOrOwner(user)) return reply.status(403).send({ error: 'Forbidden' });
   const { id } = request.params as any;
+  const { reason } = request.body as any;
+  
   const updated = await prisma.request.update({ where: { id }, data: { status: 'CLOSED' } });
+  
   // Notify requestor
   if (updated.userId) {
     const requestUser = await prisma.user.findUnique({ where: { id: updated.userId } });
     if (requestUser) {
+      const message = reason 
+        ? `Your request "${updated.title}" has been closed by an admin. Reason: ${reason}`
+        : `Your request "${updated.title}" has been closed by an admin.`;
+      
       const { text, html } = getRequestClosedEmail({ username: requestUser.username, requestTitle: updated.title });
       await createNotification({
         userId: updated.userId,
         type: 'request_closed',
-        message: `Your request "${updated.title}" has been closed by an admin.`,
+        message,
         sendEmail: true,
         email: requestUser.email,
         emailSubject: 'Your request has been closed',
@@ -37,16 +44,23 @@ export async function rejectRequestHandler(request: FastifyRequest, reply: Fasti
   const user = (request as any).user;
   if (!isAdminOrOwner(user)) return reply.status(403).send({ error: 'Forbidden' });
   const { id } = request.params as any;
+  const { reason } = request.body as any;
+  
   const updated = await prisma.request.update({ where: { id }, data: { status: 'REJECTED' } });
+  
   // Notify requestor
   if (updated.userId) {
     const requestUser = await prisma.user.findUnique({ where: { id: updated.userId } });
     if (requestUser) {
+      const message = reason 
+        ? `Your request "${updated.title}" has been rejected by an admin. Reason: ${reason}`
+        : `Your request "${updated.title}" has been rejected by an admin.`;
+      
       const { text, html } = getRequestRejectedEmail({ username: requestUser.username, requestTitle: updated.title });
       await createNotification({
         userId: updated.userId,
         type: 'request_rejected',
-        message: `Your request "${updated.title}" has been rejected by an admin.`,
+        message,
         sendEmail: true,
         email: requestUser.email,
         emailSubject: 'Your request has been rejected',

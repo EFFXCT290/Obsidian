@@ -321,7 +321,7 @@ export async function adminResetRssTokenHandler(request: FastifyRequest, reply: 
   const admin = (request as any).user;
   if (!isAdminOrOwner(admin)) return reply.status(403).send({ error: 'Forbidden' });
   const { id } = request.params as any;
-  const newToken = crypto.randomBytes(32).toString('hex');
+  const newToken = crypto.randomUUID().replace(/-/g, '');
   const updated = await prisma.user.update({ where: { id }, data: { rssToken: newToken } });
   return reply.send({ success: true, user: convertBigInts(updated) });
 }
@@ -403,7 +403,7 @@ export async function updateUserHandler(request: FastifyRequest, reply: FastifyR
   const admin = (request as any).user;
   if (!isAdminOrOwner(admin)) return reply.status(403).send({ error: 'Forbidden' });
   const { id } = request.params as any;
-  const { username, email, role, status, emailVerified } = request.body as any;
+  const { username, role, status, emailVerified } = request.body as any;
   
   // Check if user exists
   const existingUser = await prisma.user.findUnique({ where: { id } });
@@ -450,16 +450,9 @@ export async function updateUserHandler(request: FastifyRequest, reply: FastifyR
     if (usernameExists) return reply.status(400).send({ error: 'Username already in use' });
   }
   
-  // Check for email conflicts
-  if (email && email !== existingUser.email) {
-    const emailExists = await prisma.user.findFirst({ where: { email, id: { not: id } } });
-    if (emailExists) return reply.status(400).send({ error: 'Email already in use' });
-  }
-  
   // Build update data
   const updateData: any = {};
   if (username && username !== existingUser.username) updateData.username = username;
-  if (email && email !== existingUser.email) updateData.email = email;
   if (role && role !== existingUser.role) updateData.role = role;
   if (status && status !== existingUser.status) updateData.status = status;
   if (emailVerified !== undefined && emailVerified !== existingUser.emailVerified) {
@@ -471,94 +464,7 @@ export async function updateUserHandler(request: FastifyRequest, reply: FastifyR
     return reply.send({ success: true, user: convertBigInts(existingUser), message: 'No changes to save' });
   }
   
-  // Handle email change with security emails
-  if (email && email !== existingUser.email) {
-    updateData.emailVerified = false; // Always set to false when email changes
-    
-    // Invalidate previous tokens
-    await prisma.emailVerificationToken.updateMany({ 
-      where: { userId: id, used: false, expiresAt: { gt: new Date() } }, 
-      data: { used: true } 
-    });
-    await prisma.passwordResetToken.updateMany({ 
-      where: { userId: id, used: false, expiresAt: { gt: new Date() } }, 
-      data: { used: true } 
-    });
-    
-    // Generate new verification token
-    const verifyToken = randomUUID();
-    const verifyExpires = new Date(Date.now() + 60 * 60 * 1000);
-    await prisma.emailVerificationToken.create({ 
-      data: { userId: id, token: verifyToken, expiresAt: verifyExpires } 
-    });
-    
-    // Generate new password reset token
-    const resetToken = randomUUID();
-    const resetExpires = new Date(Date.now() + 60 * 60 * 1000);
-    await prisma.passwordResetToken.create({ 
-      data: { userId: id, token: resetToken, expiresAt: resetExpires } 
-    });
-    
-    // Build links
-    const baseUrl = getFrontendBaseUrl();
-    const verifyLink = `${baseUrl}/verify?token=${verifyToken}`;
-    const resetLink = `${baseUrl}/reset-password?token=${resetToken}`;
-    
-    // Send security email to old email
-    if (existingUser.email) {
-      const securityText = `Your email was changed from ${existingUser.email} to ${email} by an admin.\nIf you did not request this, you can reset your password here: ${resetLink}`;
-      const securityHtml = `<div style='font-family:sans-serif;color:#222;'><h2>Security Alert</h2><p>Your email was changed from <b>${existingUser.email}</b> to <b>${email}</b> by an admin.</p><p>If you did not request this, you can reset your password here:</p><p style='margin:32px 0;'><a href='${resetLink}' style='background:#2563eb;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:bold;'>Reset Password</a></p></div>`;
-      await sendEmail({ 
-        to: existingUser.email, 
-        subject: 'Security Alert: Your email was changed', 
-        text: securityText, 
-        html: securityHtml 
-      });
-    }
-    
-    // Send verification email to new email
-    const { text: vText, html: vHtml } = getVerificationEmail({ 
-      username: username || existingUser.username, 
-      link: verifyLink 
-    });
-    await sendEmail({ 
-      to: email, 
-      subject: 'Verify your new email address', 
-      text: vText, 
-      html: vHtml 
-    });
-  }
-  
-  // Update the user
+  // Update user
   const updated = await prisma.user.update({ where: { id }, data: updateData });
-  
-  // Send notification/email for status change (ban/unban) based on actual before/after status
-  if (existingUser.status !== updated.status) {
-    if (updated.status === 'BANNED') {
-      const { text, html } = getUserBanEmail({ username: existingUser.username });
-      await createNotification({
-        userId: existingUser.id,
-        type: 'ban',
-        message: 'Your account has been banned by an administrator.',
-        sendEmail: true,
-        email: existingUser.email,
-        emailSubject: 'Your account has been banned',
-        emailText: text,
-        emailHtml: html
-      });
-    } else if (updated.status === 'ACTIVE' && existingUser.status === 'BANNED') {
-      const { text, html } = getUserUnbanEmail({ username: existingUser.username });
-      await createNotification({
-        userId: existingUser.id,
-        type: 'unban',
-        message: 'Your account has been unbanned by an administrator.',
-        sendEmail: true,
-        email: existingUser.email,
-        emailSubject: 'Your account has been unbanned',
-        emailText: text,
-        emailHtml: html
-      });
-    }
-  }
   return reply.send({ success: true, user: convertBigInts(updated) });
 } 

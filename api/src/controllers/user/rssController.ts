@@ -62,19 +62,34 @@ export async function rssFeedHandler(request: FastifyRequest, reply: FastifyRepl
     });
   }
 
-  // Build RSS feed with direct torrent download links
+  // Build RSS feed with secure download token links
   type Torrent = { id: string; name: string; description?: string | null; infoHash: string; createdAt: Date };
-  const items = (torrents as Torrent[]).map((torrent: Torrent) => ({
-    title: torrent.name,
-    link: `${process.env.API_BASE_URL || 'http://localhost:3001'}/torrent/${torrent.id}/download?token=${token}`,
-    description: torrent.description || '',
-    pubDate: torrent.createdAt.toUTCString(),
-    infoHash: torrent.infoHash,
-    enclosure: {
-      '@_url': `${process.env.API_BASE_URL || 'http://localhost:3001'}/torrent/${torrent.id}/download?token=${token}`,
-      '@_type': 'application/x-bittorrent',
-      '@_length': '0'
-    }
+  const items = await Promise.all((torrents as Torrent[]).map(async (torrent: Torrent) => {
+    // Generate download token for each torrent
+    const downloadToken = await prisma.downloadToken.create({
+      data: {
+        token: crypto.randomUUID(),
+        userId: user.id,
+        torrentId: torrent.id,
+        expiresAt: new Date(Date.now() + 5 * 60 * 1000) // 5 minutes
+      }
+    });
+    
+    const baseUrl = process.env.API_BASE_URL || 'http://localhost:3001';
+    const downloadUrl = `${baseUrl}/torrent/${torrent.id}/download-secure?token=${downloadToken.token}`;
+    
+    return {
+      title: torrent.name,
+      link: downloadUrl,
+      description: torrent.description || '',
+      pubDate: torrent.createdAt.toUTCString(),
+      infoHash: torrent.infoHash,
+      enclosure: {
+        '@_url': downloadUrl,
+        '@_type': 'application/x-bittorrent',
+        '@_length': '0'
+      }
+    };
   }));
 
   const feed = {

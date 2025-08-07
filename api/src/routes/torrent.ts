@@ -10,7 +10,8 @@ import {
   listAllTorrentsHandler, 
   getTorrentStatsHandler, 
   recalculateUserStatsHandler,
-  downloadTorrentHandler
+  createDownloadTokenHandler,
+  downloadTorrentWithTokenHandler
 } from '../controllers/torrentController.js';
 import { requireAuthIfNotOpen } from '../middleware/authOrOpenMiddleware.js';
 import {
@@ -23,7 +24,8 @@ import {
 
 export async function registerTorrentRoutes(app: FastifyInstance) {
   app.post('/torrent/upload', { preHandler: requireAuth }, uploadTorrentHandler); //DONE
-  app.get('/torrent/:id/download', { preHandler: requireAuth }, downloadTorrentHandler);
+  app.post('/torrent/:id/download-token', { preHandler: requireAuth }, createDownloadTokenHandler);
+  app.get('/torrent/:id/download-secure', downloadTorrentWithTokenHandler);
   app.get('/torrent/list', { preHandler: requireAuthIfNotOpen }, listTorrentsHandler); //DONE
   app.get('/torrent/:id', { preHandler: requireAuthIfNotOpen }, getTorrentHandler); //DONE
   app.get('/torrent/:id/nfo', { preHandler: requireAuthIfNotOpen }, getNfoHandler); //DONE

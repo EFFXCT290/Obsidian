@@ -301,15 +301,27 @@ export async function getProfileHandler(request: FastifyRequest, reply: FastifyR
 export async function updateProfileHandler(request: FastifyRequest, reply: FastifyReply) {
   const user = (request as any).user;
   if (!user) return reply.status(401).send({ error: 'Unauthorized' });
-  const { email, username, password } = request.body as any;
-  const data: any = {};
-  if (email) data.email = email;
-  if (username) data.username = username;
-  if (password) data.passwordHash = await argon2.hash(password);
-  if (Object.keys(data).length === 0) return reply.status(400).send({ error: 'No data to update' });
+  
+  const { password } = request.body as any;
+  
+  if (!password) {
+    return reply.status(400).send({ error: 'Password is required for profile updates' });
+  }
+  
   try {
-    const updated = await prisma.user.update({ where: { id: user.id }, data });
-    return reply.send({ id: updated.id, email: updated.email, username: updated.username, role: updated.role, status: updated.status });
+    const passwordHash = await argon2.hash(password);
+    const updated = await prisma.user.update({ 
+      where: { id: user.id }, 
+      data: { passwordHash } 
+    });
+    
+    return reply.send({ 
+      id: updated.id, 
+      email: updated.email, 
+      username: updated.username, 
+      role: updated.role, 
+      status: updated.status 
+    });
   } catch (err) {
     return reply.status(400).send({ error: 'Update failed', details: err });
   }
