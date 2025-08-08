@@ -1,0 +1,38 @@
+{
+  "home": {
+    "title": "Obsidian Tracker",
+    "subtitle": "El Rastreador de Torrents SobrePotenciado",
+    "description": "Un rastreador de torrents moderno",
+    "welcome": {
+      "title": "Bienvenido a Obsidian Tracker",
+      "description": "Por favor inicia sesión o regístrate para acceder al rastreador"
+    },
+    "footer": {
+      "description": "Un rastreador de torrents moderno construido con Next.js y Fastify",
+      "login": "Iniciar Sesión",
+      "register": "Registrarse",
+      "about": "Acerca de",
+      "stats": "Estadísticas",
+      "api": "API"
+    }
+  },
+  "common": {
+    "loading": "Cargando...",
+    "users": "Usuarios",
+    "torrents": "Torrents",
+    "downloads": "Descargas",
+    "uploaded": "Subido"
+  },
+  "language": {
+    "selector": {
+      "title": "Seleccionar idioma",
+      "spanish": "Español",
+      "english": "Inglés"
+    },
+    "notification": {
+      "changed": "Idioma cambiado a {{language}}",
+      "spanish": "Español",
+      "english": "Inglés"
+    }
+  }
+}
