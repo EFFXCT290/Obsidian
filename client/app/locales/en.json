@@ -34,5 +34,79 @@
       "spanish": "Spanish",
       "english": "English"
     }
+  },
+  "auth": {
+    "register": {
+      "title": "Register",
+      "username": "Username",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "submit": "Register",
+      "hasAccount": "Already have an account?",
+      "login": "Sign In",
+      "errors": {
+        "username": "Username must be between 3 and 20 characters",
+        "email": "Please enter a valid email",
+        "passwordRequirements": "Password must be at least 6 characters",
+        "passwordMatch": "Passwords do not match",
+        "invalidCredentials": "Invalid email/username or password",
+        "userBanned": "Your account is permanently banned",
+        "signInError": "An error occurred during sign in"
+      },
+      "passwordStrength": {
+        "weak": "Weak",
+        "fair": "Fair",
+        "good": "Good",
+        "strong": "Strong"
+      },
+      "securityRecommendations": "Security recommendations",
+      "passwordRequirements": {
+        "minLength": "At least 8 characters",
+        "uppercase": "At least one uppercase",
+        "lowercase": "At least one lowercase",
+        "number": "At least one number",
+        "special": "At least one special character"
+      },
+      "success": {
+        "firstUser": "User registered successfully. You are the administrator and your email has been automatically verified.",
+        "withVerification": "User registered successfully. Please check your email to verify your account."
+      },
+      "invite": {
+        "required": "An invitation code is required",
+        "invalid": "Invalid invitation code",
+        "used": "This invitation has already been used",
+        "deactivated": "This invitation has been deactivated",
+        "expired": "This invitation has expired"
+      },
+      "registrationClosed": "Registration is currently closed",
+      "registrationClosedMessage": "New registrations are not currently accepted on the platform.",
+      "registrationClosedDescription": "If you have a valid invitation code or need special access, contact an administrator.",
+      "goToLogin": "Go to Login",
+      "alreadyHaveAccount": "Already have an account?",
+      "signInHere": "Sign in here"
+    },
+    "login": {
+      "title": "Sign In",
+      "login": "Email or Username",
+      "password": "Password",
+      "submit": "Sign In",
+      "loading": "Signing in...",
+      "forgotPassword": "Forgot your password?",
+      "noAccount": "Don't have an account?",
+      "signUpLink": "Register",
+      "errors": {
+        "loginRequired": "Email or username is required",
+        "passwordRequired": "Password is required",
+        "invalidCredentials": "Invalid credentials"
+      },
+      "success": "Successfully signed in",
+      "error": "Error signing in"
+    },
+    "notification": {
+      "successLogin": "Login successful!",
+      "successRegister": "Registration successful! Please sign in.",
+      "error": "An error occurred. Please try again."
+    }
   }
 }

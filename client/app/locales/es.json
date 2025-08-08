@@ -34,5 +34,79 @@
       "spanish": "Español",
       "english": "Inglés"
     }
+  },
+  "auth": {
+    "register": {
+      "title": "Registrarse",
+      "username": "Usuario",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar Contraseña",
+      "submit": "Registrarse",
+      "hasAccount": "¿Ya tienes una cuenta?",
+      "login": "Iniciar Sesión",
+      "errors": {
+        "username": "El usuario debe tener entre 3 y 20 caracteres",
+        "email": "Por favor ingresa un correo electrónico válido",
+        "passwordRequirements": "La contraseña debe tener al menos 6 caracteres",
+        "passwordMatch": "Las contraseñas no coinciden",
+        "invalidCredentials": "Correo electrónico/usuario o contraseña inválidos",
+        "userBanned": "Tu cuenta está permanentemente baneada",
+        "signInError": "Ocurrió un error durante el inicio de sesión"
+      },
+      "passwordStrength": {
+        "weak": "Débil",
+        "fair": "Regular",
+        "good": "Buena",
+        "strong": "Fuerte"
+      },
+      "securityRecommendations": "Recomendaciones para la seguridad",
+      "passwordRequirements": {
+        "minLength": "Al menos 8 caracteres",
+        "uppercase": "Al menos una mayúscula",
+        "lowercase": "Al menos una minúscula",
+        "number": "Al menos un número",
+        "special": "Al menos un carácter especial"
+      },
+      "success": {
+        "firstUser": "Usuario registrado exitosamente. Eres el administrador y tu correo ha sido verificado automáticamente.",
+        "withVerification": "Usuario registrado exitosamente. Por favor revisa tu correo para verificar tu cuenta."
+      },
+      "invite": {
+        "required": "Se requiere un código de invitación",
+        "invalid": "Código de invitación inválido",
+        "used": "Esta invitación ya ha sido utilizada",
+        "deactivated": "Esta invitación ha sido desactivada",
+        "expired": "Esta invitación ha expirado"
+      },
+      "registrationClosed": "El registro está cerrado actualmente",
+      "registrationClosedMessage": "En este momento no se aceptan nuevos registros en la plataforma.",
+      "registrationClosedDescription": "Si tienes un código de invitación válido o necesitas acceso especial, contacta a un administrador.",
+      "goToLogin": "Ir al Login",
+      "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+      "signInHere": "Inicia sesión aquí"
+    },
+    "login": {
+      "title": "Iniciar Sesión",
+      "login": "Correo electrónico o Usuario",
+      "password": "Contraseña",
+      "submit": "Iniciar Sesión",
+      "loading": "Iniciando sesión...",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "noAccount": "¿No tienes una cuenta?",
+      "signUpLink": "Registrarse",
+      "errors": {
+        "loginRequired": "El correo electrónico o usuario es requerido",
+        "passwordRequired": "La contraseña es requerida",
+        "invalidCredentials": "Credenciales inválidas"
+      },
+      "success": "Sesión iniciada exitosamente",
+      "error": "Error al iniciar sesión"
+    },
+    "notification": {
+      "successLogin": "¡Inicio de sesión exitoso!",
+      "successRegister": "¡Registro exitoso! Por favor inicia sesión.",
+      "error": "Ocurrió un error. Por favor intenta de nuevo."
+    }
   }
 }
