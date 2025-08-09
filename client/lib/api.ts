@@ -74,7 +74,9 @@ class ApiClient {
       totalUsers: number;
       totalTorrents: number;
       totalDownloads: number;
-      totalUpload: number;
+      totalUploadBytes: number;
+      totalDownloadsFormatted: string;
+      totalUploadFormatted: string;
     }>('/stats');
   }
 }
@@ -87,5 +89,7 @@ export interface SiteStats {
   totalUsers: number;
   totalTorrents: number;
   totalDownloads: number;
-  totalUpload: number;
+  totalUploadBytes: number;
+  totalDownloadsFormatted: string;
+  totalUploadFormatted: string;
 }

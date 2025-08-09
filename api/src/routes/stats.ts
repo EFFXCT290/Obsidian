@@ -1,4 +1,5 @@
 import { FastifyInstance } from 'fastify';
+import { prisma } from '../lib/prisma.js';
 
 /**
  * Register statistics routes
@@ -12,20 +13,41 @@ import { FastifyInstance } from 'fastify';
  * @param app - Fastify instance to register routes on
  */
 export async function registerStatsRoutes(app: FastifyInstance) {
-  // Get site statistics (mock data for now)
+  // Get site statistics from database
   app.get('/stats', async (request, reply) => {
     try {
-      // Return mock statistics for now
-      // TODO: Connect to database when it's properly configured
+      const [usersCount, torrentsCount, announcesAgg] = await Promise.all([
+        prisma.user.count(),
+        prisma.torrent.count(),
+        prisma.announce.aggregate({
+          _sum: { downloaded: true, uploaded: true },
+        }),
+      ]);
+
+      const totalDownloaded = Number(announcesAgg._sum.downloaded || 0);
+      const totalUploaded = Number(announcesAgg._sum.uploaded || 0);
+
+      // Format bytes to human readable string; return "0 megabytes" if zero
+      const formatBytes = (bytes: number): string => {
+        if (!bytes || bytes <= 0) return '0 mb';
+        const k = 1024;
+        const units = ['b', 'kb', 'mb', 'gb', 'tb', 'pb'];
+        const i = Math.min(Math.floor(Math.log(bytes) / Math.log(k)), units.length - 1);
+        const value = bytes / Math.pow(k, i);
+        return `${parseFloat(value.toFixed(1))} ${units[i]}`;
+      };
+
       return {
-        totalUsers: 1250,
-        totalTorrents: 3450,
-        totalDownloads: 156789,
-        totalUpload: "2.5 TB",
+        totalUsers: usersCount,
+        totalTorrents: torrentsCount,
+        totalDownloads: totalDownloaded,
+        totalUploadBytes: totalUploaded,
+        totalDownloadsFormatted: formatBytes(totalDownloaded),
+        totalUploadFormatted: formatBytes(totalUploaded),
       };
     } catch (error) {
       app.log.error('Error fetching stats:', error);
-      reply.status(500).send({
+      return reply.status(500).send({
         error: true,
         message: 'Failed to fetch site statistics',
       });

@@ -9,7 +9,7 @@
 import { Suspense } from 'react';
 import { headers } from 'next/headers';
 import Link from 'next/link';
-import { apiClient, SiteStats } from '@/lib/api';
+import { apiClient } from '@/lib/api';
 import { serverT, getPreferredLanguage } from './lib/server-i18n';
 import { LanguageSync } from './components/LanguageSync';
 import { LanguageSelector } from './components/LanguageSelector';
@@ -18,39 +18,7 @@ import { LanguageNotification } from './components/LanguageNotification';
 /**
  * Loading component for the home page
  */
-function HomeLoading() {
-  return (
-    <div className="min-h-screen flex flex-col bg-background text-text">
-      <main className="flex-1 flex flex-col items-center justify-center p-8">
-        <div className="text-center mb-8">
-          <div className="h-16 bg-gradient-to-r from-primary to-accent-background rounded-lg mb-4 animate-pulse"></div>
-          <div className="h-6 bg-text-secondary rounded w-64 mx-auto animate-pulse"></div>
-        </div>
-        
-        <div className="flex space-x-6 mb-8">
-          <div className="w-32 h-12 bg-primary rounded-lg animate-pulse"></div>
-          <div className="w-32 h-12 bg-surface rounded-lg animate-pulse"></div>
-        </div>
-
-        <div className="text-center">
-          <div className="h-4 bg-text-secondary rounded w-80 mx-auto mb-4 animate-pulse"></div>
-          <div className="h-4 bg-text-secondary rounded w-64 mx-auto animate-pulse"></div>
-        </div>
-      </main>
-
-      <footer className="text-center p-8 bg-surface border-t border-border">
-        <div className="h-4 bg-text-secondary rounded w-96 mx-auto mb-4 animate-pulse"></div>
-        <div className="flex justify-center space-x-4">
-          <div className="h-4 bg-text-secondary rounded w-16 animate-pulse"></div>
-          <div className="h-4 bg-border rounded w-1"></div>
-          <div className="h-4 bg-text-secondary rounded w-16 animate-pulse"></div>
-          <div className="h-4 bg-border rounded w-1"></div>
-          <div className="h-4 bg-text-secondary rounded w-16 animate-pulse"></div>
-        </div>
-      </footer>
-    </div>
-  );
-}
+// Skeleton intentionally omitted from export to avoid unused warnings
 
 /**
  * Statistics component that fetches data from the API
@@ -73,7 +41,7 @@ async function SiteStatistics() {
           <div className="text-sm text-text-secondary">Downloads</div>
         </div>
         <div className="text-center p-4 bg-surface rounded-lg border border-border">
-          <div className="text-2xl font-bold text-yellow">{stats.totalUpload}</div>
+          <div className="text-2xl font-bold text-yellow">{stats.totalUploadFormatted}</div>
           <div className="text-sm text-text-secondary">Uploaded</div>
         </div>
       </div>
@@ -92,13 +60,7 @@ async function SiteStatistics() {
 /**
  * Format bytes to human readable format
  */
-function formatBytes(bytes: number): string {
-  if (bytes === 0) return '0 B';
-  const k = 1024;
-  const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
-}
+// formatBytes helper removed (no longer used)
 
 /**
  * Main home page component
@@ -109,7 +71,7 @@ export default async function Home() {
   const language = await getPreferredLanguage(headersList);
   
   // Server-side translations
-  const title = serverT('home.title', language);
+  // const title = serverT('home.title', language);
   const subtitle = serverT('home.subtitle', language);
   const welcomeTitle = serverT('home.welcome.title', language);
   const welcomeDescription = serverT('home.welcome.description', language);
@@ -121,11 +83,11 @@ export default async function Home() {
     const apiText = serverT('home.footer.api', language);
 
   // Language selector translations
-  const languageSelectorTranslations = {
-    spanish: serverT('language.selector.spanish', language),
-    english: serverT('language.selector.english', language),
-    title: serverT('language.selector.title', language)
-  };
+  // const languageSelectorTranslations = {
+  //   spanish: serverT('language.selector.spanish', language),
+  //   english: serverT('language.selector.english', language),
+  //   title: serverT('language.selector.title', language)
+  // };
 
   // Language notification translations
   const languageNotificationTranslations = {
@@ -144,10 +106,7 @@ export default async function Home() {
       <div className="min-h-screen flex flex-col bg-background text-text">
         {/* Language Selector */}
         <div className="absolute top-4 right-4 z-10">
-          <LanguageSelector 
-            currentLanguage={language} 
-            translations={languageSelectorTranslations}
-          />
+          <LanguageSelector currentLanguage={language} />
         </div>
         
         <main className="flex-1 flex flex-col items-center justify-center p-8">
