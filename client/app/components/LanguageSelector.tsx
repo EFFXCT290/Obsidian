@@ -14,11 +14,11 @@ import { cn } from "@/app/lib/utils"
  * - Prevents hydration mismatches
  * - Responsive design with smooth animations
  */
-export function LanguageSelector({ currentLanguage }: { currentLanguage: string }) {
+export function LanguageSelector({ currentLanguage }: { currentLanguage?: string }) {
   // State to control dropdown visibility
   const [isOpen, setIsOpen] = useState(false)
   // State to track current language
-  const [currentLang, setCurrentLang] = useState(currentLanguage)
+  const [currentLang, setCurrentLang] = useState(currentLanguage ?? 'es')
 
   // Available languages configuration with flags and display names
   const languages = [
@@ -28,6 +28,19 @@ export function LanguageSelector({ currentLanguage }: { currentLanguage: string 
 
   // Find the current language object for display
   const currentLanguageObj = languages.find(lang => lang.code === currentLang) || languages[0]
+
+  // Initialize from cookie if no prop provided
+  useEffect(() => {
+    if (!currentLanguage) {
+      try {
+        const match = document.cookie.match(/(?:^|; )i18nextLng=([^;]+)/)
+        const lngFromCookie = match ? decodeURIComponent(match[1]) : undefined
+        if (lngFromCookie) {
+          setCurrentLang(lngFromCookie)
+        }
+      } catch {}
+    }
+  }, [currentLanguage])
 
   /**
    * Handles language change when user selects a new language

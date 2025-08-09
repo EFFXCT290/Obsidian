@@ -7,10 +7,10 @@ import { useCallback } from 'react';
 
 // Simple translation function that uses the current language from cookies
 export function useI18n() {
-  const t = useCallback((key: string, options?: any): string => {
-    // For now, return the key as fallback
-    // In a real implementation, this would use i18next or similar
-    return key;
+  // Minimal fallback-aware translation helper for client components
+  const t = useCallback((key: string, fallback?: string): string => {
+    // Until full client i18n is wired, prefer provided fallback text
+    return fallback ?? key;
   }, []);
 
   return { t };
