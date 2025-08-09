@@ -37,6 +37,20 @@
       "logout": "Sign out"
     }
   },
+  "admin": {
+    "nav": {
+      "dashboard": "Overview",
+      "users": "Users",
+      "categories": "Categories",
+      "announcements": "Announcements",
+      "wiki": "Wiki",
+      "peerban": "Peer Bans",
+      "settings": "Settings",
+      "requests": "Requests"
+    },
+    "backToSite": "Back to site",
+    "title": "Admin Panel"
+  },
   "common": {
     "loading": "Loading...",
     "submitting": "Submitting form...",

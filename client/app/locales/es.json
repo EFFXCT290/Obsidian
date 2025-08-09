@@ -37,6 +37,20 @@
       "logout": "Cerrar sesión"
     }
   },
+  "admin": {
+    "nav": {
+      "dashboard": "Resumen",
+      "users": "Usuarios",
+      "categories": "Categorías",
+      "announcements": "Anuncios",
+      "wiki": "Wiki",
+      "peerban": "Bloqueos",
+      "settings": "Ajustes",
+      "requests": "Peticiones"
+    },
+    "backToSite": "Volver al sitio",
+    "title": "Panel de administración"
+  },
   "common": {
     "loading": "Cargando...",
     "submitting": "Enviando formulario...",
