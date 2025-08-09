@@ -18,6 +18,8 @@
   },
   "common": {
     "loading": "Loading...",
+    "submitting": "Submitting form...",
+    "formReady": "Form ready",
     "users": "Users",
     "torrents": "Torrents",
     "downloads": "Downloads",
@@ -36,6 +38,13 @@
     }
   },
   "auth": {
+    "placeholders": {
+      "username": "Enter your username",
+      "email": "Enter your email",
+      "password": "Enter your password",
+      "confirmPassword": "Confirm your password",
+      "login": "Enter your email or username"
+    },
     "register": {
       "title": "Register",
       "username": "Username",
@@ -43,6 +52,7 @@
       "password": "Password",
       "confirmPassword": "Confirm Password",
       "submit": "Register",
+      "loading": "Creating account...",
       "hasAccount": "Already have an account?",
       "login": "Sign In",
       "errors": {
@@ -88,6 +98,7 @@
     },
     "login": {
       "title": "Sign In",
+      "formAriaLabel": "Sign in form",
       "login": "Email or Username",
       "password": "Password",
       "submit": "Sign In",
@@ -97,7 +108,9 @@
       "signUpLink": "Register",
       "errors": {
         "loginRequired": "Email or username is required",
+        "loginMinLength": "Login must be at least 3 characters",
         "passwordRequired": "Password is required",
+        "passwordMinLength": "Password must be at least 6 characters",
         "invalidCredentials": "Invalid credentials"
       },
       "success": "Successfully signed in",

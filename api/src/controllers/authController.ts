@@ -66,37 +66,40 @@ export async function registerHandler(request: FastifyRequest, reply: FastifyRep
       username,
       passwordHash,
       role,
-      emailVerified: false,
+      // Auto-verify first user to allow immediate access
+      emailVerified: first ? true : false,
       status: 'ACTIVE',
       passkey,
     }
   });
 
-  // Send verification email
-  try {
-    // Generate verification token
-    const token = randomUUID();
-    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
-    await prisma.emailVerificationToken.create({
-      data: {
-        userId: user.id,
-        token,
-        expiresAt,
-      }
-    });
+  // Send verification email for non-first users only
+  if (!first) {
+    try {
+      // Generate verification token
+      const token = randomUUID();
+      const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+      await prisma.emailVerificationToken.create({
+        data: {
+          userId: user.id,
+          token,
+          expiresAt,
+        }
+      });
 
-    // Build verification link
-    const baseUrl = getFrontendBaseUrl();
-    const link = `${baseUrl}/verify?token=${token}`;
+      // Build verification link
+      const baseUrl = getFrontendBaseUrl();
+      const link = `${baseUrl}/verify?token=${token}`;
 
-    // Prepare email
-    const { text, html } = getVerificationEmail({ username: user.username, link });
-    await sendEmail({ to: user.email, subject: 'Verify your email address', text, html });
+      // Prepare email
+      const { text, html } = getVerificationEmail({ username: user.username, link });
+      await sendEmail({ to: user.email, subject: 'Verify your email address', text, html });
 
-    console.log(`[registerHandler] Verification email sent to ${user.email}`);
-  } catch (err) {
-    console.error('[registerHandler] Failed to send verification email:', err);
-    // Don't fail registration if email sending fails, but log the error
+      console.log(`[registerHandler] Verification email sent to ${user.email}`);
+    } catch (err) {
+      console.error('[registerHandler] Failed to send verification email:', err);
+      // Don't fail registration if email sending fails, but log the error
+    }
   }
 
   return reply.status(201).send({ 
@@ -105,7 +108,9 @@ export async function registerHandler(request: FastifyRequest, reply: FastifyRep
     username: user.username, 
     role: user.role, 
     passkey: user.passkey,
-    message: 'Registration successful. Please check your email for verification instructions.'
+    message: first 
+      ? 'Registration successful. First user is auto-verified and has OWNER role.' 
+      : 'Registration successful. Please check your email for verification instructions.'
   });
 }
 

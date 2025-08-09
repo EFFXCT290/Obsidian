@@ -11,7 +11,7 @@ import { useState, useCallback } from 'react';
 import { useI18n } from '@/app/hooks/useI18n';
 import Link from 'next/link';
 import AuthInput from '../../shared/AuthInput';
-import PasswordStrengthBar from '../../shared/PasswordStrengthBar';
+import PasswordStrengthBar from '@/app/auth/shared/PasswordStrengthBar';
 import { useRouter } from 'next/navigation';
 import { showNotification } from '@/app/utils/notifications';
 
@@ -25,6 +25,12 @@ interface SignUpFormProps {
     passwordLabel: string;
     confirmPasswordLabel: string;
     submitButton: string;
+    // placeholders & loading
+    usernamePlaceholder?: string;
+    emailPlaceholder?: string;
+    passwordPlaceholder?: string;
+    confirmPasswordPlaceholder?: string;
+    registerLoading?: string;
     hasAccount: string;
     loginLink: string;
     usernameError: string;
@@ -70,7 +76,7 @@ interface FormErrors {
 }
 
 export function SignUpForm({ 
-  registrationMode, 
+  registrationMode: _registrationMode, 
   serverTranslations 
 }: SignUpFormProps) {
   const { t } = useI18n();
@@ -87,9 +93,10 @@ export function SignUpForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Get server translations with fallbacks
-  const getServerTranslation = useCallback((key: string, fallbackKey: string) => {
+  const getServerTranslation = useCallback((key: string, fallbackKey: string): string => {
     if (serverTranslations && key in serverTranslations) {
-      return serverTranslations[key as keyof typeof serverTranslations];
+      const value = serverTranslations[key as keyof typeof serverTranslations];
+      return (value as string) ?? t(fallbackKey);
     }
     return t(fallbackKey);
   }, [serverTranslations, t]);
@@ -251,7 +258,7 @@ export function SignUpForm({
         value={formData.username}
         onChange={(e) => handleFieldChange('username', e.target.value)}
         error={errors.username}
-        placeholder="Ingresa tu nombre de usuario"
+        placeholder={getServerTranslation('usernamePlaceholder', 'auth.placeholders.username')}
         disabled={loading}
         required
       />
@@ -264,7 +271,7 @@ export function SignUpForm({
         value={formData.email}
         onChange={(e) => handleFieldChange('email', e.target.value)}
         error={errors.email}
-        placeholder="Ingresa tu correo electrónico"
+        placeholder={getServerTranslation('emailPlaceholder', 'auth.placeholders.email')}
         disabled={loading}
         required
       />
@@ -277,7 +284,7 @@ export function SignUpForm({
         value={formData.password}
         onChange={(e) => handleFieldChange('password', e.target.value)}
         error={errors.password}
-        placeholder="Ingresa tu contraseña"
+        placeholder={getServerTranslation('passwordPlaceholder', 'auth.placeholders.password')}
         disabled={loading}
         required
       />
@@ -309,7 +316,7 @@ export function SignUpForm({
         value={formData.confirmPassword}
         onChange={(e) => handleFieldChange('confirmPassword', e.target.value)}
         error={errors.confirmPassword}
-        placeholder="Confirma tu contraseña"
+        placeholder={getServerTranslation('confirmPasswordPlaceholder', 'auth.placeholders.confirmPassword')}
         disabled={loading}
         required
       />
@@ -327,7 +334,7 @@ export function SignUpForm({
         disabled={loading || isSubmitting}
         className="w-full bg-primary text-primary-foreground py-2 px-4 rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
-        {loading ? 'Creando cuenta...' : getServerTranslation('submitButton', 'auth.register.submit')}
+        {loading ? getServerTranslation('registerLoading', 'auth.register.loading') : getServerTranslation('submitButton', 'auth.register.submit')}
       </button>
 
       {/* Sign in link */}

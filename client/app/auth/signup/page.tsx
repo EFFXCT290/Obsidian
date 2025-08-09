@@ -14,15 +14,15 @@ import { LanguageSync } from '../../components/LanguageSync';
 import { LanguageSelector } from '../../components/LanguageSelector';
 
 // Enhanced loading component with theme-consistent styling
-function SignUpLoading() {
+function SignUpLoading({ language }: { language: string }) {
   return (
     <div className="space-y-6">
       {/* Form fields skeleton */}
       <div className="space-y-4">
-        <FormFieldSkeleton label="Usuario" placeholder="Ingresa tu nombre de usuario" />
-        <FormFieldSkeleton label="Email" placeholder="Ingresa tu email" />
-        <FormFieldSkeleton label="Contraseña" placeholder="Ingresa tu contraseña" />
-        <FormFieldSkeleton label="Confirmar Contraseña" placeholder="Confirma tu contraseña" />
+        <FormFieldSkeleton label={serverT('auth.register.username', language)} placeholder={serverT('auth.placeholders.username', language)} />
+        <FormFieldSkeleton label={serverT('auth.register.email', language)} placeholder={serverT('auth.placeholders.email', language)} />
+        <FormFieldSkeleton label={serverT('auth.register.password', language)} placeholder={serverT('auth.placeholders.password', language)} />
+        <FormFieldSkeleton label={serverT('auth.register.confirmPassword', language)} placeholder={serverT('auth.placeholders.confirmPassword', language)} />
         <ButtonSkeleton />
       </div>
 
@@ -59,6 +59,12 @@ export default async function RegisterPage() {
   const passwordLabel = serverT('auth.register.password', language);
   const confirmPasswordLabel = serverT('auth.register.confirmPassword', language);
   const submitButton = serverT('auth.register.submit', language);
+  // Placeholders & loading
+  const usernamePlaceholder = serverT('auth.placeholders.username', language);
+  const emailPlaceholder = serverT('auth.placeholders.email', language);
+  const passwordPlaceholder = serverT('auth.placeholders.password', language);
+  const confirmPasswordPlaceholder = serverT('auth.placeholders.confirmPassword', language);
+  const registerLoading = serverT('auth.register.loading', language);
   const hasAccount = serverT('auth.register.hasAccount', language);
   const loginLink = serverT('auth.register.login', language);
   
@@ -109,7 +115,7 @@ export default async function RegisterPage() {
     <>
       <LanguageSync serverLanguage={language} />
       <AuthCard title={title}>
-        <Suspense fallback={<SignUpLoading />}>
+        <Suspense fallback={<SignUpLoading language={language} />}>
           <SignUpForm 
             registrationMode={registrationMode}
             language={language}
@@ -129,6 +135,12 @@ export default async function RegisterPage() {
               invalidCredentialsError,
               successRegister,
               errorNotification,
+              // Placeholders & loading
+              usernamePlaceholder,
+              emailPlaceholder,
+              passwordPlaceholder,
+              confirmPasswordPlaceholder,
+              registerLoading,
               registrationClosedTitle,
               registrationClosedMessage,
               registrationClosedDescription,
