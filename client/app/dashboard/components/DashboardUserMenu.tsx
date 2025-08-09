@@ -125,7 +125,7 @@ export default function DashboardUserMenu({ translations }: DashboardUserMenuPro
           </Link>
           {(role === 'ADMIN' || role === 'OWNER') && (
             <Link
-              href="/admin"
+              href="/admin/dashboard"
               className="block px-4 py-3 text-text hover:bg-surface-light transition-colors"
               onClick={() => setOpen(false)}
             >
