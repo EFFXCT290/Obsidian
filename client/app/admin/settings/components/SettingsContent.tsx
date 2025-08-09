@@ -9,6 +9,10 @@ import { Cog } from '@styled-icons/boxicons-regular/Cog';
 import { Envelope } from '@styled-icons/boxicons-regular/Envelope';
 import { Shield } from '@styled-icons/boxicons-regular/Shield';
 import { Palette } from '@styled-icons/boxicons-regular/Palette';
+import { UserPlus } from '@styled-icons/boxicons-regular/UserPlus';
+import { CheckCircle } from '@styled-icons/boxicons-regular/CheckCircle';
+import { TrendingUp } from '@styled-icons/boxicons-regular/TrendingUp';
+import { XCircle } from '@styled-icons/boxicons-regular/XCircle';
 
 interface SettingsContentProps {
   translations: {
@@ -32,6 +36,13 @@ interface SettingsContentProps {
         smtpSuccess?: string;
         smtpError?: string;
       };
+      ratioPresets?: {
+        title?: string;
+        easy?: string;
+        balanced?: string;
+        strict?: string;
+        active?: string;
+      };
     };
     fields?: Record<string, string>;
   };
@@ -50,6 +61,8 @@ type ConfigState = {
   blacklistedClients?: string[];
   allowedFingerprints?: string[];
   rssDefaultCount?: number;
+  inviteExpiryHours?: number;
+  maxInvitesPerUser?: number;
   storageType?: 'LOCAL' | 'S3' | 'DB';
   s3Bucket?: string;
   s3Region?: string;
@@ -74,8 +87,9 @@ export default function SettingsContent({ translations }: SettingsContentProps) 
   const [config, setConfig] = useState<ConfigState>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [activeRatioPreset, setActiveRatioPreset] = useState<'easy' | 'balanced' | 'strict' | 'custom'>('custom');
   const [activeSection, setActiveSection] = useState<
-    'tracker' | 'smtp' | 'antiCheat' | 'branding' | 'ratio' | 'announce' | 'clients' | 'rss' | 'storage'
+    'tracker' | 'smtp' | 'antiCheat' | 'branding' | 'ratio' | 'announce' | 'clients' | 'rss' | 'storage' | 'invitations'
   >('tracker');
 
   useEffect(() => {
@@ -88,6 +102,9 @@ export default function SettingsContent({ translations }: SettingsContentProps) 
         const res = await fetch('/api/admin/config', { headers, cache: 'no-store' });
         const data = (await res.json()) as ConfigState;
         setConfig(data || {});
+        // Determine preset after loading config
+        const preset = detectRatioPreset(data || {});
+        setActiveRatioPreset(preset);
       } catch {
         showNotification('Failed to load configuration', 'error');
       } finally {
@@ -95,6 +112,22 @@ export default function SettingsContent({ translations }: SettingsContentProps) 
       }
     })();
   }, []);
+
+  const detectRatioPreset = (cfg: ConfigState): 'easy' | 'balanced' | 'strict' | 'custom' => {
+    const ratio = cfg.minRatio ?? 0.5;
+    const bonus = cfg.bonusPointsPerHour ?? 1;
+    const hr = cfg.hitAndRunThreshold ?? 5;
+    const seed = cfg.requiredSeedingMinutes ?? 4320;
+    if (ratio === 0.3 && bonus === 2 && hr === 8 && seed === 100) return 'easy';
+    if (ratio === 0.5 && bonus === 1 && hr === 5 && seed === 50) return 'balanced';
+    if (ratio === 1.0 && bonus === 0.5 && hr === 3 && seed === 25) return 'strict';
+    return 'custom';
+  };
+
+  // Recompute preset when any ratio-related field changes
+  useEffect(() => {
+    setActiveRatioPreset(detectRatioPreset(config));
+  }, [config]);
 
   const handleChange = <K extends keyof ConfigState>(key: K, value: ConfigState[K]) => {
     setConfig(prev => ({ ...prev, [key]: value }));
@@ -141,13 +174,14 @@ export default function SettingsContent({ translations }: SettingsContentProps) 
             </div>
             <nav className="p-2">
               {(() => {
-                type SectionId = 'tracker' | 'ratio' | 'announce' | 'clients' | 'rss' | 'storage' | 'smtp' | 'antiCheat' | 'branding';
+                type SectionId = 'tracker' | 'ratio' | 'announce' | 'clients' | 'invitations' | 'rss' | 'storage' | 'smtp' | 'antiCheat' | 'branding';
                 type IconComponent = ComponentType<{ size?: number }>;
                 const sections: Array<{ id: SectionId; title: string; desc?: string; icon: IconComponent }> = [
                   { id: 'tracker', title: translations.sections?.tracker || 'Tracker', desc: translations.details?.tracker, icon: Cog },
                   { id: 'ratio', title: translations.sections?.ratio || 'Ratio & H&R', desc: translations.details?.ratio, icon: Shield },
                   { id: 'announce', title: translations.sections?.announce || 'Announce', desc: translations.details?.announce, icon: Cog },
                   { id: 'clients', title: translations.sections?.clients || 'Clients', desc: translations.details?.clients, icon: Shield },
+                  { id: 'invitations', title: translations.sections?.invitations || 'Invitations', desc: translations.details?.invitations, icon: UserPlus },
                   { id: 'rss', title: translations.sections?.rss || 'RSS', desc: translations.details?.rss, icon: Cog },
                   { id: 'storage', title: translations.sections?.storage || 'Storage', desc: translations.details?.storage, icon: Cog },
                   { id: 'smtp', title: translations.sections?.smtp || 'SMTP', desc: translations.details?.smtp, icon: Envelope },
@@ -222,11 +256,131 @@ export default function SettingsContent({ translations }: SettingsContentProps) 
               <div className="space-y-6">
                 <h3 className="text-xl font-semibold text-text">{translations.sections?.ratio || 'Ratio & H&R'}</h3>
                 <p className="text-text-secondary">{translations.details?.ratio}</p>
+
+                {/* Presets */}
+                <div>
+                  <h4 className="text-lg font-medium text-text mb-3">{translations.settings?.ratioPresets?.title || 'Ratio Presets'}</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Easy */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleChange('minRatio', 0.3);
+                        handleChange('bonusPointsPerHour', 2);
+                        handleChange('hitAndRunThreshold', 8);
+                        handleChange('requiredSeedingMinutes', 100); // Gracia en minutos aproximada
+                      }}
+                      className={`relative p-4 border rounded-lg text-left transition-colors ${
+                        activeRatioPreset === 'easy'
+                          ? 'border-green-600/50 bg-green-600/5'
+                          : 'border-border hover:border-green-600/50 hover:bg-green-600/5'
+                      }`}
+                    >
+                      {activeRatioPreset === 'easy' && (
+                        <span className="absolute top-2 right-2 text-xs px-2 py-0.5 rounded bg-green-600 text-white">
+                          {translations.settings?.ratioPresets?.active || 'Active'}
+                        </span>
+                      )}
+                      <div className="flex items-center space-x-3 mb-3">
+                        <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
+                          <CheckCircle size={20} className="text-white" />
+                        </div>
+                        <span className="font-medium text-text">{translations.settings?.ratioPresets?.easy || 'Easy'}</span>
+                      </div>
+                      <div className="text-xs text-text-secondary space-y-1">
+                        <div>• {translations.fields?.minRatio || 'Min Ratio'}: 0.3</div>
+                        <div>• {translations.fields?.bonusPointsPerHour || 'Bonus Points per Hour'}: 2</div>
+                        <div>• {translations.fields?.hitAndRunThreshold || 'Hit & Run Threshold'}: 8</div>
+                        <div>• {translations.fields?.requiredSeedingMinutes || 'Required Seeding Minutes'}: 100</div>
+                      </div>
+                    </button>
+
+                    {/* Balanced */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleChange('minRatio', 0.5);
+                        handleChange('bonusPointsPerHour', 1);
+                        handleChange('hitAndRunThreshold', 5);
+                        handleChange('requiredSeedingMinutes', 50);
+                      }}
+                      className={`relative p-4 border rounded-lg text-left transition-colors ${
+                        activeRatioPreset === 'balanced'
+                          ? 'border-blue-600/50 bg-blue-600/5'
+                          : 'border-border hover:border-blue-600/50 hover:bg-blue-600/5'
+                      }`}
+                    >
+                      {activeRatioPreset === 'balanced' && (
+                        <span className="absolute top-2 right-2 text-xs px-2 py-0.5 rounded bg-blue-600 text-white">
+                          {translations.settings?.ratioPresets?.active || 'Active'}
+                        </span>
+                      )}
+                      <div className="flex items-center space-x-3 mb-3">
+                        <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                          <TrendingUp size={20} className="text-white" />
+                        </div>
+                        <span className="font-medium text-text">{translations.settings?.ratioPresets?.balanced || 'Balanced'}</span>
+                      </div>
+                      <div className="text-xs text-text-secondary space-y-1">
+                        <div>• {translations.fields?.minRatio || 'Min Ratio'}: 0.5</div>
+                        <div>• {translations.fields?.bonusPointsPerHour || 'Bonus Points per Hour'}: 1</div>
+                        <div>• {translations.fields?.hitAndRunThreshold || 'Hit & Run Threshold'}: 5</div>
+                        <div>• {translations.fields?.requiredSeedingMinutes || 'Required Seeding Minutes'}: 50</div>
+                      </div>
+                    </button>
+
+                    {/* Strict */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleChange('minRatio', 1.0);
+                        handleChange('bonusPointsPerHour', 0.5);
+                        handleChange('hitAndRunThreshold', 3);
+                        handleChange('requiredSeedingMinutes', 25);
+                      }}
+                      className={`relative p-4 border rounded-lg text-left transition-colors ${
+                        activeRatioPreset === 'strict'
+                          ? 'border-red-600/50 bg-red-600/5'
+                          : 'border-border hover:border-red-600/50 hover:bg-red-600/5'
+                      }`}
+                    >
+                      {activeRatioPreset === 'strict' && (
+                        <span className="absolute top-2 right-2 text-xs px-2 py-0.5 rounded bg-red-600 text-white">
+                          {translations.settings?.ratioPresets?.active || 'Active'}
+                        </span>
+                      )}
+                      <div className="flex items-center space-x-3 mb-3">
+                        <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
+                          <XCircle size={20} className="text-white" />
+                        </div>
+                        <span className="font-medium text-text">{translations.settings?.ratioPresets?.strict || 'Strict'}</span>
+                      </div>
+                      <div className="text-xs text-text-secondary space-y-1">
+                        <div>• {translations.fields?.minRatio || 'Min Ratio'}: 1.0</div>
+                        <div>• {translations.fields?.bonusPointsPerHour || 'Bonus Points per Hour'}: 0.5</div>
+                        <div>• {translations.fields?.hitAndRunThreshold || 'Hit & Run Threshold'}: 3</div>
+                        <div>• {translations.fields?.requiredSeedingMinutes || 'Required Seeding Minutes'}: 25</div>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Manual config */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormField label={translations.fields?.minRatio || 'Min Ratio'} type="number" value={String(config.minRatio ?? 0.5)} onChange={(v) => handleChange('minRatio', Number(v))} />
                   <FormField label={translations.fields?.bonusPointsPerHour || 'Bonus Points per Hour'} type="number" value={String(config.bonusPointsPerHour ?? 1)} onChange={(v) => handleChange('bonusPointsPerHour', Number(v))} />
                   <FormField label={translations.fields?.hitAndRunThreshold || 'Hit & Run Threshold'} type="number" value={String(config.hitAndRunThreshold ?? 5)} onChange={(v) => handleChange('hitAndRunThreshold', Number(v))} />
                   <FormField label={translations.fields?.requiredSeedingMinutes || 'Required Seeding Minutes'} type="number" value={String(config.requiredSeedingMinutes ?? 4320)} onChange={(v) => handleChange('requiredSeedingMinutes', Number(v))} />
+                  {activeRatioPreset === 'custom' && (
+                    <div className="md:col-span-2">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="text-lg font-medium text-text">{(translations.settings?.ratioPresets as { manualTitle?: string })?.manualTitle || 'Manual Configuration'}</h3>
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                          {(translations.settings?.ratioPresets as { customBadge?: string })?.customBadge || 'Custom Configuration'}
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -272,6 +426,18 @@ export default function SettingsContent({ translations }: SettingsContentProps) 
                 <p className="text-text-secondary">{translations.details?.rss}</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormField label={translations.fields?.rssDefaultCount || 'Default RSS Count'} type="number" value={String(config.rssDefaultCount ?? 20)} onChange={(v) => handleChange('rssDefaultCount', Number(v))} />
+                </div>
+              </div>
+            )}
+
+            {/* Invitations */}
+            {activeSection === 'invitations' && (
+              <div className="space-y-6">
+                <h3 className="text-xl font-semibold text-text">{translations.sections?.invitations || 'Invitations'}</h3>
+                <p className="text-text-secondary">{translations.details?.invitations}</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormField label={translations.fields?.inviteExpiryHours || 'Invite Expiry (hours)'} type="number" value={String(config.inviteExpiryHours ?? 6)} onChange={(v) => handleChange('inviteExpiryHours', Number(v))} />
+                  <FormField label={translations.fields?.maxInvitesPerUser || 'Max Invites per User'} type="number" value={String(config.maxInvitesPerUser ?? 5)} onChange={(v) => handleChange('maxInvitesPerUser', Number(v))} />
                 </div>
               </div>
             )}

@@ -9,6 +9,7 @@
 import { Suspense } from 'react';
 import { headers } from 'next/headers';
 import Link from 'next/link';
+import Image from 'next/image';
 import { apiClient } from '@/lib/api';
 import { serverT, getPreferredLanguage } from './lib/server-i18n';
 import { LanguageSync } from './components/LanguageSync';
@@ -117,6 +118,17 @@ export default async function Home() {
         
         <main className="flex-1 flex flex-col items-center justify-center p-8">
         <div className="text-center mb-8">
+          <Image
+            src="/logo.png"
+            alt="Obsidian logo"
+            width={160}
+            height={160}
+            quality={100}
+            priority
+            sizes="160px"
+            className="mx-auto mb-8"
+            draggable={false}
+          />
           <h1 className="text-6xl tracking-tighter mb-4">
             {(() => {
               const parts = brandingName.trim().split(/\s+/);
@@ -125,12 +137,12 @@ export default async function Home() {
                 const last = parts[parts.length - 1];
                 return (
                   <>
-                    <span className="text-text">{first} </span>
+                    <span className="text-purple-500">{first} </span>
                     <span className="text-green">{last}</span>
                   </>
                 );
               }
-              return <span className="text-text">{brandingName}</span>;
+              return <span className="text-purple-500">{brandingName}</span>;
             })()}
           </h1>
           <p className="text-text-secondary text-lg">

@@ -176,6 +176,9 @@ model Config {
   s3SecretAccessKey String?
   // Branding
   brandingName     String?
+  // Invitations
+  inviteExpiryHours Int @default(6)
+  maxInvitesPerUser Int @default(5)
 }
 
 enum RegMode {
