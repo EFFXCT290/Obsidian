@@ -16,6 +16,27 @@
       "api": "API"
     }
   },
+  "sidebar": {
+    "nav": {
+      "home": "Inicio",
+      "categories": "Categorías",
+      "requests": "Peticiones",
+      "announcements": "Anuncios",
+      "wiki": "Wiki",
+      "rss": "RSS",
+      "bookmarks": "Marcadores"
+    }
+  },
+  "header": {
+    "search": { "placeholder": "Buscar..." },
+    "upload": "Subir",
+    "userMenu": {
+      "profile": "Perfil",
+      "adminPanel": "Panel Admin",
+      "moderatorPanel": "Panel Moderador",
+      "logout": "Cerrar sesión"
+    }
+  },
   "common": {
     "loading": "Cargando...",
     "submitting": "Enviando formulario...",
