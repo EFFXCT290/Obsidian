@@ -159,6 +159,70 @@
       "english": "English"
     }
   },
+  "profile": {
+    "title": "Profile",
+    "sections": {
+      "stats": "Statistics",
+      "invitations": "Invitations",
+      "preferences": "Preferences",
+      "recent": "Recent Activity"
+    },
+    "fields": {
+      "username": "Username",
+      "email": "Email",
+      "ratio": "Ratio",
+      "points": "Points",
+      "rank": "Rank",
+      "joinDate": "Join date",
+      "announceUrl": "Announce URL",
+      "uploaded": "Uploaded",
+      "downloaded": "Downloaded"
+    },
+    "actions": {
+      "uploadAvatar": "Upload avatar",
+      "removeAvatar": "Remove",
+      "copy": "Copy",
+      "save": "Save"
+    },
+    "invitations": {
+      "available": "Available invites",
+      "create": "Create Invitation",
+      "generated": {
+        "title": "Invitation link",
+        "copied": "Link copied",
+        "copyError": "Failed to copy link"
+      },
+      "active": {
+        "cancel": "Cancel",
+        "cancelSuccess": "Invitation cancelled",
+        "cancelError": "Failed to cancel invitation"
+      },
+      "none": "No active invitations",
+      "expires": "Expires",
+      "status": "Status",
+      "used": "Used",
+      "expired": "Expired",
+      "noExpiry": "No expiry",
+      "disabledByMode": "Invitations are currently disabled by registration mode. You can keep your invites, but cannot create or use them now."
+    },
+    "preferences": {
+      "language": "Language",
+      "emailNotifications": "Allow email notifications",
+      "placeholder": "Preferences section (to be implemented)."
+    },
+    "recent": {
+      "placeholder": "Recent activity will appear here."
+    },
+    "notification": {
+      "avatarUpdated": "Avatar updated",
+      "uploadError": "Avatar upload error",
+      "avatarRemoved": "Avatar removed",
+      "removalError": "Avatar removal error",
+      "noAnnounceUrl": "No announce URL available",
+      "announceCopied": "Announce URL copied",
+      "copyError": "Copy failed"
+    }
+  },
   "auth": {
     "placeholders": {
       "username": "Enter your username",
@@ -214,6 +278,16 @@
       "registrationClosed": "Registration is currently closed",
       "registrationClosedMessage": "New registrations are not currently accepted on the platform.",
       "registrationClosedDescription": "If you have a valid invitation code or need special access, contact an administrator.",
+      "inviteOnly": {
+        "title": "Invite-only registration",
+        "message": "You need a valid invitation link to create an account."
+      },
+      "inviteBanner": {
+        "invitedBy": "Invited by",
+        "code": "Code",
+        "expires": "Expires",
+        "invalid": "Invalid or expired invitation."
+      },
       "goToLogin": "Go to Login",
       "alreadyHaveAccount": "Already have an account?",
       "signInHere": "Sign in here"
@@ -228,6 +302,7 @@
       "forgotPassword": "Forgot your password?",
       "noAccount": "Don't have an account?",
       "signUpLink": "Register",
+      "logout": "Sign out",
       "errors": {
         "loginRequired": "Email or username is required",
         "loginMinLength": "Login must be at least 3 characters",
@@ -240,8 +315,14 @@
     },
     "notification": {
       "successLogin": "Login successful!",
+      "successLogout": "Signed out",
       "successRegister": "Registration successful! Please sign in.",
       "error": "An error occurred. Please try again."
+    },
+    "unverified": {
+      "title": "Verify your email",
+      "message": "Your account is created but your email is not verified yet. Please check your inbox and click the verification link.",
+      "resend": "Resend verification email"
     }
   }
 }

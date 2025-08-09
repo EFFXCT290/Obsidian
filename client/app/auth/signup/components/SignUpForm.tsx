@@ -18,6 +18,10 @@ import { showNotification } from '@/app/utils/notifications';
 interface SignUpFormProps {
   registrationMode: string;
   language?: string;
+  // If provided (from invite link), we will hide invite UI and submit this code
+  inviteCode?: string;
+  // Hide banners/inputs related to invite mode when true (used in invite link page)
+  hideInviteUi?: boolean;
   serverTranslations?: {
     title: string;
     usernameLabel: string;
@@ -57,6 +61,8 @@ interface SignUpFormProps {
     lowercase: string;
     number: string;
     special: string;
+    inviteOnlyTitle?: string;
+    inviteOnlyMessage?: string;
   };
 }
 
@@ -65,6 +71,7 @@ interface FormData {
   email: string;
   password: string;
   confirmPassword: string;
+  inviteCode?: string;
 }
 
 interface FormErrors {
@@ -77,7 +84,9 @@ interface FormErrors {
 
 export function SignUpForm({ 
   registrationMode: _registrationMode, 
-  serverTranslations 
+  serverTranslations,
+  inviteCode: prefilledInviteCode,
+  hideInviteUi = false,
 }: SignUpFormProps) {
   const { t } = useI18n();
   const router = useRouter();
@@ -86,7 +95,8 @@ export function SignUpForm({
     username: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    inviteCode: prefilledInviteCode || ''
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [loading, setLoading] = useState(false);
@@ -214,7 +224,8 @@ export function SignUpForm({
         body: JSON.stringify({
           username: formData.username,
           email: formData.email,
-          password: formData.password
+          password: formData.password,
+          inviteCode: prefilledInviteCode || formData.inviteCode
         })
       });
 
@@ -250,6 +261,19 @@ export function SignUpForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Registration mode banners */}
+      {(_registrationMode?.toUpperCase?.() === 'CLOSED') && (
+        <div className="p-3 rounded border border-border bg-surface text-text">
+          <div className="text-sm font-semibold mb-1">{serverTranslations?.registrationClosedTitle || t('auth.register.registrationClosed')}</div>
+          <div className="text-xs text-text-secondary">{serverTranslations?.registrationClosedMessage || t('auth.register.registrationClosedMessage')}</div>
+        </div>
+      )}
+      {(_registrationMode?.toUpperCase?.() === 'INVITE') && !hideInviteUi && (
+        <div className="p-3 rounded border border-border bg-surface text-text">
+          <div className="text-sm font-semibold mb-1">{serverTranslations?.inviteOnlyTitle || 'Invite-only'}</div>
+          <div className="text-xs text-text-secondary">{serverTranslations?.inviteOnlyMessage || 'Registration requires a valid invitation code.'}</div>
+        </div>
+      )}
       {/* Username field */}
       <AuthInput
         label={getServerTranslation('usernameLabel', 'auth.register.username')}
@@ -288,6 +312,20 @@ export function SignUpForm({
         disabled={loading}
         required
       />
+
+      {/* Invite code when in INVITE mode */}
+      {(_registrationMode?.toUpperCase?.() === 'INVITE') && !prefilledInviteCode && !hideInviteUi && (
+        <AuthInput
+          label={serverTranslations?.inviteOnlyTitle || 'Invitation Code'}
+          name="inviteCode"
+          type="text"
+          value={formData.inviteCode || ''}
+          onChange={(e) => setFormData(prev => ({ ...prev, inviteCode: e.target.value }))}
+          placeholder={serverTranslations?.inviteOnlyMessage || 'Enter your invitation code'}
+          disabled={loading}
+          required
+        />
+      )}
 
       {/* Password strength bar */}
       {formData.password && (

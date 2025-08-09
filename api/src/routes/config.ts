@@ -11,6 +11,16 @@ export async function registerConfigRoutes(app: FastifyInstance) {
       return reply.send({ brandingName: 'Obsidian Tracker' });
     }
   });
+
+  app.get('/config/registration-mode', async (_request, reply) => {
+    try {
+      const cfg = await getConfig();
+      return reply.send({ registrationMode: (cfg as any).registrationMode || 'OPEN' });
+    } catch (err) {
+      app.log.error({ err }, 'Failed to load registration mode');
+      return reply.send({ registrationMode: 'OPEN' });
+    }
+  });
 }
 
 

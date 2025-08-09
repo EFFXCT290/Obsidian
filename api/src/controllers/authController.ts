@@ -40,7 +40,33 @@ export async function registerHandler(request: FastifyRequest, reply: FastifyRep
   if (config.registrationMode === 'INVITE' && !inviteCode) {
     return reply.status(400).send({ error: 'Invite code required.' });
   }
-  // TODO: Validate invite code if needed
+  // Validate invite usage policy
+  let inviteRecord: any | null = null;
+  if (config.registrationMode === 'INVITE') {
+    // Validate invite code exists, not used, not expired
+    if (!inviteCode || typeof inviteCode !== 'string') {
+      return reply.status(400).send({ error: 'Invite code required.' });
+    }
+    const now = new Date();
+    inviteRecord = await prisma.invite.findFirst({
+      where: {
+        code: inviteCode,
+        usedById: null,
+        OR: [
+          { expiresAt: null },
+          { expiresAt: { gt: now } }
+        ]
+      }
+    });
+    if (!inviteRecord) {
+      return reply.status(400).send({ error: 'Invalid or expired invite code.' });
+    }
+  } else {
+    // OPEN or CLOSED modes do not accept invites usage
+    if (inviteCode) {
+      return reply.status(403).send({ error: 'Invitations are disabled at this time.' });
+    }
+  }
 
   // Check if user/email already exists
   const existing = await prisma.user.findFirst({
@@ -72,6 +98,15 @@ export async function registerHandler(request: FastifyRequest, reply: FastifyRep
       passkey,
     }
   });
+
+  // If INVITE mode, consume the invite by deleting it (destroy after use)
+  if (config.registrationMode === 'INVITE' && inviteRecord) {
+    try {
+      await prisma.invite.delete({ where: { id: inviteRecord.id } });
+    } catch {
+      // ignore errors
+    }
+  }
 
   // Send verification email for non-first users only
   if (!first) {
@@ -390,7 +425,8 @@ export async function uploadAvatarHandler(request: FastifyRequest, reply: Fastif
             // Ignore deletion errors
           }
         }
-        const avatarUrl = `/uploads/${uploaded.storageKey}`;
+        // Para LOCAL servimos por /uploads/, para DB/S3 usamos la ruta genérica /files/:id
+        const avatarUrl = config.storageType === 'LOCAL' ? `/uploads/${uploaded.storageKey}` : `/files/${uploaded.id}`;
         await prisma.user.update({
           where: { id: user.id },
           data: { avatarFileId: uploaded.id, avatarUrl }
@@ -423,6 +459,35 @@ export async function uploadAvatarHandler(request: FastifyRequest, reply: Fastif
     });
     return reply.send({ avatarUrl: url });
   }
+}
+
+export async function deleteAvatarHandler(request: FastifyRequest, reply: FastifyReply) {
+  const user = (request as any).user;
+  if (!user) return reply.status(401).send({ error: 'Unauthorized' });
+
+  const config = normalizeS3Config(await getConfig());
+  const existing = await prisma.user.findUnique({ where: { id: user.id }, select: { avatarFileId: true, avatarUrl: true } });
+
+  if (!existing) return reply.status(404).send({ error: 'User not found' });
+
+  // If there is a stored file, delete it from storage and DB
+  if (existing.avatarFileId) {
+    try {
+      const file = await prisma.uploadedFile.findUnique({ where: { id: existing.avatarFileId } });
+      if (file) {
+        await deleteFile({ file, config });
+      }
+    } catch {
+      // Ignore deletion errors to avoid blocking user action
+    }
+  }
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { avatarFileId: null, avatarUrl: null }
+  });
+
+  return reply.send({ success: true });
 }
 
 export async function disableSelfHandler(request: FastifyRequest, reply: FastifyReply) {

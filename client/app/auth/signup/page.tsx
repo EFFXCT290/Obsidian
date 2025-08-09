@@ -9,6 +9,7 @@ import { headers } from 'next/headers';
 import { serverT, getPreferredLanguage } from '@/app/lib/server-i18n';
 import AuthCard from '../shared/AuthCard';
 import { SignUpForm } from './components/SignUpForm';
+import { apiClient } from '@/lib/api';
 import { FormFieldSkeleton, ButtonSkeleton, TextSkeleton } from '../../components/ui/Skeleton';
 import { LanguageSync } from '../../components/LanguageSync';
 import { LanguageSelector } from '../../components/LanguageSelector';
@@ -50,7 +51,7 @@ export default async function RegisterPage() {
   // }
   
   // Direct database access - no HTTP overhead
-  const registrationMode = 'open'; // await getRegistrationMode();
+  const { registrationMode } = await apiClient.getRegistrationMode();
 
   // Server-side translations with debug logging
   const title = serverT('auth.register.title', language);
@@ -76,6 +77,8 @@ export default async function RegisterPage() {
   const invalidCredentialsError = serverT('auth.register.errors.invalidCredentials', language);
   const successRegister = serverT('auth.notification.successRegister', language);
   const errorNotification = serverT('auth.notification.error', language);
+  const inviteOnlyTitle = serverT('auth.register.inviteOnly.title', language);
+  const inviteOnlyMessage = serverT('auth.register.inviteOnly.message', language);
   
   // Registration closed messages
   const registrationClosedTitle = serverT('auth.register.registrationClosed', language);
@@ -115,52 +118,72 @@ export default async function RegisterPage() {
     <>
       <LanguageSync serverLanguage={language} />
       <AuthCard title={title}>
-        <Suspense fallback={<SignUpLoading language={language} />}>
-          <SignUpForm 
-            registrationMode={registrationMode}
-            language={language}
-            serverTranslations={{
-              title,
-              usernameLabel,
-              emailLabel,
-              passwordLabel,
-              confirmPasswordLabel,
-              submitButton,
-              hasAccount,
-              loginLink,
-              usernameError,
-              emailError,
-              passwordRequirementsError,
-              passwordMatchError,
-              invalidCredentialsError,
-              successRegister,
-              errorNotification,
-              // Placeholders & loading
-              usernamePlaceholder,
-              emailPlaceholder,
-              passwordPlaceholder,
-              confirmPasswordPlaceholder,
-              registerLoading,
-              registrationClosedTitle,
-              registrationClosedMessage,
-              registrationClosedDescription,
-              goToLogin,
-              alreadyHaveAccount,
-              signInHere,
-              // Password strength translations
-              securityRecommendations,
-              weak,
-              fair,
-              good,
-              strong,
-              minLength,
-              uppercase,
-              lowercase,
-              number,
-              special
-            }}
-          />
-        </Suspense>
+        {registrationMode === 'OPEN' && (
+          <Suspense fallback={<SignUpLoading language={language} />}>
+            <SignUpForm 
+              registrationMode={registrationMode}
+              language={language}
+              serverTranslations={{
+                title,
+                usernameLabel,
+                emailLabel,
+                passwordLabel,
+                confirmPasswordLabel,
+                submitButton,
+                hasAccount,
+                loginLink,
+                usernameError,
+                emailError,
+                passwordRequirementsError,
+                passwordMatchError,
+                invalidCredentialsError,
+                successRegister,
+                errorNotification,
+                inviteOnlyTitle,
+                inviteOnlyMessage,
+                // Placeholders & loading
+                usernamePlaceholder,
+                emailPlaceholder,
+                passwordPlaceholder,
+                confirmPasswordPlaceholder,
+                registerLoading,
+                registrationClosedTitle,
+                registrationClosedMessage,
+                registrationClosedDescription,
+                goToLogin,
+                alreadyHaveAccount,
+                signInHere,
+                // Password strength translations
+                securityRecommendations,
+                weak,
+                fair,
+                good,
+                strong,
+                minLength,
+                uppercase,
+                lowercase,
+                number,
+                special
+              }}
+            />
+          </Suspense>
+        )}
+        {registrationMode === 'CLOSED' && (
+          <div className="space-y-4">
+            <div className="p-4 rounded border border-error bg-error/10">
+              <div className="font-semibold mb-1 text-error">{registrationClosedTitle}</div>
+              <div className="text-sm text-text-secondary">{registrationClosedMessage}</div>
+            </div>
+          </div>
+        )}
+        {registrationMode === 'INVITE' && (
+          <div className="space-y-4">
+            <div className="p-4 rounded border border-primary bg-surface">
+              <div className="font-semibold mb-1 text-text">{inviteOnlyTitle}</div>
+              <div className="text-sm text-text-secondary">{inviteOnlyMessage}</div>
+            </div>
+          </div>
+        )}
       </AuthCard>
       
       {/* Language Selector - Bottom Left Corner */}

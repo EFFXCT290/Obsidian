@@ -159,6 +159,70 @@
       "english": "Inglés"
     }
   },
+  "profile": {
+    "title": "Perfil",
+    "sections": {
+      "stats": "Estadísticas",
+      "invitations": "Invitaciones",
+      "preferences": "Preferencias",
+      "recent": "Actividad reciente"
+    },
+    "fields": {
+      "username": "Usuario",
+      "email": "Correo",
+      "ratio": "Ratio",
+      "points": "Puntos",
+      "rank": "Rango",
+      "joinDate": "Fecha de registro",
+      "announceUrl": "URL de announce",
+      "uploaded": "Subido",
+      "downloaded": "Descargado"
+    },
+    "actions": {
+      "uploadAvatar": "Subir avatar",
+      "removeAvatar": "Quitar",
+      "copy": "Copiar",
+      "save": "Guardar"
+    },
+    "invitations": {
+      "available": "Invitaciones disponibles",
+      "create": "Crear invitación",
+      "generated": {
+        "title": "Enlace de invitación",
+        "copied": "Enlace copiado",
+        "copyError": "No se pudo copiar el enlace"
+      },
+      "active": {
+        "cancel": "Cancelar",
+        "cancelSuccess": "Invitación cancelada",
+        "cancelError": "No se pudo cancelar la invitación"
+      },
+      "none": "No hay invitaciones activas",
+      "expires": "Expira",
+      "status": "Estado",
+      "used": "Usada",
+      "expired": "Caducada",
+      "noExpiry": "Sin caducidad",
+      "disabledByMode": "Las invitaciones están deshabilitadas por el modo de registro. Puedes conservar tus invitaciones, pero no crear ni usarlas ahora."
+    },
+    "preferences": {
+      "language": "Idioma",
+      "emailNotifications": "Permitir notificaciones por email",
+      "placeholder": "Sección de preferencias (pendiente)"
+    },
+    "recent": {
+      "placeholder": "La actividad reciente aparecerá aquí."
+    },
+    "notification": {
+      "avatarUpdated": "Avatar actualizado",
+      "uploadError": "Error al subir el avatar",
+      "avatarRemoved": "Avatar eliminado",
+      "removalError": "Error al eliminar el avatar",
+      "noAnnounceUrl": "No hay URL de announce disponible",
+      "announceCopied": "URL de announce copiada",
+      "copyError": "No se pudo copiar"
+    }
+  },
   "auth": {
     "placeholders": {
       "username": "Ingresa tu nombre de usuario",
@@ -214,6 +278,16 @@
       "registrationClosed": "El registro está cerrado actualmente",
       "registrationClosedMessage": "En este momento no se aceptan nuevos registros en la plataforma.",
       "registrationClosedDescription": "Si tienes un código de invitación válido o necesitas acceso especial, contacta a un administrador.",
+      "inviteOnly": {
+        "title": "Registro por invitación",
+        "message": "Necesitas un enlace de invitación válido para crear una cuenta."
+      },
+      "inviteBanner": {
+        "invitedBy": "Invitado por",
+        "code": "Código",
+        "expires": "Expira",
+        "invalid": "Invitación inválida o caducada."
+      },
       "goToLogin": "Ir al Login",
       "alreadyHaveAccount": "¿Ya tienes una cuenta?",
       "signInHere": "Inicia sesión aquí"
@@ -228,6 +302,7 @@
       "forgotPassword": "¿Olvidaste tu contraseña?",
       "noAccount": "¿No tienes una cuenta?",
       "signUpLink": "Registrarse",
+      "logout": "Cerrar sesión",
       "errors": {
         "loginRequired": "El correo electrónico o usuario es requerido",
         "loginMinLength": "El login debe tener al menos 3 caracteres",
@@ -240,8 +315,14 @@
     },
     "notification": {
       "successLogin": "¡Inicio de sesión exitoso!",
+      "successLogout": "Has cerrado sesión",
       "successRegister": "¡Registro exitoso! Por favor inicia sesión.",
       "error": "Ocurrió un error. Por favor intenta de nuevo."
+    },
+    "unverified": {
+      "title": "Verifica tu correo",
+      "message": "Tu cuenta ha sido creada pero tu correo aún no está verificado. Revisa tu bandeja de entrada y haz clic en el enlace de verificación.",
+      "resend": "Reenviar correo de verificación"
     }
   }
 }

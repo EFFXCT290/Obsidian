@@ -86,6 +86,27 @@ class ApiClient {
   async getBranding() {
     return this.get<{ brandingName: string }>('/config/branding');
   }
+
+  /**
+   * Get registration mode
+   */
+  async getRegistrationMode() {
+    return this.get<{ registrationMode: 'OPEN' | 'INVITE' | 'CLOSED' }>('/config/registration-mode');
+  }
+
+  /**
+   * Get invite details by code (public)
+   */
+  async getInviteByCode(code: string) {
+    return this.get<{
+      valid: boolean;
+      code: string;
+      createdAt: string;
+      expiresAt?: string | null;
+      createdBy?: { id: string; username: string } | null;
+      usedById?: string | null;
+    }>(`/invite/${encodeURIComponent(code)}`);
+  }
 }
 
 // Create and export API client instance

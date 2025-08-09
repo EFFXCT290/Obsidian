@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     
     // Validate required fields
-    const { username, email, password } = body;
+    const { username, email, password, inviteCode } = body as { username?: string; email?: string; password?: string; inviteCode?: string };
     
     if (!username || !email || !password) {
       return NextResponse.json(
@@ -30,7 +30,8 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         username,
         email,
-        password
+        password,
+        ...(inviteCode ? { inviteCode } : {})
       })
     });
 

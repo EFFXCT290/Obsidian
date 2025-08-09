@@ -54,6 +54,10 @@ model User {
   commentVotes   CommentVote[]
   downloadTokens DownloadToken[]
 
+  // Preferences
+  preferredLanguage String? // 'es' | 'en'
+  allowEmailNotifications Boolean @default(true)
+
   @@index([rssToken])
 }
 

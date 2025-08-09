@@ -8,8 +8,10 @@ import { listWikiPagesHandler, getWikiPageHandler } from '../controllers/user/wi
 import { listBookmarksHandler, addBookmarkHandler, removeBookmarkHandler, updateBookmarkNoteHandler } from '../controllers/user/bookmarkController.js';
 import { getRssTokenHandler, regenerateRssTokenHandler } from '../controllers/user/rssController.js';
 import { getActiveTorrentsHandler } from '../controllers/user/userActiveTorrentController.js';
-import { uploadAvatarHandler, disableSelfHandler } from '../controllers/authController.js';
+import { uploadAvatarHandler, deleteAvatarHandler, disableSelfHandler } from '../controllers/authController.js';
 import { getCommentThreadHandler } from '../controllers/commentController.js';
+import { listUserInvitesHandler, createInviteHandler, cancelInviteHandler, getInviteByCodePublicHandler } from '../controllers/user/inviteController.js';
+import { getPreferencesHandler, updatePreferencesHandler } from '../controllers/user/userPreferenceController.js';
 
 export async function registerUserRoutes(app: FastifyInstance) {
   app.get('/notifications', { preHandler: requireAuth }, getUserNotificationsHandler); //DONE
@@ -37,5 +39,12 @@ export async function registerUserRoutes(app: FastifyInstance) {
   app.post('/user/rss-token', { preHandler: requireAuth }, regenerateRssTokenHandler); //DONE
   app.get('/user/active-torrents', { preHandler: requireAuth }, getActiveTorrentsHandler);
   app.post('/user/avatar', { preHandler: requireAuth }, uploadAvatarHandler);
+  app.delete('/user/avatar', { preHandler: requireAuth }, deleteAvatarHandler);
   app.post('/user/disable', { preHandler: requireAuth }, disableSelfHandler);
+  app.get('/user/invites', { preHandler: requireAuth }, listUserInvitesHandler);
+  app.post('/user/invites', { preHandler: requireAuth }, createInviteHandler);
+  app.delete('/user/invites', { preHandler: requireAuth }, cancelInviteHandler);
+  app.get('/invite/:code', getInviteByCodePublicHandler);
+  app.get('/user/preferences', { preHandler: requireAuth }, getPreferencesHandler);
+  app.put('/user/preferences', { preHandler: requireAuth }, updatePreferencesHandler);
 } 

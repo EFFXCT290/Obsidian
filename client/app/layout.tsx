@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import ToasterProvider from './components/ToasterProvider';
+import SWRProvider from './components/SWRProvider';
 
 /**
  * Font configuration for the application
@@ -58,7 +60,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-text`}
         suppressHydrationWarning
       >
-        {children}
+        <ToasterProvider />
+        <SWRProvider>
+          {children}
+        </SWRProvider>
       </body>
     </html>
   );

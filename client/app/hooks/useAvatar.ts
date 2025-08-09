@@ -10,6 +10,7 @@ import useSWR from 'swr';
 interface AvatarResponse {
   image: string; // base64 string or empty if not set
   userId: string;
+  contentType?: string;
 }
 
 interface UseAvatarReturn {
@@ -20,7 +21,9 @@ interface UseAvatarReturn {
 }
 export function useAvatar(userId?: string): UseAvatarReturn {
   const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
-  const key = userId ? ['/api/user/avatar/' + userId, token] : null;
+  // Incluimos un timestamp local para forzar revalidación cuando se actualice el avatar
+  const updatedAt = typeof window !== 'undefined' ? localStorage.getItem('avatarUpdatedAt') : null;
+  const key = userId ? ['/api/user/avatar/' + userId, token, updatedAt] : null;
   const { data, isLoading, error, mutate } = useSWR<AvatarResponse>(
     key,
     async ([url, _token]) => {
@@ -41,7 +44,7 @@ export function useAvatar(userId?: string): UseAvatarReturn {
     }
   );
 
-  const avatarUrl = data?.image ? `data:image/jpeg;base64,${data.image}` : null;
+  const avatarUrl = data?.image ? `data:${data.contentType || 'image/jpeg'};base64,${data.image}` : null;
 
   return {
     avatarUrl,
