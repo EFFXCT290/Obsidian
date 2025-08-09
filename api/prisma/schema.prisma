@@ -174,6 +174,8 @@ model Config {
   s3Region         String?
   s3AccessKeyId    String?
   s3SecretAccessKey String?
+  // Branding
+  brandingName     String?
 }
 
 enum RegMode {

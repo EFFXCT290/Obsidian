@@ -4,6 +4,7 @@ import { serverT, getPreferredLanguage } from '@/app/lib/server-i18n';
 import DashboardHeader from './DashboardHeader';
 import DashboardSidebar from './DashboardSidebar';
 import { LanguageSelector } from '@/app/components/LanguageSelector';
+import { apiClient } from '@/lib/api';
 
 interface DashboardWrapperProps {
   children: ReactNode;
@@ -23,12 +24,19 @@ export default async function DashboardWrapper({ children }: DashboardWrapperPro
     { href: '/bookmarks', label: serverT('sidebar.nav.bookmarks', language), icon: 'Bookmark' },
   ];
 
+  // Load branding from API
+  let brandingName = 'Obsidian Tracker';
+  try {
+    const branding = await apiClient.getBranding();
+    brandingName = branding.brandingName || brandingName;
+  } catch {}
+
   return (
     <div className="min-h-screen bg-background">
       <Suspense fallback={
         <div className="h-16 bg-surface border-b border-border fixed top-0 left-0 right-0 z-30" />
       }>
-        <DashboardHeader language={language} />
+        <DashboardHeader language={language} brandingName={brandingName} />
       </Suspense>
 
       <Suspense fallback={

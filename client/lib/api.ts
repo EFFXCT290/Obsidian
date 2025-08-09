@@ -79,6 +79,13 @@ class ApiClient {
       totalUploadFormatted: string;
     }>('/stats');
   }
+
+  /**
+   * Get branding configuration (branding name)
+   */
+  async getBranding() {
+    return this.get<{ brandingName: string }>('/config/branding');
+  }
 }
 
 // Create and export API client instance

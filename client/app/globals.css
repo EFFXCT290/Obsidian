@@ -99,6 +99,17 @@
   }
 }
 
+/* Hide native number input spinners for our floating inputs */
+input.formfield-input[type=number]::-webkit-outer-spin-button,
+input.formfield-input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input.formfield-input[type=number] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
 @theme {
   --color-primary: var(--primary);
   --color-primary-dark: var(--primary-dark);

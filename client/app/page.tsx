@@ -69,6 +69,12 @@ export default async function Home() {
   // Get headers for language detection
   const headersList = await headers();
   const language = await getPreferredLanguage(headersList);
+  // Load branding
+  let brandingName = 'Obsidian Tracker';
+  try {
+    const branding = await apiClient.getBranding();
+    brandingName = branding.brandingName || brandingName;
+  } catch {}
   
   // Server-side translations
   // const title = serverT('home.title', language);
@@ -112,8 +118,20 @@ export default async function Home() {
         <main className="flex-1 flex flex-col items-center justify-center p-8">
         <div className="text-center mb-8">
           <h1 className="text-6xl tracking-tighter mb-4">
-            <span className="text-text">Obsidian</span>
-            <span className="text-green">Tracker</span>
+            {(() => {
+              const parts = brandingName.trim().split(/\s+/);
+              if (parts.length >= 2) {
+                const first = parts.slice(0, -1).join(' ');
+                const last = parts[parts.length - 1];
+                return (
+                  <>
+                    <span className="text-text">{first} </span>
+                    <span className="text-green">{last}</span>
+                  </>
+                );
+              }
+              return <span className="text-text">{brandingName}</span>;
+            })()}
           </h1>
           <p className="text-text-secondary text-lg">
             {subtitle}
