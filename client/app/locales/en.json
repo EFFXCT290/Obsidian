@@ -41,10 +41,13 @@
       "nav": {
         "dashboard": "Overview",
         "users": "Users",
+        "torrentApprovals": "Torrent Approvals",
+        "torrentManagement": "Torrent Management",
         "categories": "Categories",
         "announcements": "Announcements",
         "wiki": "Wiki",
         "peerban": "Peer Bans",
+        "rssManagement": "RSS Management",
         "settings": "Settings",
         "configuration": "Configuration",
         "requests": "Requests"
@@ -148,6 +151,48 @@
           "BANNED": "Banned",
           "DISABLED": "Disabled"
         }
+      },
+      "torrentApprovals": {
+        "title": "Torrent Approvals",
+        "description": "Review and approve pending torrent uploads.",
+        "comingSoon": "Coming Soon",
+        "comingSoonDescription": "Torrent approval system will be available soon."
+      },
+      "torrentManagement": {
+        "title": "Torrent Management",
+        "description": "Manage existing torrents, categories, and metadata.",
+        "comingSoon": "Coming Soon",
+        "comingSoonDescription": "Torrent management system will be available soon."
+      },
+      "rssManagement": {
+        "title": "RSS Management",
+        "description": "Configure and manage RSS feeds and settings.",
+        "comingSoon": "Coming Soon",
+        "comingSoonDescription": "RSS management system will be available soon."
+      },
+      "announcements": {
+        "title": "Announcements",
+        "description": "Manage site announcements and notifications.",
+        "comingSoon": "Coming Soon",
+        "comingSoonDescription": "Announcement management system will be available soon."
+      },
+      "wiki": {
+        "title": "Wiki Management",
+        "description": "Manage wiki pages and documentation.",
+        "comingSoon": "Coming Soon",
+        "comingSoonDescription": "Wiki management system will be available soon."
+      },
+      "peerban": {
+        "title": "Peer Bans",
+        "description": "Manage peer bans and IP restrictions.",
+        "comingSoon": "Coming Soon",
+        "comingSoonDescription": "Peer ban management system will be available soon."
+      },
+      "requests": {
+        "title": "Request Management",
+        "description": "Manage user requests and fill status.",
+        "comingSoon": "Coming Soon",
+        "comingSoonDescription": "Request management system will be available soon."
       },
       "settings": {
       "title": "Configuration",

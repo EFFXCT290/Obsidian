@@ -11,8 +11,11 @@ import { News } from '@styled-icons/boxicons-regular/News';
 import { BookOpen } from '@styled-icons/boxicons-regular/BookOpen';
 import { Shield } from '@styled-icons/boxicons-regular/Shield';
 import { HelpCircle } from '@styled-icons/boxicons-regular/HelpCircle';
+import { CheckShield } from '@styled-icons/boxicons-regular/CheckShield';
+import { Folder } from '@styled-icons/boxicons-regular/Folder';
+import { Rss } from '@styled-icons/boxicons-regular/Rss';
 
-const iconMap = { Home, Group, Cog, ListUl, News, BookOpen, Shield, HelpCircle } as const;
+const iconMap = { Home, Group, Cog, ListUl, News, BookOpen, Shield, HelpCircle, CheckShield, Folder, Rss } as const;
 
 export interface AdminNavItem { href: string; label: string; icon: keyof typeof iconMap }
 

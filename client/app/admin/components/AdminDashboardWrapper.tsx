@@ -13,10 +13,13 @@ export default async function AdminDashboardWrapper({ children }: { children: Re
   const items: AdminNavItem[] = [
     { href: '/admin/dashboard', label: serverT('admin.nav.dashboard', language), icon: 'Home' },
     { href: '/admin/users', label: serverT('admin.nav.users', language), icon: 'Group' },
+    { href: '/admin/torrent-approvals', label: serverT('admin.nav.torrentApprovals', language), icon: 'CheckShield' },
+    { href: '/admin/torrent-management', label: serverT('admin.nav.torrentManagement', language), icon: 'Folder' },
     { href: '/admin/categories', label: serverT('admin.nav.categories', language), icon: 'ListUl' },
     { href: '/admin/announcements', label: serverT('admin.nav.announcements', language), icon: 'News' },
     { href: '/admin/wiki', label: serverT('admin.nav.wiki', language), icon: 'BookOpen' },
     { href: '/admin/peerban', label: serverT('admin.nav.peerban', language), icon: 'Shield' },
+    { href: '/admin/rss-management', label: serverT('admin.nav.rssManagement', language), icon: 'Rss' },
     { href: '/admin/settings', label: serverT('admin.nav.configuration', language), icon: 'Cog' },
     { href: '/admin/requests', label: serverT('admin.nav.requests', language), icon: 'HelpCircle' },
   ];

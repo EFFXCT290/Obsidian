@@ -41,10 +41,13 @@
       "nav": {
         "dashboard": "Resumen",
         "users": "Usuarios",
+        "torrentApprovals": "Aprobaciones de Torrents",
+        "torrentManagement": "Gestión de Torrents",
         "categories": "Categorías",
         "announcements": "Anuncios",
         "wiki": "Wiki",
         "peerban": "Bloqueos",
+        "rssManagement": "Gestión de RSS",
         "settings": "Ajustes",
         "configuration": "Configuración",
         "requests": "Peticiones"
@@ -148,6 +151,48 @@
           "BANNED": "Baneado",
           "DISABLED": "Deshabilitado"
         }
+      },
+      "torrentApprovals": {
+        "title": "Aprobaciones de Torrents",
+        "description": "Revisar y aprobar torrents pendientes de subida.",
+        "comingSoon": "Próximamente",
+        "comingSoonDescription": "El sistema de aprobación de torrents estará disponible pronto."
+      },
+      "torrentManagement": {
+        "title": "Gestión de Torrents",
+        "description": "Administrar torrents existentes, categorías y metadatos.",
+        "comingSoon": "Próximamente",
+        "comingSoonDescription": "El sistema de gestión de torrents estará disponible pronto."
+      },
+      "rssManagement": {
+        "title": "Gestión de RSS",
+        "description": "Configurar y administrar feeds RSS y configuraciones.",
+        "comingSoon": "Próximamente",
+        "comingSoonDescription": "El sistema de gestión de RSS estará disponible pronto."
+      },
+      "announcements": {
+        "title": "Anuncios",
+        "description": "Administrar anuncios del sitio y notificaciones.",
+        "comingSoon": "Próximamente",
+        "comingSoonDescription": "El sistema de gestión de anuncios estará disponible pronto."
+      },
+      "wiki": {
+        "title": "Gestión de Wiki",
+        "description": "Administrar páginas de wiki y documentación.",
+        "comingSoon": "Próximamente",
+        "comingSoonDescription": "El sistema de gestión de wiki estará disponible pronto."
+      },
+      "peerban": {
+        "title": "Bloqueos de Peers",
+        "description": "Administrar bloqueos de peers y restricciones de IP.",
+        "comingSoon": "Próximamente",
+        "comingSoonDescription": "El sistema de gestión de bloqueos de peers estará disponible pronto."
+      },
+      "requests": {
+        "title": "Gestión de Peticiones",
+        "description": "Administrar peticiones de usuarios y estado de llenado.",
+        "comingSoon": "Próximamente",
+        "comingSoonDescription": "El sistema de gestión de peticiones estará disponible pronto."
       },
       "settings": {
       "title": "Configuración",
