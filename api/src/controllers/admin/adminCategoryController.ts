@@ -62,4 +62,31 @@ export async function deleteCategoryHandler(request: FastifyRequest, reply: Fast
   const { id } = request.params as any;
   await prisma.category.delete({ where: { id } });
   return reply.send({ success: true });
+}
+
+export async function reorderCategoriesHandler(request: FastifyRequest, reply: FastifyReply) {
+  const user = (request as any).user;
+  if (!isAdminOrOwner(user)) return reply.status(403).send({ error: 'Forbidden' });
+  
+  const { categories } = request.body as any;
+  if (!Array.isArray(categories)) {
+    return reply.status(400).send({ error: 'Categories array is required' });
+  }
+
+  try {
+    // Update each category's order in a transaction
+    await prisma.$transaction(
+      categories.map((category: any, index: number) =>
+        prisma.category.update({
+          where: { id: category.id },
+          data: { order: index }
+        })
+      )
+    );
+
+    return reply.send({ success: true });
+  } catch (error) {
+    console.error('Error reordering categories:', error);
+    return reply.status(500).send({ error: 'Failed to reorder categories' });
+  }
 } 

@@ -59,7 +59,6 @@
         "editCategory": "Edit Category",
         "list": "Categories List",
         "name": "Name",
-        "description": "Description",
         "icon": "Icon",
         "order": "Order",
         "parentCategory": "Parent Category",
@@ -80,7 +79,10 @@
         "errorLoading": "Error loading categories",
         "errorCreating": "Error creating category",
         "errorUpdating": "Error updating category",
-        "errorDeleting": "Error deleting category"
+        "errorDeleting": "Error deleting category",
+        "dragToReorder": "Drag to reorder",
+        "reorderSuccess": "Order updated successfully",
+        "reorderError": "Error updating order"
       },
     "settings": {
       "title": "Configuration",

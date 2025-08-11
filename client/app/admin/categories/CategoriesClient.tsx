@@ -2,8 +2,27 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useI18n } from '@/app/hooks/useI18n';
-import { Plus, Edit, Trash, Folder, FolderOpen } from '@styled-icons/boxicons-regular';
+import { Plus, Edit, Trash, Folder, FolderOpen, Move } from '@styled-icons/boxicons-regular';
 import toast from 'react-hot-toast';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import {
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 // Types for category management
 interface Category {
@@ -59,7 +78,111 @@ interface CategoriesClientProps {
     errorCreating: string;
     errorUpdating: string;
     errorDeleting: string;
+    dragToReorder: string;
+    reorderSuccess: string;
+    reorderError: string;
   };
+}
+
+// Sortable category item component
+function SortableCategoryItem({ 
+  category, 
+  level = 0, 
+  onEdit, 
+  onDelete, 
+  translations 
+}: { 
+  category: Category; 
+  level?: number; 
+  onEdit: (category: Category) => void; 
+  onDelete: (categoryId: string) => void;
+  translations: CategoriesClientProps['translations'];
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: category.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} className="space-y-2">
+      <div className={`flex items-center justify-between p-4 bg-surface rounded-lg border border-border ${level > 0 ? 'ml-6' : ''}`}>
+        <div className="flex items-center space-x-3">
+          <div
+            {...attributes}
+            {...listeners}
+            className="cursor-grab active:cursor-grabbing p-1 hover:bg-surface-light rounded"
+            title={translations.dragToReorder}
+          >
+            <Move size={16} className="text-text-secondary" />
+          </div>
+          {category.children && category.children.length > 0 ? (
+            <FolderOpen size={20} className="text-primary" />
+          ) : (
+            <Folder size={20} className="text-text-secondary" />
+          )}
+          <div>
+            <h3 className="font-medium text-text">{category.name}</h3>
+            {category.description && (
+              <p className="text-sm text-text-secondary">{category.description}</p>
+            )}
+            <div className="flex items-center space-x-4 mt-1 text-xs text-text-secondary">
+              {category._count && (
+                <>
+                  <span>{category._count.torrents} {translations.torrents}</span>
+                  <span>{category._count.requests} {translations.requests}</span>
+                </>
+              )}
+              {category.order !== undefined && (
+                <span>{translations.order}: {category.order}</span>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={() => onEdit(category)}
+            className="p-2 text-text-secondary hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
+            title={translations.edit}
+          >
+            <Edit size={16} />
+          </button>
+          <button
+            onClick={() => onDelete(category.id)}
+            className="p-2 text-text-secondary hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+            title={translations.delete}
+          >
+            <Trash size={16} />
+          </button>
+        </div>
+      </div>
+      {category.children && category.children.length > 0 && (
+        <div className="ml-4">
+          <SortableContext items={category.children.map(c => c.id)} strategy={verticalListSortingStrategy}>
+            {category.children.map((child) => (
+              <SortableCategoryItem
+                key={child.id}
+                category={child}
+                level={level + 1}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                translations={translations}
+              />
+            ))}
+          </SortableContext>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default function CategoriesClient({ translations }: CategoriesClientProps) {
@@ -75,6 +198,14 @@ export default function CategoriesClient({ translations }: CategoriesClientProps
     order: 0,
     parentId: ''
   });
+
+  // DnD sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   const loadCategories = useCallback(async () => {
     try {
@@ -175,6 +306,45 @@ export default function CategoriesClient({ translations }: CategoriesClientProps
     }
   };
 
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (active.id !== over?.id) {
+      const oldIndex = categories.findIndex(cat => cat.id === active.id);
+      const newIndex = categories.findIndex(cat => cat.id === over?.id);
+
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const newCategories = arrayMove(categories, oldIndex, newIndex);
+        setCategories(newCategories);
+
+        try {
+          const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
+          const headers: HeadersInit = { 'Content-Type': 'application/json' };
+          if (token) headers['Authorization'] = `Bearer ${token}`;
+          
+          const res = await fetch('/api/admin/category', {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({
+              categories: newCategories.map((cat, index) => ({
+                id: cat.id,
+                order: index
+              }))
+            })
+          });
+
+          if (!res.ok) throw new Error('Failed to reorder categories');
+          toast.success(translations.reorderSuccess);
+        } catch (error) {
+          console.error('Error reordering categories:', error);
+          toast.error(translations.reorderError);
+          // Reload categories to restore original order
+          loadCategories();
+        }
+      }
+    }
+  };
+
   const resetForm = () => {
     setFormData({
       name: '',
@@ -187,57 +357,16 @@ export default function CategoriesClient({ translations }: CategoriesClientProps
     setShowForm(false);
   };
 
-  const renderCategoryTree = (categoryList: Category[], level = 0) => {
+    const renderCategoryTree = (categoryList: Category[], level = 0) => {
     return categoryList.map((category) => (
-      <div key={category.id} className="space-y-2">
-        <div className={`flex items-center justify-between p-4 bg-surface rounded-lg border border-border ${level > 0 ? 'ml-6' : ''}`}>
-          <div className="flex items-center space-x-3">
-            {category.children && category.children.length > 0 ? (
-              <FolderOpen size={20} className="text-primary" />
-            ) : (
-              <Folder size={20} className="text-text-secondary" />
-            )}
-            <div>
-              <h3 className="font-medium text-text">{category.name}</h3>
-              {category.description && (
-                <p className="text-sm text-text-secondary">{category.description}</p>
-              )}
-              <div className="flex items-center space-x-4 mt-1 text-xs text-text-secondary">
-                {category._count && (
-                  <>
-                    <span>{category._count.torrents} {translations.torrents}</span>
-                    <span>{category._count.requests} {translations.requests}</span>
-                  </>
-                )}
-                {category.order !== undefined && (
-                  <span>{translations.order}: {category.order}</span>
-                )}
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={() => handleEdit(category)}
-              className="p-2 text-text-secondary hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
-                            title={translations.edit}
-            >
-              <Edit size={16} />
-            </button>
-            <button
-              onClick={() => handleDelete(category.id)}
-              className="p-2 text-text-secondary hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
-              title={translations.delete}
-              >
-                <Trash size={16} />
-              </button>
-          </div>
-        </div>
-        {category.children && category.children.length > 0 && (
-          <div className="ml-4">
-            {renderCategoryTree(category.children, level + 1)}
-          </div>
-        )}
-      </div>
+      <SortableCategoryItem
+        key={category.id}
+        category={category}
+        level={level}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        translations={translations}
+      />
     ));
   };
 
@@ -372,9 +501,17 @@ export default function CategoriesClient({ translations }: CategoriesClientProps
             {translations.noCategories}
           </div>
         ) : (
-          <div className="space-y-2">
-            {renderCategoryTree(categories)}
-          </div>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext items={categories.map(c => c.id)} strategy={verticalListSortingStrategy}>
+              <div className="space-y-2">
+                {renderCategoryTree(categories)}
+              </div>
+            </SortableContext>
+          </DndContext>
         )}
       </div>
     </div>

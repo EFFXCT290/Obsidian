@@ -6,7 +6,7 @@ import {
   adminSetRssEnabledHandler, adminResetRssTokenHandler, listAllUsersHandler, updateUserEmailHandler, updateUserHandler
 } from '../controllers/admin/adminUserController.js';
 import {
-  listCategoriesHandler, createCategoryHandler, updateCategoryHandler, deleteCategoryHandler
+  listCategoriesHandler, createCategoryHandler, updateCategoryHandler, deleteCategoryHandler, reorderCategoriesHandler
 } from '../controllers/admin/adminCategoryController.js';
 import {
   createAnnouncementHandler, updateAnnouncementHandler, deleteAnnouncementHandler, pinAnnouncementHandler, unpinAnnouncementHandler, showAnnouncementHandler, hideAnnouncementHandler, listAllAnnouncementsHandler
@@ -43,6 +43,7 @@ export async function registerAdminRoutes(app: FastifyInstance) {
   app.post('/admin/category', { preHandler: requireAuth }, createCategoryHandler); //DONE
   app.put('/admin/category/:id', { preHandler: requireAuth }, updateCategoryHandler); //DONE
   app.delete('/admin/category/:id', { preHandler: requireAuth }, deleteCategoryHandler); //DONE
+  app.post('/admin/category/reorder', { preHandler: requireAuth }, reorderCategoriesHandler); //DONE
   app.post('/admin/request/:id/close', { preHandler: requireAuth }, closeRequestHandler); //DONE
   app.post('/admin/request/:id/reject', { preHandler: requireAuth }, rejectRequestHandler); //DONE
   app.post('/admin/announcement', { preHandler: requireAuth }, createAnnouncementHandler); //DONE

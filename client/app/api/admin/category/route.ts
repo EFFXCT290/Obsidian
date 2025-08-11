@@ -24,13 +24,27 @@ export async function POST(request: NextRequest) {
     const headers: HeadersInit = { 'Content-Type': 'application/json' };
     if (auth) headers['Authorization'] = auth;
     const body = await request.text();
-    const res = await fetch(`${API_BASE_URL}/admin/category`, { method: 'POST', headers, body });
-    const data = await res.json();
-    if (!res.ok) {
-      return NextResponse.json({ error: data?.message || 'Failed to create category' }, { status: res.status });
+    
+    // Check if this is a reorder request
+    const bodyData = JSON.parse(body);
+    if (bodyData.categories && Array.isArray(bodyData.categories)) {
+      // This is a reorder request
+      const res = await fetch(`${API_BASE_URL}/admin/category/reorder`, { method: 'POST', headers, body });
+      const data = await res.json();
+      if (!res.ok) {
+        return NextResponse.json({ error: data?.message || 'Failed to reorder categories' }, { status: res.status });
+      }
+      return NextResponse.json(data);
+    } else {
+      // This is a create category request
+      const res = await fetch(`${API_BASE_URL}/admin/category`, { method: 'POST', headers, body });
+      const data = await res.json();
+      if (!res.ok) {
+        return NextResponse.json({ error: data?.message || 'Failed to create category' }, { status: res.status });
+      }
+      return NextResponse.json(data);
     }
-    return NextResponse.json(data);
   } catch (err) {
-    return NextResponse.json({ error: 'Failed to create category' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to process request' }, { status: 500 });
   }
 }

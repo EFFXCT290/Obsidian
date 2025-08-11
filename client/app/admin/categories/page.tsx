@@ -59,6 +59,9 @@ export default async function AdminCategoriesPage() {
     errorCreating: serverT('admin.categories.errorCreating', language),
     errorUpdating: serverT('admin.categories.errorUpdating', language),
     errorDeleting: serverT('admin.categories.errorDeleting', language),
+    dragToReorder: serverT('admin.categories.dragToReorder', language),
+    reorderSuccess: serverT('admin.categories.reorderSuccess', language),
+    reorderError: serverT('admin.categories.reorderError', language),
   };
 
   return (
