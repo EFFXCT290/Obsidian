@@ -13,6 +13,8 @@ import { UserPlus } from '@styled-icons/boxicons-regular/UserPlus';
 import { CheckCircle } from '@styled-icons/boxicons-regular/CheckCircle';
 import { TrendingUp } from '@styled-icons/boxicons-regular/TrendingUp';
 import { XCircle } from '@styled-icons/boxicons-regular/XCircle';
+import { Rss } from '@styled-icons/boxicons-regular/Rss';
+import { Folder } from '@styled-icons/boxicons-regular/Folder';
 
 interface SettingsContentProps {
   translations: {
@@ -118,9 +120,9 @@ export default function SettingsContent({ translations }: SettingsContentProps) 
     const bonus = cfg.bonusPointsPerHour ?? 1;
     const hr = cfg.hitAndRunThreshold ?? 5;
     const seed = cfg.requiredSeedingMinutes ?? 4320;
-    if (ratio === 0.3 && bonus === 2 && hr === 8 && seed === 100) return 'easy';
+    if (ratio === 0.3 && bonus === 2 && hr === 8 && seed === 25) return 'easy';
     if (ratio === 0.5 && bonus === 1 && hr === 5 && seed === 50) return 'balanced';
-    if (ratio === 1.0 && bonus === 0.5 && hr === 3 && seed === 25) return 'strict';
+    if (ratio === 1.0 && bonus === 0.5 && hr === 3 && seed === 100) return 'strict';
     return 'custom';
   };
 
@@ -182,8 +184,8 @@ export default function SettingsContent({ translations }: SettingsContentProps) 
                   { id: 'announce', title: translations.sections?.announce || 'Announce', desc: translations.details?.announce, icon: Cog },
                   { id: 'clients', title: translations.sections?.clients || 'Clients', desc: translations.details?.clients, icon: Shield },
                   { id: 'invitations', title: translations.sections?.invitations || 'Invitations', desc: translations.details?.invitations, icon: UserPlus },
-                  { id: 'rss', title: translations.sections?.rss || 'RSS', desc: translations.details?.rss, icon: Cog },
-                  { id: 'storage', title: translations.sections?.storage || 'Storage', desc: translations.details?.storage, icon: Cog },
+                  { id: 'rss', title: translations.sections?.rss || 'RSS', desc: translations.details?.rss, icon: Rss },
+                  { id: 'storage', title: translations.sections?.storage || 'Storage', desc: translations.details?.storage, icon: Folder },
                   { id: 'smtp', title: translations.sections?.smtp || 'SMTP', desc: translations.details?.smtp, icon: Envelope },
                   { id: 'antiCheat', title: translations.sections?.antiCheat || 'Anti-Cheat', desc: translations.details?.antiCheat, icon: Shield },
                   { id: 'branding', title: translations.sections?.branding || 'Branding', desc: translations.details?.branding, icon: Palette },
@@ -268,7 +270,7 @@ export default function SettingsContent({ translations }: SettingsContentProps) 
                         handleChange('minRatio', 0.3);
                         handleChange('bonusPointsPerHour', 2);
                         handleChange('hitAndRunThreshold', 8);
-                        handleChange('requiredSeedingMinutes', 100); // Gracia en minutos aproximada
+                        handleChange('requiredSeedingMinutes', 25); // Gracia en minutos aproximada
                       }}
                       className={`relative p-4 border rounded-lg text-left transition-colors ${
                         activeRatioPreset === 'easy'
@@ -291,7 +293,7 @@ export default function SettingsContent({ translations }: SettingsContentProps) 
                         <div>• {translations.fields?.minRatio || 'Min Ratio'}: 0.3</div>
                         <div>• {translations.fields?.bonusPointsPerHour || 'Bonus Points per Hour'}: 2</div>
                         <div>• {translations.fields?.hitAndRunThreshold || 'Hit & Run Threshold'}: 8</div>
-                        <div>• {translations.fields?.requiredSeedingMinutes || 'Required Seeding Minutes'}: 100</div>
+                        <div>• {translations.fields?.requiredSeedingMinutes || 'Required Seeding Minutes'}: 25</div>
                       </div>
                     </button>
 
@@ -336,7 +338,7 @@ export default function SettingsContent({ translations }: SettingsContentProps) 
                         handleChange('minRatio', 1.0);
                         handleChange('bonusPointsPerHour', 0.5);
                         handleChange('hitAndRunThreshold', 3);
-                        handleChange('requiredSeedingMinutes', 25);
+                        handleChange('requiredSeedingMinutes', 100);
                       }}
                       className={`relative p-4 border rounded-lg text-left transition-colors ${
                         activeRatioPreset === 'strict'
@@ -359,7 +361,7 @@ export default function SettingsContent({ translations }: SettingsContentProps) 
                         <div>• {translations.fields?.minRatio || 'Min Ratio'}: 1.0</div>
                         <div>• {translations.fields?.bonusPointsPerHour || 'Bonus Points per Hour'}: 0.5</div>
                         <div>• {translations.fields?.hitAndRunThreshold || 'Hit & Run Threshold'}: 3</div>
-                        <div>• {translations.fields?.requiredSeedingMinutes || 'Required Seeding Minutes'}: 25</div>
+                        <div>• {translations.fields?.requiredSeedingMinutes || 'Required Seeding Minutes'}: 100</div>
                       </div>
                     </button>
                   </div>
