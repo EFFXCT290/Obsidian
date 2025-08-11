@@ -11,7 +11,24 @@ export async function listCategoriesHandler(request: FastifyRequest, reply: Fast
   if (!isAdminOrOwner(user)) return reply.status(403).send({ error: 'Forbidden' });
   const categories = await prisma.category.findMany({
     where: { parentId: null },
-    include: { children: true }
+    include: { 
+      children: {
+        include: {
+          _count: {
+            select: {
+              torrents: true,
+              requests: true
+            }
+          }
+        }
+      },
+      _count: {
+        select: {
+          torrents: true,
+          requests: true
+        }
+      }
+    }
   });
   return reply.send(categories);
 }
