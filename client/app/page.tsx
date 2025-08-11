@@ -22,6 +22,17 @@ import { LanguageNotification } from './components/LanguageNotification';
 // Skeleton intentionally omitted from export to avoid unused warnings
 
 /**
+ * Format bytes to human readable format
+ */
+function formatBytes(bytes: number): string {
+  if (bytes === 0) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+}
+
+/**
  * Statistics component that fetches data from the API
  */
 async function SiteStatistics() {
@@ -42,7 +53,7 @@ async function SiteStatistics() {
           <div className="text-sm text-text-secondary">Downloads</div>
         </div>
         <div className="text-center p-4 bg-surface rounded-lg border border-border">
-          <div className="text-2xl font-bold text-yellow">{stats.totalUploadFormatted}</div>
+          <div className="text-2xl font-bold text-yellow">{formatBytes(stats.totalUploadBytes)}</div>
           <div className="text-sm text-text-secondary">Uploaded</div>
         </div>
       </div>
@@ -57,11 +68,6 @@ async function SiteStatistics() {
     );
   }
 }
-
-/**
- * Format bytes to human readable format
- */
-// formatBytes helper removed (no longer used)
 
 /**
  * Main home page component
