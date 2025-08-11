@@ -1,30 +1,10 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { useI18n } from '@/app/hooks/useI18n';
-import { Plus, Edit, Trash, Folder, FolderOpen, Move } from '@styled-icons/boxicons-regular';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Plus, Edit, Trash } from '@styled-icons/boxicons-regular';
 import toast from 'react-hot-toast';
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent,
-} from '@dnd-kit/core';
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import {
-  useSortable,
-} from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import Sortable from 'sortablejs';
 
-// Types for category management
 interface Category {
   id: string;
   name: string;
@@ -44,7 +24,6 @@ interface CategoryFormData {
   description: string;
   icon: string;
   order: number;
-  parentId: string;
 }
 
 interface CategoriesClientProps {
@@ -59,8 +38,6 @@ interface CategoriesClientProps {
     descriptionField: string;
     icon: string;
     order: string;
-    parentCategory: string;
-    noParent: string;
     torrents: string;
     requests: string;
     create: string;
@@ -84,101 +61,107 @@ interface CategoriesClientProps {
   };
 }
 
-// Sortable category item component
-function SortableCategoryItem({ 
-  category, 
-  level = 0, 
+// Category Item Component
+function CategoryItem({ 
+  item, 
   onEdit, 
   onDelete, 
-  translations 
+  translations
 }: { 
-  category: Category; 
-  level?: number; 
+  item: Category; 
   onEdit: (category: Category) => void; 
   onDelete: (categoryId: string) => void;
   translations: CategoriesClientProps['translations'];
 }) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: category.id });
+  const handleEdit = () => {
+    onEdit(item);
+  };
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
+  const handleDelete = () => {
+    onDelete(item.id);
   };
 
   return (
-    <div ref={setNodeRef} style={style} className="space-y-2">
-      <div className={`flex items-center justify-between p-4 bg-surface rounded-lg border border-border ${level > 0 ? 'ml-6' : ''}`}>
-        <div className="flex items-center space-x-3">
-          <div
-            {...attributes}
-            {...listeners}
-            className="cursor-grab active:cursor-grabbing p-1 hover:bg-surface-light rounded"
-            title={translations.dragToReorder}
-          >
-            <Move size={16} className="text-text-secondary" />
-          </div>
-          {category.children && category.children.length > 0 ? (
-            <FolderOpen size={20} className="text-primary" />
-          ) : (
-            <Folder size={20} className="text-text-secondary" />
-          )}
-          <div>
-            <h3 className="font-medium text-text">{category.name}</h3>
-            {category.description && (
-              <p className="text-sm text-text-secondary">{category.description}</p>
-            )}
-            <div className="flex items-center space-x-4 mt-1 text-xs text-text-secondary">
-              {category._count && (
-                <>
-                  <span>{category._count.torrents} {translations.torrents}</span>
-                  <span>{category._count.requests} {translations.requests}</span>
-                </>
-              )}
-              {category.order !== undefined && (
-                <span>{translations.order}: {category.order}</span>
-              )}
+    <div 
+      className="category-item bg-surface rounded-lg border border-border p-4 mb-2"
+      data-id={item.id}
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-3 flex-1 min-w-0">
+          {/* Drag Handle */}
+          <div className="cursor-grab active:cursor-grabbing p-2 rounded transition-colors text-text-secondary hover:text-primary hover:bg-surface-light">
+            <div className="w-4 h-4 flex items-center justify-center">
+              <div className="w-3 h-3 flex flex-wrap gap-0.5">
+                <div className="w-1 h-1 bg-current rounded-full"></div>
+                <div className="w-1 h-1 bg-current rounded-full"></div>
+                <div className="w-1 h-1 bg-current rounded-full"></div>
+                <div className="w-1 h-1 bg-current rounded-full"></div>
+              </div>
             </div>
           </div>
+          
+          {/* Category Info */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center space-x-2">
+              <h3 className="font-medium text-text truncate">{item.name}</h3>
+                          {item.children && item.children.length > 0 && (
+              <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
+                {item.children.length} sub
+              </span>
+            )}
+            </div>
+            {item.description && (
+              <p className="text-sm text-text-secondary truncate">{item.description}</p>
+            )}
+          </div>
         </div>
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={() => onEdit(category)}
-            className="p-2 text-text-secondary hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
-            title={translations.edit}
-          >
-            <Edit size={16} />
-          </button>
-          <button
-            onClick={() => onDelete(category.id)}
-            className="p-2 text-text-secondary hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
-            title={translations.delete}
-          >
-            <Trash size={16} />
-          </button>
+
+        {/* Stats and Actions */}
+        <div className="flex items-center space-x-3 flex-shrink-0">
+          {/* Category Statistics */}
+          <div className="text-sm text-text-secondary bg-surface-light px-2 py-1 rounded">
+            <span className="font-medium">{item._count?.torrents || 0}</span> {translations.torrents} • 
+            <span className="font-medium"> {item._count?.requests || 0}</span> {translations.requests}
+          </div>
+          
+          {/* Action Buttons */}
+          <div className="flex items-center space-x-1">
+            <button
+              onClick={handleEdit}
+              className="p-2 rounded transition-colors text-text-secondary hover:text-primary hover:bg-surface-light"
+              title={translations.edit}
+            >
+              <Edit size={16} />
+            </button>
+            
+            <button
+              onClick={handleDelete}
+              className="p-2 rounded transition-colors text-red-500 hover:text-red-600 hover:bg-red-50"
+              title={translations.delete}
+            >
+              <Trash size={16} />
+            </button>
+          </div>
         </div>
       </div>
-      {category.children && category.children.length > 0 && (
-        <div className="ml-4">
-          <SortableContext items={category.children.map(c => c.id)} strategy={verticalListSortingStrategy}>
-            {category.children.map((child) => (
-              <SortableCategoryItem
-                key={child.id}
-                category={child}
-                level={level + 1}
-                onEdit={onEdit}
-                onDelete={onDelete}
-                translations={translations}
-              />
-            ))}
-          </SortableContext>
+      
+      {/* Nested Categories Container - Following Sortable.js pattern */}
+      {item.children && item.children.length > 0 && (
+        <div className="nested-sortable mt-3">
+          {item.children.map((child) => (
+            <CategoryItem
+              key={child.id}
+              item={child}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              translations={translations}
+            />
+          ))}
+        </div>
+      )}
+      {/* Drop zone for main categories only (no parentId) */}
+      {!item.parentId && (!item.children || item.children.length === 0) && (
+        <div className="nested-sortable mt-3">
         </div>
       )}
     </div>
@@ -186,7 +169,6 @@ function SortableCategoryItem({
 }
 
 export default function CategoriesClient({ translations }: CategoriesClientProps) {
-  const { t } = useI18n();
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -195,17 +177,11 @@ export default function CategoriesClient({ translations }: CategoriesClientProps
     name: '',
     description: '',
     icon: '',
-    order: 0,
-    parentId: ''
+    order: 0
   });
 
-  // DnD sensors
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
+  const sortableRef = useRef<HTMLDivElement>(null);
+  const sortableInstances = useRef<Sortable[]>([]);
 
   const loadCategories = useCallback(async () => {
     try {
@@ -213,9 +189,12 @@ export default function CategoriesClient({ translations }: CategoriesClientProps
       const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
       const headers: HeadersInit = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
-      const res = await fetch('/api/admin/category', { headers, cache: 'no-store' });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.message || 'Failed to fetch categories');
+      
+      const response = await fetch('/api/admin/category', { headers, cache: 'no-store' });
+      if (!response.ok) {
+        throw new Error('Failed to load categories');
+      }
+      const data = await response.json();
       setCategories(data);
     } catch (error) {
       console.error('Error loading categories:', error);
@@ -223,12 +202,147 @@ export default function CategoriesClient({ translations }: CategoriesClientProps
     } finally {
       setLoading(false);
     }
-  }, [t]);
+  }, [translations.errorLoading]);
 
-  // Load categories on component mount
   useEffect(() => {
     loadCategories();
   }, [loadCategories]);
+
+  // Initialize Sortable.js following official nested pattern
+  useEffect(() => {
+    // Cleanup function to destroy all instances
+    const cleanup = () => {
+      sortableInstances.current.forEach((instance) => {
+        try {
+          instance.destroy();
+        } catch (error) {
+          console.warn('Error destroying sortable instance:', error);
+        }
+      });
+      sortableInstances.current = [];
+    };
+
+    // Only initialize if we have categories and the ref exists
+    if (sortableRef.current && categories.length > 0) {
+      // Clean up existing instances first
+      cleanup();
+
+      // Wait for DOM to be ready
+      setTimeout(() => {
+        // Get all nested sortable elements (following Sortable.js pattern)
+        const nestedSortables = [].slice.call(document.querySelectorAll('.nested-sortable'));
+        
+        // Add the main container to the list
+        const allSortables = sortableRef.current ? [sortableRef.current, ...nestedSortables] : nestedSortables;
+
+        console.log('Found sortable containers:', allSortables.length);
+
+        // Loop through each sortable element (following official pattern)
+        for (let i = 0; i < allSortables.length; i++) {
+          try {
+            const instance = new Sortable(allSortables[i], {
+              group: 'nested',
+              animation: 150,
+              fallbackOnBody: true,
+              swapThreshold: 0.65,
+              handle: '.cursor-grab',
+              
+              onStart: function (evt) {
+                console.log('Drag started:', evt.item.dataset.id);
+              },
+              
+              onEnd: async function (evt) {
+                const { item, from, to, oldIndex, newIndex } = evt;
+                const itemId = item.dataset.id;
+                
+                if (!itemId) return;
+                
+                console.log('Drag ended:', { 
+                  itemId, 
+                  from: from.dataset.id || from.className, 
+                  to: to.dataset.id || to.className, 
+                  oldIndex, 
+                  newIndex 
+                });
+                
+                try {
+                  const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
+                  const headers: HeadersInit = { 'Content-Type': 'application/json' };
+                  if (token) headers['Authorization'] = `Bearer ${token}`;
+                  
+                  // Determine if it's a move to a different parent
+                  let newParentId = null;
+                  let newOrder = newIndex;
+                  
+                  // Check if dropped into a nested container (subcategory)
+                  if (to.classList.contains('nested-sortable')) {
+                    // Find the parent category
+                    const parentContainer = to.closest('.category-item');
+                    if (parentContainer) {
+                      newParentId = (parentContainer as HTMLElement).dataset.id;
+                      // Calculate order within the nested container
+                      const nestedItems = Array.from(to.children);
+                      newOrder = nestedItems.indexOf(item);
+                      console.log('Moving to subcategory:', { newParentId, newOrder });
+                    }
+                  } else if ((to as HTMLElement).dataset.id === 'root') {
+                    // Dropped in main container (main category)
+                    newParentId = null;
+                    newOrder = newIndex;
+                    console.log('Moving to main category:', { newParentId, newOrder });
+                  }
+                  
+                  // If moving within the same container, we need to handle reordering
+                  const fromParentId = from.classList.contains('nested-sortable') 
+                    ? (from.closest('.category-item') as HTMLElement)?.dataset.id 
+                    : null;
+                  
+                  if (fromParentId === newParentId && oldIndex !== newIndex) {
+                    console.log('Reordering within same container');
+                    // The backend should handle this automatically, but let's make sure
+                    // we send the correct newOrder
+                  }
+                  
+                  const requestBody = {
+                    categoryId: itemId,
+                    newParentId,
+                    newOrder,
+                    forceReorder: true // Signal to backend to recalculate all orders
+                  };
+                  
+                  console.log('Sending request:', requestBody);
+                  
+                  const response = await fetch('/api/admin/category', {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify(requestBody),
+                  });
+
+                  if (!response.ok) {
+                    throw new Error('Failed to move category');
+                  }
+
+                  toast.success(translations.reorderSuccess);
+                  loadCategories();
+                } catch (error) {
+                  console.error('Error moving category:', error);
+                  toast.error(translations.reorderError);
+                  loadCategories();
+                }
+              }
+            });
+            
+            sortableInstances.current.push(instance);
+            console.log('Created sortable instance for:', allSortables[i]);
+          } catch (error) {
+            console.error('Error creating sortable instance:', error);
+          }
+        }
+      }, 100); // Small delay to ensure DOM is ready
+    }
+
+    return cleanup;
+  }, [categories, loadCategories, translations.reorderSuccess, translations.reorderError]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -239,30 +353,27 @@ export default function CategoriesClient({ translations }: CategoriesClientProps
     }
 
     try {
+      const url = editingCategory 
+        ? `/api/admin/category/${editingCategory.id}`
+        : '/api/admin/category';
+      
+      const method = editingCategory ? 'PUT' : 'POST';
+      
       const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
       const headers: HeadersInit = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
       
-      if (editingCategory) {
-        // Update existing category
-        const res = await fetch(`/api/admin/category/${editingCategory.id}`, { 
-          method: 'PUT', 
-          headers, 
-          body: JSON.stringify(formData) 
-        });
-        if (!res.ok) throw new Error('Failed to update category');
-        toast.success(translations.updated);
-      } else {
-        // Create new category
-        const res = await fetch('/api/admin/category', { 
-          method: 'POST', 
-          headers, 
-          body: JSON.stringify(formData) 
-        });
-        if (!res.ok) throw new Error('Failed to create category');
-        toast.success(translations.created);
+      const response = await fetch(url, {
+        method,
+        headers,
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save category');
       }
-      
+
+      toast.success(editingCategory ? translations.updated : translations.created);
       resetForm();
       loadCategories();
     } catch (error) {
@@ -277,27 +388,28 @@ export default function CategoriesClient({ translations }: CategoriesClientProps
       name: category.name,
       description: category.description || '',
       icon: category.icon || '',
-      order: category.order || 0,
-      parentId: category.parentId || ''
+      order: category.order || 0
     });
     setShowForm(true);
   };
 
   const handleDelete = async (categoryId: string) => {
-    if (!confirm(translations.confirmDelete)) {
-      return;
-    }
+    if (!confirm(translations.confirmDelete)) return;
 
     try {
       const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
       const headers: HeadersInit = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
       
-      const res = await fetch(`/api/admin/category/${categoryId}`, { 
-        method: 'DELETE', 
-        headers 
+      const response = await fetch(`/api/admin/category/${categoryId}`, {
+        method: 'DELETE',
+        headers,
       });
-      if (!res.ok) throw new Error('Failed to delete category');
+
+      if (!response.ok) {
+        throw new Error('Failed to delete category');
+      }
+
       toast.success(translations.deleted);
       loadCategories();
     } catch (error) {
@@ -306,185 +418,104 @@ export default function CategoriesClient({ translations }: CategoriesClientProps
     }
   };
 
-  const handleDragEnd = async (event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (active.id !== over?.id) {
-      const oldIndex = categories.findIndex(cat => cat.id === active.id);
-      const newIndex = categories.findIndex(cat => cat.id === over?.id);
-
-      if (oldIndex !== -1 && newIndex !== -1) {
-        const newCategories = arrayMove(categories, oldIndex, newIndex);
-        setCategories(newCategories);
-
-        try {
-          const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
-          const headers: HeadersInit = { 'Content-Type': 'application/json' };
-          if (token) headers['Authorization'] = `Bearer ${token}`;
-          
-          const res = await fetch('/api/admin/category', {
-            method: 'POST',
-            headers,
-            body: JSON.stringify({
-              categories: newCategories.map((cat, index) => ({
-                id: cat.id,
-                order: index
-              }))
-            })
-          });
-
-          if (!res.ok) throw new Error('Failed to reorder categories');
-          toast.success(translations.reorderSuccess);
-        } catch (error) {
-          console.error('Error reordering categories:', error);
-          toast.error(translations.reorderError);
-          // Reload categories to restore original order
-          loadCategories();
-        }
-      }
-    }
-  };
-
   const resetForm = () => {
     setFormData({
       name: '',
       description: '',
       icon: '',
-      order: 0,
-      parentId: ''
+      order: 0
     });
     setEditingCategory(null);
     setShowForm(false);
   };
 
-    const renderCategoryTree = (categoryList: Category[], level = 0) => {
-    return categoryList.map((category) => (
-      <SortableCategoryItem
-        key={category.id}
-        category={category}
-        level={level}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        translations={translations}
-      />
-    ));
-  };
-
   if (loading) {
     return (
-      <div className="space-y-4">
-        <div className="h-8 bg-surface-light rounded animate-pulse"></div>
-        <div className="space-y-2">
-          {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-16 bg-surface-light rounded animate-pulse"></div>
-          ))}
-        </div>
+      <div className="flex items-center justify-center py-8">
+        <div className="text-text-secondary">Cargando categorías...</div>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-text">{translations.title}</h1>
-          <p className="text-text-secondary">{translations.description}</p>
-        </div>
-        <button
-          onClick={() => setShowForm(true)}
-          className="flex items-center space-x-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
-        >
-          <Plus size={20} />
-          <span>{translations.addNew}</span>
-        </button>
-      </div>
-
-      {/* Category Form */}
+      {/* Add/Edit Category Form */}
       {showForm && (
-        <div className="bg-surface border border-border rounded-lg p-6">
+        <div className="bg-surface rounded-lg border border-border p-6">
           <h2 className="text-lg font-semibold text-text mb-4">
             {editingCategory ? translations.editCategory : translations.addCategory}
           </h2>
+          
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-text mb-2">
-                  {translations.name} *
-                </label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3 py-2 border border-border rounded-lg bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-text mb-2">
-                  {translations.icon}
-                </label>
-                <input
-                  type="text"
-                  value={formData.icon}
-                  onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
-                  placeholder="📁"
-                  className="w-full px-3 py-2 border border-border rounded-lg bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-              </div>
-            </div>
             <div>
-              <label className="block text-sm font-medium text-text mb-2">
+              <label htmlFor="name" className="block text-sm font-medium text-text mb-1">
+                {translations.name} *
+              </label>
+              <input
+                type="text"
+                id="name"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="w-full px-3 py-2 border border-border rounded-md bg-surface text-text focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder={translations.name}
+                required
+              />
+            </div>
+            
+            <div>
+              <label htmlFor="description" className="block text-sm font-medium text-text mb-1">
                 {translations.descriptionField}
               </label>
               <textarea
+                id="description"
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                className="w-full px-3 py-2 border border-border rounded-md bg-surface text-text focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder={translations.descriptionField}
                 rows={3}
-                className="w-full px-3 py-2 border border-border rounded-lg bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-text mb-2">
-                  {translations.order}
-                </label>
-                <input
-                  type="number"
-                  value={formData.order}
-                  onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
-                  className="w-full px-3 py-2 border border-border rounded-lg bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-text mb-2">
-                  {translations.parentCategory}
-                </label>
-                <select
-                  value={formData.parentId}
-                  onChange={(e) => setFormData({ ...formData, parentId: e.target.value })}
-                  className="w-full px-3 py-2 border border-border rounded-lg bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary"
-                >
-                  <option value="">{translations.noParent}</option>
-                  {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            
+            <div>
+              <label htmlFor="icon" className="block text-sm font-medium text-text mb-1">
+                {translations.icon}
+              </label>
+              <input
+                type="text"
+                id="icon"
+                value={formData.icon}
+                onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
+                className="w-full px-3 py-2 border border-border rounded-md bg-surface text-text focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder={translations.icon}
+              />
             </div>
-            <div className="flex items-center space-x-3 pt-4">
+            
+            <div>
+              <label htmlFor="order" className="block text-sm font-medium text-text mb-1">
+                {translations.order}
+              </label>
+              <input
+                type="number"
+                id="order"
+                value={formData.order}
+                onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-border rounded-md bg-surface text-text focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder={translations.order}
+              />
+            </div>
+            
+            <div className="flex items-center space-x-3">
               <button
                 type="submit"
-                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+                className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors"
               >
                 {editingCategory ? translations.update : translations.create}
               </button>
+              
               <button
                 type="button"
                 onClick={resetForm}
-                className="px-4 py-2 border border-border text-text rounded-lg hover:bg-surface-light transition-colors"
+                className="px-4 py-2 border border-border text-text rounded-md hover:bg-surface-light transition-colors"
               >
                 {translations.cancel}
               </button>
@@ -493,27 +524,102 @@ export default function CategoriesClient({ translations }: CategoriesClientProps
         </div>
       )}
 
-      {/* Categories List */}
+      {/* Add New Category Button */}
+      {!showForm && (
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold text-text">{translations.title}</h1>
+            <p className="text-text-secondary mt-1">{translations.description}</p>
+          </div>
+          
+          <button
+            onClick={() => setShowForm(true)}
+            className="flex items-center space-x-2 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors"
+          >
+            <Plus size={20} />
+            <span>{translations.addNew}</span>
+          </button>
+        </div>
+      )}
+
+      {/* Categories List with Sortable.js */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-text">{translations.list}</h3>
+        <h2 className="text-lg font-semibold text-text">{translations.list}</h2>
+        
         {categories.length === 0 ? (
           <div className="text-center py-8 text-text-secondary">
             {translations.noCategories}
           </div>
         ) : (
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
+          <div 
+            ref={sortableRef}
+            className="categories-container space-y-2"
+            data-id="root"
           >
-            <SortableContext items={categories.map(c => c.id)} strategy={verticalListSortingStrategy}>
-              <div className="space-y-2">
-                {renderCategoryTree(categories)}
-              </div>
-            </SortableContext>
-          </DndContext>
+            {categories.map((item) => (
+              <CategoryItem
+                key={item.id}
+                item={item}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                translations={translations}
+              />
+            ))}
+          </div>
         )}
       </div>
+      
+      {/* Sortable.js Styles */}
+      <style jsx>{`
+        .sortable-ghost {
+          opacity: 0.5;
+          background: #f3f4f6;
+          border: 2px dashed #3b82f6;
+        }
+        
+        .sortable-chosen {
+          background: #eff6ff;
+          border-color: #3b82f6;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sortable-drag {
+          opacity: 0.8;
+          transform: rotate(5deg);
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .nested-sortable {
+          min-height: 20px;
+          margin-top: 0.5rem;
+          background: rgba(59, 130, 246, 0.02);
+          border-radius: 0.375rem;
+          transition: all 0.2s ease;
+          padding: 0.5rem;
+        }
+        
+        .nested-sortable:hover {
+          background: rgba(59, 130, 246, 0.05);
+        }
+        
+        .nested-sortable.sortable-ghost {
+          background: rgba(59, 130, 246, 0.1);
+          border: 2px dashed #3b82f6;
+          min-height: 40px;
+        }
+        
+        .category-item {
+          transition: all 0.2s ease;
+        }
+        
+        .category-item:hover {
+          background: #f9fafb;
+        }
+        
+        .category-item .nested-sortable {
+          position: relative;
+        }
+      `}</style>
     </div>
   );
 }

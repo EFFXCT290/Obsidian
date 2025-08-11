@@ -62,6 +62,16 @@ export default async function AdminCategoriesPage() {
     dragToReorder: serverT('admin.categories.dragToReorder', language),
     reorderSuccess: serverT('admin.categories.reorderSuccess', language),
     reorderError: serverT('admin.categories.reorderError', language),
+    moveToCategory: serverT('admin.categories.moveToCategory', language),
+    moveToMain: serverT('admin.categories.moveToMain', language),
+    moveSuccess: serverT('admin.categories.moveSuccess', language),
+    moveError: serverT('admin.categories.moveError', language),
+    dropZone: serverT('admin.categories.dropZone', language),
+    dropHereToMove: serverT('admin.categories.dropHereToMove', language),
+    errorHasSubcategories: serverT('admin.categories.errorHasSubcategories', language),
+    errorSubcategoryParent: serverT('admin.categories.errorSubcategoryParent', language),
+    errorCircularReference: serverT('admin.categories.errorCircularReference', language),
+    errorSelfParent: serverT('admin.categories.errorSelfParent', language),
   };
 
   return (

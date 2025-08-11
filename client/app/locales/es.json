@@ -82,7 +82,17 @@
         "errorDeleting": "Error al eliminar la categoría",
         "dragToReorder": "Arrastra para reordenar",
         "reorderSuccess": "Orden actualizado exitosamente",
-        "reorderError": "Error al actualizar el orden"
+        "reorderError": "Error al actualizar el orden",
+        "moveToCategory": "Mover a categoría",
+        "moveToMain": "Mover a categoría principal",
+        "moveSuccess": "Categoría movida exitosamente",
+        "moveError": "Error al mover la categoría",
+        "dropZone": "Zona de destino",
+        "dropHereToMove": "Suelta aquí para mover",
+        "errorHasSubcategories": "No se puede mover una categoría con subcategorías. Mueve las subcategorías primero.",
+        "errorSubcategoryParent": "No se puede mover una categoría dentro de una subcategoría. Solo las categorías principales pueden tener subcategorías.",
+        "errorCircularReference": "No se puede mover la categoría: crearía una referencia circular.",
+        "errorSelfParent": "Una categoría no puede ser su propio padre."
       },
     "settings": {
       "title": "Configuración",

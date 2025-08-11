@@ -82,7 +82,17 @@
         "errorDeleting": "Error deleting category",
         "dragToReorder": "Drag to reorder",
         "reorderSuccess": "Order updated successfully",
-        "reorderError": "Error updating order"
+        "reorderError": "Error updating order",
+        "moveToCategory": "Move to category",
+        "moveToMain": "Move to main category",
+        "moveSuccess": "Category moved successfully",
+        "moveError": "Error moving category",
+        "dropZone": "Drop zone",
+        "dropHereToMove": "Drop here to move",
+        "errorHasSubcategories": "Cannot move a category with subcategories. Please move the subcategories first.",
+        "errorSubcategoryParent": "Cannot move a category into a subcategory. Only root categories can have subcategories.",
+        "errorCircularReference": "Cannot move category: would create circular reference.",
+        "errorSelfParent": "A category cannot be its own parent."
       },
     "settings": {
       "title": "Configuration",
