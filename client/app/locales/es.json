@@ -468,4 +468,94 @@
       "resend": "Reenviar correo de verificación"
     }
   }
+  ,
+  "upload": {
+    "title": "Subir torrent",
+    "subtitle": "Comparte tu contenido con la comunidad.",
+    "form": {
+      "name": {
+        "label": "Nombre",
+        "placeholder": "Nombre del torrent",
+        "issues": {
+          "empty": "El nombre no puede estar vacío.",
+          "invalidChars": "Contiene caracteres no permitidos: \\ / : * ? \" < > | o de control.",
+          "emojis": "No se permiten emojis en el nombre.",
+          "trailing": "No puede terminar con espacios o puntos.",
+          "reserved": "No puede usar nombres reservados de Windows (CON, PRN, AUX, NUL, COM1-9, LPT1-9).",
+          "tooLong": "El nombre es demasiado largo (máximo 200 caracteres).",
+          "review": "Revisa el nombre:"
+        }
+      },
+      "category": {
+        "label": "Categoría",
+        "placeholder": "Selecciona una categoría"
+      },
+      "source": {
+        "label": "Source",
+        "placeholder": "Selecciona un source"
+      },
+      "description": {
+        "label": "Descripción",
+        "placeholder": "Describe tu torrent"
+      },
+      "tags": {
+        "label": "Etiquetas ({{count}})",
+        "suggested": "Etiquetas sugeridas",
+        "popular": "Etiquetas populares",
+        "customPlaceholder": "Añadir etiqueta personalizada"
+      }
+    },
+    "areas": {
+      "torrent": {
+        "title": "Archivo .torrent",
+        "subtitle": "Arrastra y suelta o selecciona el archivo",
+        "select": "Seleccionar .torrent"
+      },
+      "image": {
+        "title": "Imagen de póster (opcional)",
+        "subtitle": "JPG, PNG, GIF, WEBP",
+        "select": "Seleccionar imagen",
+        "remove": "Quitar imagen"
+      },
+      "nfo": {
+        "title": "Adjuntar NFO (opcional)",
+        "subtitle": "Solo archivos .nfo",
+        "select": "Seleccionar NFO",
+        "remove": "Quitar NFO"
+      }
+    },
+    "options": {
+      "anonymous": "Subir como anónimo",
+      "freeleech": "Marcar como freeleech"
+    },
+    "actions": {
+      "upload": "Subir",
+      "uploading": "Subiendo…",
+      "reset": "Restablecer",
+      "panelTitle": "Para habilitar el botón de subida, completa:",
+      "notePrivate": "Recuerda: el .torrent debe estar marcado como privado y contener tu passkey en la URL de announce.",
+      "reasons": {
+        "missingTorrent": "Selecciona un archivo .torrent.",
+        "missingName": "Introduce un nombre para el torrent.",
+        "missingDescription": "Añade una descripción (mínimo 10 caracteres).",
+        "missingCategory": "Selecciona una categoría.",
+        "missingSource": "Selecciona un source.",
+        "missingTags": "Añade al menos una etiqueta."
+      }
+    },
+    "toasts": {
+      "missingTorrent": "Selecciona un archivo .torrent",
+      "success": "Torrent subido correctamente",
+      "error": "Error al subir el torrent"
+    },
+    "tips": {
+      "title": "Consejos",
+      "items": [
+        "Asegúrate de que el archivo .torrent es válido y corresponde al contenido.",
+        "Proporciona una descripción clara y concisa.",
+        "Elige la categoría y el source más adecuados.",
+        "Usa etiquetas relevantes para mejorar el descubrimiento."
+      ]
+    }
+  }
 }

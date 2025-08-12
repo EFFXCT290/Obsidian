@@ -468,4 +468,94 @@
       "resend": "Resend verification email"
     }
   }
+  ,
+  "upload": {
+    "title": "Upload torrent",
+    "subtitle": "Share your content with the community.",
+    "form": {
+      "name": {
+        "label": "Name",
+        "placeholder": "Torrent name",
+        "issues": {
+          "empty": "Name cannot be empty.",
+          "invalidChars": "Contains invalid characters: \\ / : * ? \" < > | or control chars.",
+          "emojis": "Emojis are not allowed in the name.",
+          "trailing": "Cannot end with spaces or dots.",
+          "reserved": "Cannot use Windows reserved names (CON, PRN, AUX, NUL, COM1-9, LPT1-9).",
+          "tooLong": "Name is too long (max 200 characters).",
+          "review": "Review the name:"
+        }
+      },
+      "category": {
+        "label": "Category",
+        "placeholder": "Select a category"
+      },
+      "source": {
+        "label": "Source",
+        "placeholder": "Select a source"
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Describe your torrent"
+      },
+      "tags": {
+        "label": "Tags ({{count}})",
+        "suggested": "Suggested tags",
+        "popular": "Popular tags",
+        "customPlaceholder": "Add a custom tag"
+      }
+    },
+    "areas": {
+      "torrent": {
+        "title": ".torrent file",
+        "subtitle": "Drag & drop or select the file",
+        "select": "Select .torrent"
+      },
+      "image": {
+        "title": "Poster image (optional)",
+        "subtitle": "JPG, PNG, GIF, WEBP",
+        "select": "Select image",
+        "remove": "Remove image"
+      },
+      "nfo": {
+        "title": "Attach NFO (optional)",
+        "subtitle": "Only .nfo files",
+        "select": "Select NFO",
+        "remove": "Remove NFO"
+      }
+    },
+    "options": {
+      "anonymous": "Upload as anonymous",
+      "freeleech": "Mark as freeleech"
+    },
+    "actions": {
+      "upload": "Upload",
+      "uploading": "Uploading…",
+      "reset": "Reset",
+      "panelTitle": "To enable the upload button, complete:",
+      "notePrivate": "Remember: the .torrent must be private and include your passkey in the announce URL.",
+      "reasons": {
+        "missingTorrent": "Select a .torrent file.",
+        "missingName": "Enter a torrent name.",
+        "missingDescription": "Add a description (minimum 10 characters).",
+        "missingCategory": "Select a category.",
+        "missingSource": "Select a source.",
+        "missingTags": "Add at least one tag."
+      }
+    },
+    "toasts": {
+      "missingTorrent": "Please select a .torrent file",
+      "success": "Torrent uploaded successfully",
+      "error": "Error uploading torrent"
+    },
+    "tips": {
+      "title": "Tips",
+      "items": [
+        "Ensure your .torrent file is valid and reflects the content.",
+        "Provide a clear and concise description.",
+        "Choose the most appropriate category and source.",
+        "Use relevant tags to improve discoverability."
+      ]
+    }
+  }
 }

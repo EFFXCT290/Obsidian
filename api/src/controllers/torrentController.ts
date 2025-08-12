@@ -36,6 +36,35 @@ function normalizeS3Config(config: any) {
   };
 }
 
+// Windows-safe filename sanitizer (allows dots). Removes only invalid Windows filename chars
+// Invalid: \\ / : * ? " < > | and control chars (0-31). Also trims trailing dots/spaces and avoids reserved device names
+function windowsSafeFilename(original: string, fallback = 'file'): string {
+  let name = String(original || '').trim();
+  // Replace invalid characters
+  name = name.replace(/[<>:"/\\|?*\x00-\x1F]/g, '_');
+  // Remove emojis (extended pictographic, variation selectors, ZWJ)
+  try {
+    name = name.replace(/[\u200D\uFE0F]/g, '').replace(/\p{Extended_Pictographic}/gu, '');
+  } catch {
+    // Fallback for environments without Unicode property escapes support
+    name = name.replace(/[\u200D\uFE0F]/g, '');
+  }
+  // Trim trailing spaces or dots
+  name = name.replace(/[ .]+$/g, '');
+  // Avoid reserved device names (CON, PRN, AUX, NUL, COM1..9, LPT1..9)
+  const reserved = /^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\..*)?$/i;
+  if (reserved.test(name)) {
+    name = '_' + name;
+  }
+  // Collapse multiple underscores
+  name = name.replace(/_{2,}/g, '_');
+  // Enforce a reasonable max length to be safe with headers/filesystems
+  if (name.length > 200) name = name.slice(0, 200);
+  // Fallback if empty after sanitizing
+  if (!name) name = fallback;
+  return name;
+}
+
 export async function uploadTorrentHandler(request: FastifyRequest, reply: FastifyReply) {
   console.log('[uploadTorrentHandler] Start');
   const user = (request as any).user;
@@ -119,6 +148,55 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
   if (!parsed.infoHash) {
     console.log('[uploadTorrentHandler] Could not extract infoHash');
     return reply.status(400).send({ error: 'Could not extract infoHash from .torrent file' });
+  }
+
+  // VALIDATION: Torrent must be private
+  const isPrivate = (parsed as any)?.private === true || (parsed as any)?.info?.private === 1 || (parsed as any)?.info?.private === true;
+  if (!isPrivate) {
+    console.log('[uploadTorrentHandler] Rejected: torrent not private');
+    return reply.status(400).send({ error: 'El torrent debe estar marcado como privado.' });
+  }
+
+  // VALIDATION: Announce must include user's passkey
+  const announceCandidates: string[] = [];
+  if (typeof (parsed as any)?.announce === 'string') {
+    announceCandidates.push((parsed as any).announce);
+  }
+  if (Array.isArray((parsed as any)?.announce)) {
+    announceCandidates.push(...((parsed as any).announce as string[]));
+  }
+  if (Array.isArray((parsed as any)?.announceList)) {
+    for (const group of (parsed as any).announceList) {
+      if (Array.isArray(group)) announceCandidates.push(...group);
+    }
+  }
+  let passkeyFound = false;
+  for (const url of announceCandidates) {
+    try {
+      const u = new URL(String(url));
+      const pk = u.searchParams.get('passkey');
+      if (pk && pk === user.passkey) {
+        passkeyFound = true;
+        break;
+      }
+    } catch {
+      // ignore malformed announce entries
+      if (typeof url === 'string' && url.includes(`passkey=${user.passkey}`)) {
+        passkeyFound = true;
+        break;
+      }
+    }
+  }
+  if (!passkeyFound) {
+    console.log('[uploadTorrentHandler] Rejected: passkey not found in announce URLs');
+    return reply.status(400).send({ error: 'El torrent debe incluir tu passkey en la URL de announce.' });
+  }
+
+  // VALIDATION: No emojis in provided torrent name
+  const emojiRegex = /\p{Extended_Pictographic}|[\u200D\uFE0F]/u;
+  if (typeof name === 'string' && emojiRegex.test(name)) {
+    console.log('[uploadTorrentHandler] Rejected: name contains emojis');
+    return reply.status(400).send({ error: 'El nombre del torrent no puede contener emojis.' });
   }
 
   // Save .nfo file if provided
@@ -347,8 +425,8 @@ export async function getNfoHandler(request: FastifyRequest, reply: FastifyReply
   try {
     const nfoBuffer = await getFile({ file, config });
     
-    // Sanitize filename for HTTP header
-    const sanitizedFilename = torrent.name.replace(/[^\w\s.-]/g, '').replace(/\s+/g, '_');
+    // Sanitize filename for HTTP header (Windows-safe, allows dots)
+    const sanitizedFilename = windowsSafeFilename(torrent.name || 'nfo');
     
     reply.header('Content-Type', file.mimeType || 'text/plain; charset=utf-8');
     reply.header('Content-Disposition', `inline; filename="${sanitizedFilename}.nfo"`);
@@ -626,7 +704,7 @@ export async function downloadTorrentWithTokenHandler(request: FastifyRequest, r
     const modifiedBuffer = await modifyTorrentAnnounceUrls(fileBuffer, downloadToken.user.passkey);
     
     // Sanitize filename for HTTP header
-    const sanitizedFilename = downloadToken.torrent.name.replace(/[^\w\s.-]/g, '').replace(/\s+/g, '_');
+    const sanitizedFilename = windowsSafeFilename(downloadToken.torrent.name || 'download');
     
     reply.header('Content-Type', file.mimeType || 'application/x-bittorrent');
     reply.header('Content-Disposition', `attachment; filename="${sanitizedFilename}.torrent"`);

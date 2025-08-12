@@ -84,3 +84,48 @@ export async function listTorrentsByCategoryTitleHandler(request: FastifyRequest
     limit: Number(limit)
   });
 } 
+
+// Public: Get category sources (own + inherited computed) for user-facing features
+export async function getCategorySourcesPublicHandler(request: FastifyRequest, reply: FastifyReply) {
+  const { id } = request.params as any;
+  if (!id) return reply.status(400).send({ error: 'Category ID is required' });
+
+  try {
+    const category = await prisma.category.findUnique({ where: { id } });
+    if (!category) return reply.status(404).send({ error: 'Category not found' });
+
+    const ownLinks = await prisma.categorySource.findMany({
+      where: { categoryId: id },
+      include: { source: true },
+      orderBy: { order: 'asc' },
+    });
+
+    let inherited: { id: string; name: string; isActive: boolean; order: number }[] = [];
+    if (category.parentId) {
+      const ownIds = new Set(ownLinks.map((l) => l.sourceId));
+      let currentParentId: string | null = category.parentId;
+      const seen = new Set<string>();
+      while (currentParentId) {
+        const parent = await prisma.category.findUnique({ where: { id: currentParentId } });
+        if (!parent) break;
+        const parentLinks = await prisma.categorySource.findMany({
+          where: { categoryId: currentParentId },
+          include: { source: true },
+          orderBy: { order: 'asc' },
+        });
+        for (const link of parentLinks) {
+          if (seen.has(link.sourceId) || ownIds.has(link.sourceId)) continue;
+          seen.add(link.sourceId);
+          inherited.push({ id: link.source.id, name: link.source.name, isActive: link.source.isActive, order: link.order });
+        }
+        currentParentId = parent.parentId;
+      }
+    }
+
+    const own = ownLinks.map((l) => ({ id: l.source.id, name: l.source.name, isActive: l.source.isActive, order: l.order }));
+    return reply.send({ own, inherited });
+  } catch (error) {
+    console.error('Error fetching category sources (public):', error);
+    return reply.status(500).send({ error: 'Failed to fetch category sources' });
+  }
+}

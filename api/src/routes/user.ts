@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { requireAuth } from '../middleware/authMiddleware.js';
 import { getUserNotificationsHandler, markNotificationReadHandler, markAllNotificationsReadHandler, clearNotificationsHandler } from '../controllers/user/notificationController.js';
-import { listAllCategoriesHandler, listTorrentsByCategoryTitleHandler } from '../controllers/user/categoryController.js';
+import { listAllCategoriesHandler, listTorrentsByCategoryTitleHandler, getCategorySourcesPublicHandler } from '../controllers/user/categoryController.js';
 import { listRequestsHandler, createRequestHandler, getRequestHandler, fillRequestHandler, listCommentsForRequestHandler, createCommentForRequestHandler } from '../controllers/user/requestController.js';
 import { listAnnouncementsHandler, getAnnouncementHandler } from '../controllers/user/announcementController.js';
 import { listWikiPagesHandler, getWikiPageHandler } from '../controllers/user/wikiController.js';
@@ -19,6 +19,7 @@ export async function registerUserRoutes(app: FastifyInstance) {
   app.post('/notifications/read-all', { preHandler: requireAuth }, markAllNotificationsReadHandler); //DONE
   app.delete('/notifications/clear', { preHandler: requireAuth }, clearNotificationsHandler); //DONE
   app.get('/categories', listAllCategoriesHandler); //DONE
+  app.get('/category/:id/sources', getCategorySourcesPublicHandler); // NEW: public category sources (for upload UI)
   app.get('/category/:title/torrents', listTorrentsByCategoryTitleHandler); //DONE
   app.get('/requests', listRequestsHandler); //DONE
   app.post('/requests', { preHandler: requireAuth }, createRequestHandler); //DONE
