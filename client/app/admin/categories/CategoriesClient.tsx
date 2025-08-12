@@ -5,6 +5,9 @@ import { Plus, Edit, Trash } from '@styled-icons/boxicons-regular';
 import toast from 'react-hot-toast';
 import Sortable from 'sortablejs';
 import { API_BASE_URL } from '@/lib/api';
+import SourcesManagementModal from './SourcesManagementModal';
+import MoveCategorySourcesDialog from './MoveCategorySourcesDialog';
+import ConfirmDeleteCategoryModal from './ConfirmDeleteCategoryModal';
 
 interface Category {
   id: string;
@@ -67,11 +70,13 @@ function CategoryItem({
   item, 
   onEdit, 
   onDelete, 
+  onManageSources,
   translations
 }: { 
   item: Category; 
   onEdit: (category: Category) => void; 
-  onDelete: (categoryId: string) => void;
+  onDelete: (category: Category) => void;
+  onManageSources: (category: Category) => void;
   translations: CategoriesClientProps['translations'];
 }) {
   const handleEdit = () => {
@@ -79,7 +84,11 @@ function CategoryItem({
   };
 
   const handleDelete = () => {
-    onDelete(item.id);
+    onDelete(item);
+  };
+
+  const handleManageSources = () => {
+    onManageSources(item);
   };
 
   return (
@@ -128,6 +137,13 @@ function CategoryItem({
           {/* Action Buttons */}
           <div className="flex items-center space-x-1">
             <button
+              onClick={handleManageSources}
+              className="p-2 rounded transition-colors text-text-secondary hover:text-primary hover:bg-surface-light"
+              title="Sources"
+            >
+              Sources
+            </button>
+            <button
               onClick={handleEdit}
               className="p-2 rounded transition-colors text-text-secondary hover:text-primary hover:bg-surface-light"
               title={translations.edit}
@@ -147,14 +163,15 @@ function CategoryItem({
       </div>
       
       {/* Nested Categories Container - Following Sortable.js pattern */}
-      {item.children && item.children.length > 0 && (
+          {item.children && item.children.length > 0 && (
         <div className="nested-sortable mt-3">
           {item.children.map((child) => (
             <CategoryItem
               key={child.id}
               item={child}
               onEdit={onEdit}
-              onDelete={onDelete}
+               onDelete={onDelete}
+                  onManageSources={onManageSources}
               translations={translations}
             />
           ))}
@@ -174,12 +191,18 @@ export default function CategoriesClient({ translations }: CategoriesClientProps
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [sourcesModalOpen, setSourcesModalOpen] = useState(false);
+  const [sourcesCategory, setSourcesCategory] = useState<Category | null>(null);
+  const [moveDialogOpen, setMoveDialogOpen] = useState(false);
+  const [moveDialogData, setMoveDialogData] = useState<{ categoryId: string; categoryName: string; targetParentId: string | null; inheritedPreview: string[]; ownPreview: string[] } | null>(null);
   const [formData, setFormData] = useState<CategoryFormData>({
     name: '',
     description: '',
     icon: '',
     order: 0
   });
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deletingCategory, setDeletingCategory] = useState<Category | null>(null);
 
   const sortableRef = useRef<HTMLDivElement>(null);
   const sortableInstances = useRef<Sortable[]>([]);
@@ -298,33 +321,55 @@ export default function CategoriesClient({ translations }: CategoriesClientProps
                     ? (from.closest('.category-item') as HTMLElement)?.dataset.id 
                     : null;
                   
-                  if (fromParentId === newParentId && oldIndex !== newIndex) {
-                    console.log('Reordering within same container');
-                    // The backend should handle this automatically, but let's make sure
-                    // we send the correct newOrder
-                  }
-                  
-                  const requestBody = {
-                    categoryId: itemId,
-                    newParentId,
-                    newOrder,
-                    forceReorder: true // Signal to backend to recalculate all orders
-                  };
-                  
-
-                  
-                  const response = await fetch(`${API_BASE_URL}/admin/category`, {
-                    method: 'POST',
-                    headers,
-                    body: JSON.stringify(requestBody),
-                  });
-
-                  if (!response.ok) {
-                    throw new Error('Failed to move category');
+                  // If only reorder in same container, call move directly without dialog
+                  if (fromParentId === newParentId) {
+                    const requestBody = { categoryId: itemId, newParentId, newOrder, forceReorder: true };
+                    const response = await fetch(`${API_BASE_URL}/admin/category/move`, {
+                      method: 'POST',
+                      headers,
+                      body: JSON.stringify(requestBody),
+                    });
+                    if (!response.ok) throw new Error('Failed to reorder category');
+                    toast.success(translations.reorderSuccess);
+                    loadCategories();
+                    return;
                   }
 
-                  toast.success(translations.reorderSuccess);
-                  loadCategories();
+                  // When parent changes, open dialog to decide inheritance behavior
+                  // Fetch previews
+                  let inheritedPreview: string[] = [];
+                  let ownPreview: string[] = [];
+                  try {
+                    if (newParentId) {
+                      const resParent = await fetch(`${API_BASE_URL}/admin/category/${newParentId}/sources`, { headers, cache: 'no-store' });
+                      if (resParent.ok) {
+                        const data = await resParent.json();
+                        const names = [...(data.own || []), ...(data.inherited || [])].map((s: any) => s.name);
+                        inheritedPreview = Array.from(new Set(names)).slice(0, 10);
+                      }
+                    }
+                    const resCat = await fetch(`${API_BASE_URL}/admin/category/${itemId}/sources`, { headers, cache: 'no-store' });
+                    if (resCat.ok) {
+                      const data = await resCat.json();
+                      ownPreview = (data.own || []).map((s: any) => s.name).slice(0, 10);
+                    }
+                  } catch (e) {
+                    // ignore preview errors
+                  }
+
+                  const categoryName = (function findName(list: Category[]): string {
+                    for (const c of list) {
+                      if (c.id === itemId) return c.name;
+                      if (c.children) {
+                        const n = findName(c.children);
+                        if (n) return n;
+                      }
+                    }
+                    return '';
+                  })(categories);
+
+                  setMoveDialogData({ categoryId: itemId, categoryName, targetParentId: newParentId ?? null, inheritedPreview, ownPreview });
+                  setMoveDialogOpen(true);
                 } catch (error) {
                   console.error('Error moving category:', error);
                   toast.error(translations.reorderError);
@@ -394,30 +439,15 @@ export default function CategoriesClient({ translations }: CategoriesClientProps
     setShowForm(true);
   };
 
-  const handleDelete = async (categoryId: string) => {
-    if (!confirm(translations.confirmDelete)) return;
+  const handleManageSources = (category: Category) => {
+    setSourcesCategory(category);
+    setSourcesModalOpen(true);
+  };
 
-    try {
-      const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
-      const headers: HeadersInit = { 'Content-Type': 'application/json' };
-      if (token) headers['Authorization'] = `Bearer ${token}`;
-      
-      const response = await fetch(`${API_BASE_URL}/admin/category/${categoryId}`, {
-        method: 'DELETE',
-        headers,
-        body: JSON.stringify({}), // Add empty body to match backend expectations
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete category');
-      }
-
-      toast.success(translations.deleted);
-      loadCategories();
-    } catch (error) {
-      console.error('Error deleting category:', error);
-      toast.error(translations.errorDeleting);
-    }
+  const handleDelete = (category: Category) => {
+    // Dos niveles max: si tiene children, es categoría; si no, es subcategoría
+    setDeletingCategory({ ...category, children: category.children || [] });
+    setDeleteModalOpen(true);
   };
 
   const resetForm = () => {
@@ -564,12 +594,47 @@ export default function CategoriesClient({ translations }: CategoriesClientProps
                 item={item}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
+                onManageSources={handleManageSources}
                 translations={translations}
               />
             ))}
           </div>
         )}
       </div>
+
+      {/* Sources Management Modal */}
+      <SourcesManagementModal
+        open={sourcesModalOpen}
+        onClose={() => setSourcesModalOpen(false)}
+        categoryId={sourcesCategory?.id || ''}
+        categoryName={sourcesCategory?.name || ''}
+      />
+
+      {/* Move Category Sources Dialog */}
+      {moveDialogData && (
+        <MoveCategorySourcesDialog
+          open={moveDialogOpen}
+          categoryId={moveDialogData.categoryId}
+          categoryName={moveDialogData.categoryName}
+          targetParentId={moveDialogData.targetParentId}
+          inheritedPreview={moveDialogData.inheritedPreview}
+          ownPreview={moveDialogData.ownPreview}
+          onClose={() => setMoveDialogOpen(false)}
+          onMoved={() => loadCategories()}
+        />
+      )}
+
+      {/* Confirm Delete Category Modal */}
+      <ConfirmDeleteCategoryModal
+        open={deleteModalOpen}
+        category={deletingCategory}
+        onClose={() => setDeleteModalOpen(false)}
+        onDeleted={() => {
+          setDeleteModalOpen(false);
+          setDeletingCategory(null);
+          loadCategories();
+        }}
+      />
       
       {/* Sortable.js Styles */}
       <style jsx>{`

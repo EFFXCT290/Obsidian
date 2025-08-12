@@ -85,6 +85,10 @@ model Category {
   children    Category[]  @relation("CategoryParent")
   torrents    Torrent[]
   requests    Request[]
+  // When true, this category inherits sources from its parent (if any)
+  inheritSources Boolean   @default(true)
+  // Relation: own category-source links
+  categorySources CategorySource[]
 }
 
 model Torrent {
@@ -420,4 +424,37 @@ model DownloadToken {
 
   @@index([token])
   @@index([expiresAt])
+}
+
+// Source master table holding the canonical list of source names
+model Source {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relation with category sources
+  categorySources CategorySource[]
+}
+
+// Relation table with metadata between Category and Source
+model CategorySource {
+  id          String   @id @default(uuid())
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId  String
+  source      Source   @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  sourceId    String
+  // True when this entry is inherited from a parent category (for materialized inheritance)
+  // Note: For now we compute inheritance on the fly and keep own entries with isInherited = false
+  isInherited Boolean  @default(false)
+  order       Int      @default(0)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([categoryId, sourceId])
+  @@index([categoryId])
+  @@index([sourceId])
+  @@index([categoryId, order])
 }

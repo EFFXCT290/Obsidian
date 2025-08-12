@@ -6,7 +6,7 @@ import {
   adminSetRssEnabledHandler, adminResetRssTokenHandler, listAllUsersHandler, updateUserEmailHandler, updateUserHandler
 } from '../controllers/admin/adminUserController.js';
 import {
-  listCategoriesHandler, createCategoryHandler, updateCategoryHandler, deleteCategoryHandler, reorderCategoriesHandler, moveCategoryHandler
+  listCategoriesHandler, createCategoryHandler, updateCategoryHandler, deleteCategoryHandler, reorderCategoriesHandler, moveCategoryHandler, getCategorySourcesHandler, addCategorySourceHandler, deleteCategorySourceHandler, reorderCategorySourcesHandler
 } from '../controllers/admin/adminCategoryController.js';
 import {
   createAnnouncementHandler, updateAnnouncementHandler, deleteAnnouncementHandler, pinAnnouncementHandler, unpinAnnouncementHandler, showAnnouncementHandler, hideAnnouncementHandler, listAllAnnouncementsHandler
@@ -45,6 +45,11 @@ export async function registerAdminRoutes(app: FastifyInstance) {
   app.delete('/admin/category/:id', { preHandler: requireAuth }, deleteCategoryHandler); //DONE
   app.post('/admin/category/reorder', { preHandler: requireAuth }, reorderCategoriesHandler); //DONE
   app.post('/admin/category/move', { preHandler: requireAuth }, moveCategoryHandler); //DONE
+  // Category Sources
+  app.get('/admin/category/:id/sources', { preHandler: requireAuth }, getCategorySourcesHandler);
+  app.post('/admin/category/:id/sources', { preHandler: requireAuth }, addCategorySourceHandler);
+  app.delete('/admin/category/:id/sources/:sourceId', { preHandler: requireAuth }, deleteCategorySourceHandler);
+  app.put('/admin/category/:id/sources/reorder', { preHandler: requireAuth }, reorderCategorySourcesHandler);
   app.post('/admin/request/:id/close', { preHandler: requireAuth }, closeRequestHandler); //DONE
   app.post('/admin/request/:id/reject', { preHandler: requireAuth }, rejectRequestHandler); //DONE
   app.post('/admin/announcement', { preHandler: requireAuth }, createAnnouncementHandler); //DONE
