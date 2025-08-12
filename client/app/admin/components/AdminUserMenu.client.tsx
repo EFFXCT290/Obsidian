@@ -2,12 +2,12 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+
 import { ChevronDown } from '@styled-icons/boxicons-regular/ChevronDown';
 import { ArrowBack } from '@styled-icons/boxicons-regular/ArrowBack';
 import { User as UserIcon } from '@styled-icons/boxicons-regular/User';
 import { LogOutCircle } from '@styled-icons/boxicons-regular/LogOutCircle';
-import { useCurrentUserAvatar } from '@/app/hooks/useAvatar';
+import { API_BASE_URL } from '@/lib/api';
 
 interface AdminUserMenuProps {
   translations: {
@@ -22,15 +22,15 @@ type CurrentUser = {
   email?: string | null;
   username?: string | null;
   role?: string | null;
+  avatarUrl?: string;
 };
 
-type CurrentUserResponse = { user?: CurrentUser | null };
+type CurrentUserResponse = CurrentUser;
 
 export default function AdminUserMenu({ translations }: AdminUserMenuProps) {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<CurrentUser | null>(null);
-  const { avatarUrl, isLoading: avatarLoading } = useCurrentUserAvatar();
   const [mounted, setMounted] = useState(false);
   const [isFetchingUser, setIsFetchingUser] = useState(true);
 
@@ -43,9 +43,9 @@ export default function AdminUserMenu({ translations }: AdminUserMenuProps) {
         const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
         const headers: HeadersInit = { 'Content-Type': 'application/json' };
         if (token) headers['Authorization'] = `Bearer ${token}`;
-        const res = await fetch('/api/user/current', { headers, cache: 'no-store' });
+        const res = await fetch(`${API_BASE_URL}/auth/profile`, { headers, cache: 'no-store' });
         const data: CurrentUserResponse = await res.json();
-        if (!cancelled) setUser(data.user || null);
+        if (!cancelled) setUser(data || null);
       } catch {
         if (!cancelled) setUser(null);
       } finally {
@@ -96,9 +96,9 @@ export default function AdminUserMenu({ translations }: AdminUserMenuProps) {
   return (
     <div className="relative" ref={dropdownRef}>
       <button onClick={() => setOpen(!open)} className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-surface-light transition-colors">
-        {avatarUrl ? (
+        {user?.avatarUrl ? (
           <div className="relative w-8 h-8 rounded-full overflow-hidden">
-            <Image src={avatarUrl} alt="User avatar" fill className="object-cover" />
+            <img src={`${API_BASE_URL}${user.avatarUrl}`} alt="User avatar" className="w-full h-full object-cover" />
           </div>
         ) : (
           <span className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-background text-sm font-medium">

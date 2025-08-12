@@ -58,7 +58,7 @@ export async function createInviteHandler(request: FastifyRequest, reply: Fastif
       expiresAt: new Date(now.getTime() + expiryHours * 60 * 60 * 1000),
     },
   });
-  return reply.send({ invite, inviteLink: `${process.env.FRONTEND_BASE_URL || 'http://localhost:3000'}/auth/signup/${code}` });
+  return reply.send({ invite, inviteLink: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/signup/${code}` });
 }
 
 export async function cancelInviteHandler(request: FastifyRequest, reply: FastifyReply) {

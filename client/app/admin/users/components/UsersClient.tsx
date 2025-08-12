@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Edit, Shield, Crown, User, Search, X, UserCheck, UserX, ShieldAlt } from '@styled-icons/boxicons-regular';
 import toast from 'react-hot-toast';
+import { API_BASE_URL } from '@/lib/api';
 
 interface User {
   id: string;
@@ -130,6 +131,8 @@ function UserItem({
   
   const canBanUser = currentUserRole === 'OWNER' || 
     (currentUserRole === 'ADMIN' && user.role !== 'ADMIN' && user.role !== 'OWNER');
+  
+
   
   const canPromoteToAdmin = currentUserRole === 'OWNER';
   const canPromoteToMod = currentUserRole === 'OWNER' || currentUserRole === 'ADMIN';
@@ -462,7 +465,7 @@ export default function UsersClient({ translations }: UsersClientProps) {
       if (debouncedSearchQuery) queryParams.append('q', debouncedSearchQuery);
       queryParams.append('limit', '100'); // Load more users for better UX
       
-      const response = await fetch(`/api/admin/users?${queryParams}`, { headers, cache: 'no-store' });
+      const response = await fetch(`${API_BASE_URL}/admin/users?${queryParams}`, { headers, cache: 'no-store' });
       if (!response.ok) {
         throw new Error('Failed to load users');
       }
@@ -486,10 +489,10 @@ export default function UsersClient({ translations }: UsersClientProps) {
       const headers: HeadersInit = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
       
-      const response = await fetch('/api/user/current', { headers, cache: 'no-store' });
+      const response = await fetch(`${API_BASE_URL}/auth/profile`, { headers, cache: 'no-store' });
       if (response.ok) {
         const data = await response.json();
-        setCurrentUserRole(data.user?.role || '');
+        setCurrentUserRole(data?.role || '');
       }
     } catch (error) {
       console.error('Error loading current user role:', error);
@@ -525,7 +528,7 @@ export default function UsersClient({ translations }: UsersClientProps) {
 
       // 1) Update email first (if changed), since backend also triggers verification flows
       if (emailChanged) {
-        const resEmail = await fetch(`/api/admin/user/${editingUser.id}/email`, {
+        const resEmail = await fetch(`${API_BASE_URL}/admin/user/${editingUser.id}/email`, {
           method: 'PUT',
           headers,
           body: JSON.stringify({ email: userData.email }),
@@ -537,7 +540,7 @@ export default function UsersClient({ translations }: UsersClientProps) {
 
       // 2) Update other details if any changed
       if (Object.keys(detailsPayload).length > 0) {
-        const resDetails = await fetch(`/api/admin/user/${editingUser.id}`, {
+        const resDetails = await fetch(`${API_BASE_URL}/admin/user/${editingUser.id}`, {
           method: 'PUT',
           headers,
           body: JSON.stringify(detailsPayload),
@@ -563,9 +566,10 @@ export default function UsersClient({ translations }: UsersClientProps) {
       const headers: HeadersInit = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
       
-      const response = await fetch(`/api/admin/user/${userId}/ban`, {
+      const response = await fetch(`${API_BASE_URL}/admin/user/${userId}/ban`, {
         method: 'POST',
         headers,
+        body: JSON.stringify({}),
       });
 
       if (!response.ok) {
@@ -588,9 +592,10 @@ export default function UsersClient({ translations }: UsersClientProps) {
       const headers: HeadersInit = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
       
-      const response = await fetch(`/api/admin/user/${userId}/unban`, {
+      const response = await fetch(`${API_BASE_URL}/admin/user/${userId}/unban`, {
         method: 'POST',
         headers,
+        body: JSON.stringify({}),
       });
 
       if (!response.ok) {
@@ -613,7 +618,7 @@ export default function UsersClient({ translations }: UsersClientProps) {
       const headers: HeadersInit = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
       
-      const response = await fetch(`/api/admin/user/${userId}/promote`, {
+      const response = await fetch(`${API_BASE_URL}/admin/user/${userId}/promote`, {
         method: 'POST',
         headers,
         body: JSON.stringify({ role }),
@@ -639,7 +644,7 @@ export default function UsersClient({ translations }: UsersClientProps) {
       const headers: HeadersInit = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
       
-      const response = await fetch(`/api/admin/user/${userId}/demote`, {
+      const response = await fetch(`${API_BASE_URL}/admin/user/${userId}/demote`, {
         method: 'POST',
         headers,
         body: JSON.stringify({ role }),

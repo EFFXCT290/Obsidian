@@ -4,7 +4,7 @@ import { serverT, getPreferredLanguage } from '@/app/lib/server-i18n';
 import DashboardHeader from './DashboardHeader';
 import DashboardSidebar from './DashboardSidebar';
 import { LanguageSelector } from '@/app/components/LanguageSelector';
-import { apiClient } from '@/lib/api';
+import { API_BASE_URL } from '@/lib/api';
 
 interface DashboardWrapperProps {
   children: ReactNode;
@@ -27,7 +27,8 @@ export default async function DashboardWrapper({ children }: DashboardWrapperPro
   // Load branding from API
   let brandingName = 'Obsidian Tracker';
   try {
-    const branding = await apiClient.getBranding();
+    const response = await fetch(`${API_BASE_URL}/config/branding`);
+    const branding = await response.json();
     brandingName = branding.brandingName || brandingName;
   } catch {}
 

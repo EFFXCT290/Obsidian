@@ -14,6 +14,7 @@ import AuthInput from '../../shared/AuthInput';
 import PasswordStrengthBar from '@/app/auth/shared/PasswordStrengthBar';
 import { useRouter } from 'next/navigation';
 import { showNotification } from '@/app/utils/notifications';
+import { API_BASE_URL } from '@/lib/api';
 
 interface SignUpFormProps {
   registrationMode: string;
@@ -216,16 +217,17 @@ export function SignUpForm({
     setErrors({});
 
     try {
-      const response = await fetch('/api/auth/register', {
+      // Use the Fastify backend API instead of Next.js API route
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username: formData.username,
           email: formData.email,
+          username: formData.username,
           password: formData.password,
-          inviteCode: prefilledInviteCode || formData.inviteCode
+          inviteCode: (_registrationMode?.toUpperCase?.() === 'INVITE') ? (prefilledInviteCode || formData.inviteCode) : null
         })
       });
 

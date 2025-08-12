@@ -5,6 +5,7 @@ import { FormField } from '@/app/components/ui/FigmaFloatingLabelInput';
 import { SelectField } from '@/app/components/ui/FigmaFloatingLabelSelect';
 import { ToggleSwitch } from '@/app/components/ui/ToggleSwitch';
 import { showNotification } from '@/app/utils/notifications';
+import { API_BASE_URL } from '@/lib/api';
 import { Cog } from '@styled-icons/boxicons-regular/Cog';
 import { Envelope } from '@styled-icons/boxicons-regular/Envelope';
 import { Shield } from '@styled-icons/boxicons-regular/Shield';
@@ -101,7 +102,7 @@ export default function SettingsContent({ translations }: SettingsContentProps) 
         const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
         const headers: HeadersInit = { 'Content-Type': 'application/json' };
         if (token) headers['Authorization'] = `Bearer ${token}`;
-        const res = await fetch('/api/admin/config', { headers, cache: 'no-store' });
+        const res = await fetch(`${API_BASE_URL}/admin/config`, { headers, cache: 'no-store' });
         const data = (await res.json()) as ConfigState;
         setConfig(data || {});
         // Determine preset after loading config
@@ -141,7 +142,7 @@ export default function SettingsContent({ translations }: SettingsContentProps) 
       const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
       const headers: HeadersInit = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
-      const res = await fetch('/api/admin/config', { method: 'POST', headers, body: JSON.stringify(config) });
+              const res = await fetch(`${API_BASE_URL}/admin/config`, { method: 'POST', headers, body: JSON.stringify(config) });
       if (!res.ok) throw new Error('Failed');
       showNotification('Configuration saved');
     } catch {
@@ -487,7 +488,7 @@ export default function SettingsContent({ translations }: SettingsContentProps) 
                           const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
                           const headers: HeadersInit = { 'Content-Type': 'application/json' };
                           if (token) headers['Authorization'] = `Bearer ${token}`;
-                          const res = await fetch('/api/admin/smtp/test', { method: 'POST', headers, body: JSON.stringify({ to: config.smtpFrom || '' }) });
+                          const res = await fetch(`${API_BASE_URL}/admin/smtp/test`, { method: 'POST', headers, body: JSON.stringify({ to: config.smtpFrom || '' }) });
                           if (!res.ok) throw new Error('Failed');
                           showNotification(translations.settings?.ui?.smtpSuccess || 'Test email sent');
                         } catch {

@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Plus, Edit, Trash } from '@styled-icons/boxicons-regular';
 import toast from 'react-hot-toast';
 import Sortable from 'sortablejs';
+import { API_BASE_URL } from '@/lib/api';
 
 interface Category {
   id: string;
@@ -190,7 +191,7 @@ export default function CategoriesClient({ translations }: CategoriesClientProps
       const headers: HeadersInit = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
       
-      const response = await fetch('/api/admin/category', { headers, cache: 'no-store' });
+      const response = await fetch(`${API_BASE_URL}/admin/category`, { headers, cache: 'no-store' });
       if (!response.ok) {
         throw new Error('Failed to load categories');
       }
@@ -310,9 +311,9 @@ export default function CategoriesClient({ translations }: CategoriesClientProps
                     forceReorder: true // Signal to backend to recalculate all orders
                   };
                   
-                  console.log('Sending request:', requestBody);
+
                   
-                  const response = await fetch('/api/admin/category', {
+                  const response = await fetch(`${API_BASE_URL}/admin/category`, {
                     method: 'POST',
                     headers,
                     body: JSON.stringify(requestBody),
@@ -333,7 +334,7 @@ export default function CategoriesClient({ translations }: CategoriesClientProps
             });
             
             sortableInstances.current.push(instance);
-            console.log('Created sortable instance for:', allSortables[i]);
+
           } catch (error) {
             console.error('Error creating sortable instance:', error);
           }
@@ -354,8 +355,8 @@ export default function CategoriesClient({ translations }: CategoriesClientProps
 
     try {
       const url = editingCategory 
-        ? `/api/admin/category/${editingCategory.id}`
-        : '/api/admin/category';
+        ? `${API_BASE_URL}/admin/category/${editingCategory.id}`
+        : `${API_BASE_URL}/admin/category`;
       
       const method = editingCategory ? 'PUT' : 'POST';
       
@@ -401,9 +402,10 @@ export default function CategoriesClient({ translations }: CategoriesClientProps
       const headers: HeadersInit = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
       
-      const response = await fetch(`/api/admin/category/${categoryId}`, {
+      const response = await fetch(`${API_BASE_URL}/admin/category/${categoryId}`, {
         method: 'DELETE',
         headers,
+        body: JSON.stringify({}), // Add empty body to match backend expectations
       });
 
       if (!response.ok) {

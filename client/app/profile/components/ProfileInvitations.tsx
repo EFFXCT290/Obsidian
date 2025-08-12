@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useI18n } from '@/app/hooks/useI18n';
 import useSWR from 'swr';
+import { API_BASE_URL } from '@/lib/api';
 
 interface InviteItem { id: string; code: string; createdAt: string; usedById?: string | null; expiresAt?: string | null }
 
@@ -11,7 +12,7 @@ export default function ProfileInvitations() {
   const [inviteLink, setInviteLink] = useState('');
 
   const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
-  const { data, isLoading, mutate } = useSWR(token ? ['/api/user/invites', token] : null, async ([url, _token]) => {
+  const { data, isLoading, mutate } = useSWR(token ? [`${API_BASE_URL}/user/invites`, token] : null, async ([url, _token]) => {
     const headers: HeadersInit = { 'Content-Type': 'application/json' };
     if (_token) headers['Authorization'] = `Bearer ${_token as string}`;
     const res = await fetch(url as string, { headers, cache: 'no-store' });
@@ -57,7 +58,7 @@ export default function ProfileInvitations() {
     const { showNotification } = await import('@/app/utils/notifications');
     try {
       showNotification('Creando invitación...', 'success');
-      const res = await fetch('/api/user/invites', { method: 'POST', headers });
+      const res = await fetch(`${API_BASE_URL}/user/invites`, { method: 'POST', headers });
       const data = await res.json();
       if (!res.ok) {
         showNotification(data?.error || 'Error al crear la invitación', 'error');
@@ -75,7 +76,7 @@ export default function ProfileInvitations() {
     const headers: HeadersInit = token ? { Authorization: `Bearer ${token}` } : {};
     const { showNotification } = await import('@/app/utils/notifications');
     try {
-      const res = await fetch(`/api/user/invites?id=${id}`, { method: 'DELETE', headers });
+      const res = await fetch(`${API_BASE_URL}/user/invites?id=${id}`, { method: 'DELETE', headers });
       const data = await res.json();
       if (!res.ok) {
         showNotification(data?.error || 'Error al cancelar la invitación', 'error');
@@ -90,7 +91,7 @@ export default function ProfileInvitations() {
 
   const shareLinkFor = (code: string) => {
     if (typeof window === 'undefined') return '';
-    return `${window.location.origin}/auth/signup/${code}`;
+    return `${typeof window !== 'undefined' && window.location.protocol === 'https:' ? 'https' : 'http'}://${typeof window !== 'undefined' ? window.location.host : 'localhost:3000'}/auth/signup/${code}`;
   };
 
   return (

@@ -1,5 +1,5 @@
 import { headers } from 'next/headers';
-import { apiClient } from '@/lib/api';
+import { API_BASE_URL } from '@/lib/api';
 import AuthCard from '../../shared/AuthCard';
 import { serverT, getPreferredLanguage } from '@/app/lib/server-i18n';
 import { LanguageSync } from '../../../components/LanguageSync';
@@ -30,7 +30,8 @@ export default async function InviteSignupPage({ params }: { params: Promise<{ c
   const title = serverT('auth.register.title', language);
   let inviteInfo: InviteInfo;
   try {
-    inviteInfo = await apiClient.getInviteByCode(code) as InviteInfo;
+    const response = await fetch(`${API_BASE_URL}/invite/${code}`);
+    inviteInfo = await response.json() as InviteInfo;
   } catch {
     inviteInfo = { valid: false };
   }

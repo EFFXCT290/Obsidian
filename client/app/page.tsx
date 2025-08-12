@@ -10,7 +10,7 @@ import { Suspense } from 'react';
 import { headers } from 'next/headers';
 import Link from 'next/link';
 import Image from 'next/image';
-import { apiClient } from '@/lib/api';
+import { API_BASE_URL } from '@/lib/api';
 import { serverT, getPreferredLanguage } from './lib/server-i18n';
 import { LanguageSync } from './components/LanguageSync';
 import { LanguageSelector } from './components/LanguageSelector';
@@ -37,7 +37,8 @@ function formatBytes(bytes: number): string {
  */
 async function SiteStatistics() {
   try {
-    const stats = await apiClient.getStats();
+    const response = await fetch(`${API_BASE_URL}/stats`);
+    const stats = await response.json();
     return (
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div className="text-center p-4 bg-surface rounded-lg border border-border">
@@ -79,7 +80,8 @@ export default async function Home() {
   // Load branding
   let brandingName = 'Obsidian Tracker';
   try {
-    const branding = await apiClient.getBranding();
+    const response = await fetch(`${API_BASE_URL}/config/branding`);
+    const branding = await response.json();
     brandingName = branding.brandingName || brandingName;
   } catch {}
   

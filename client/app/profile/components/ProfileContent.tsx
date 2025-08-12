@@ -5,6 +5,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
+import { API_BASE_URL } from '@/lib/api';
 import ProfileHeader from './ProfileHeader';
 import ProfileSidebar from './ProfileSidebar';
 import ProfileStats from './ProfileStats';
@@ -20,7 +21,7 @@ export default function ProfileContent() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
-  const { data: currentData, isLoading: userLoading } = useSWR(token ? ['/api/user/current', token] : null, async ([url, _token]) => {
+  const { data: currentData, isLoading: userLoading } = useSWR(token ? [`${API_BASE_URL}/auth/profile`, token] : null, async ([url, _token]) => {
     const headers: HeadersInit = { 'Content-Type': 'application/json' };
     if (_token) headers['Authorization'] = `Bearer ${_token as string}`;
     const res = await fetch(url as string, { headers, cache: 'no-store' });
@@ -28,7 +29,7 @@ export default function ProfileContent() {
   });
 
   useEffect(() => {
-    const currentUser = currentData?.user || null;
+    const currentUser = currentData || null;
     setUser(currentUser);
     if (currentUser) {
       try { localStorage.setItem('user', JSON.stringify({ id: currentUser.id, email: currentUser.email, username: currentUser.username })); } catch {}
@@ -78,15 +79,16 @@ export default function ProfileContent() {
       formData.append('avatar', file);
       const token = localStorage.getItem('authToken');
       const headers: HeadersInit = token ? { Authorization: `Bearer ${token}` } : {};
-      const res = await fetch('/api/user/avatar', { method: 'POST', headers, body: formData });
+      const res = await fetch(`${API_BASE_URL}/user/avatar`, { method: 'POST', headers, body: formData });
       if (!res.ok) {
         showNotification('Error al subir el avatar', 'error');
         throw new Error('Upload failed');
       }
       showNotification('Avatar subido correctamente', 'success');
-      // Limpia el preview y fuerza recarga del hook de avatar mediante actualización de localStorage timestamp
+      // Clear preview and refresh user data
       setPreviewUrl(null);
-      localStorage.setItem('avatarUpdatedAt', Date.now().toString());
+      // Force refresh of user data by updating the SWR cache
+      window.location.reload();
     } catch {
       const { showNotification } = await import('@/app/utils/notifications');
       showNotification('Error al subir el avatar', 'error');
@@ -97,7 +99,7 @@ export default function ProfileContent() {
     try {
       const token = localStorage.getItem('authToken');
       const headers: HeadersInit = token ? { Authorization: `Bearer ${token}` } : {};
-      const res = await fetch('/api/user/avatar', { method: 'DELETE', headers });
+      const res = await fetch(`${API_BASE_URL}/user/avatar`, { method: 'DELETE', headers });
       if (!res.ok) {
         const { showNotification } = await import('@/app/utils/notifications');
         showNotification('Error al eliminar el avatar', 'error');
@@ -106,7 +108,8 @@ export default function ProfileContent() {
       const { showNotification } = await import('@/app/utils/notifications');
       showNotification('Avatar eliminado', 'success');
       setPreviewUrl(null);
-      localStorage.setItem('avatarUpdatedAt', Date.now().toString());
+      // Force refresh of user data by updating the SWR cache
+      window.location.reload();
     } catch {
       const { showNotification } = await import('@/app/utils/notifications');
       showNotification('Error al eliminar el avatar', 'error');

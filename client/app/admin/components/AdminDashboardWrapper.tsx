@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { headers } from 'next/headers';
 import { getPreferredLanguage, serverT } from '@/app/lib/server-i18n';
 import AdminHeader from './AdminHeader';
-import { apiClient } from '@/lib/api';
+import { API_BASE_URL } from '@/lib/api';
 import AdminSidebar from './AdminSidebar';
 import type { AdminNavItem } from './AdminSidebarClient';
 
@@ -27,7 +27,8 @@ export default async function AdminDashboardWrapper({ children }: { children: Re
   // Load branding from API (server-side)
   let brandingName = 'Obsidian Tracker';
   try {
-    const branding = await apiClient.getBranding();
+    const response = await fetch(`${API_BASE_URL}/config/branding`);
+    const branding = await response.json();
     brandingName = branding.brandingName || brandingName;
   } catch {}
 

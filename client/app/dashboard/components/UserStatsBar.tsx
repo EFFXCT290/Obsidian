@@ -5,6 +5,7 @@ import { Upload } from '@styled-icons/boxicons-regular/Upload';
 import { Download } from '@styled-icons/boxicons-regular/Download';
 import { BarChartSquare } from '@styled-icons/boxicons-regular/BarChartSquare';
 import { Award } from '@styled-icons/boxicons-regular/Award';
+import { API_BASE_URL } from '@/lib/api';
 
 interface UserStats {
   uploaded: number;
@@ -34,19 +35,20 @@ export default function UserStatsBar() {
           const token = localStorage.getItem('authToken');
           if (token) headers['Authorization'] = `Bearer ${token}`;
         } catch {}
-        const res = await fetch('/api/user/current', { headers, cache: 'no-store' });
+        const res = await fetch(`${API_BASE_URL}/auth/profile`, { headers, cache: 'no-store' });
         const data = await res.json();
-        if (data && data.user) {
+        console.log('UserStatsBar API response:', data);
+        if (data) {
           setUserStats({
-            uploaded: Number(data.user.uploaded || 0),
-            downloaded: Number(data.user.downloaded || 0),
-            ratio: typeof data.user.ratio === 'number' ? data.user.ratio : 0,
-            bonusPoints: Number(data.user.bonusPoints || 0),
-            hitnrunCount: Number(data.user.hitnrunCount || 0),
+            uploaded: Number(data.upload || 0),
+            downloaded: Number(data.download || 0),
+            ratio: typeof data.ratio === 'number' ? data.ratio : 0,
+            bonusPoints: Number(data.bonusPoints || 0),
+            hitnrunCount: Number(data.hitAndRunCount || 0),
           });
         }
-      } catch {
-        // ignore
+      } catch (error) {
+        console.error('Error fetching user stats:', error);
       }
     })();
   }, []);

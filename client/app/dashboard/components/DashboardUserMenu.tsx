@@ -2,12 +2,13 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+
 import { ChevronDown } from '@styled-icons/boxicons-regular/ChevronDown';
 import { User } from '@styled-icons/boxicons-regular/User';
 import { Lock } from '@styled-icons/boxicons-regular/Lock';
 import { LogOutCircle } from '@styled-icons/boxicons-regular/LogOutCircle';
-import { useCurrentUserAvatar } from '@/app/hooks/useAvatar';
+
+import { API_BASE_URL } from '@/lib/api';
 
 interface DashboardUserMenuProps {
   translations: {
@@ -19,20 +20,19 @@ interface DashboardUserMenuProps {
 }
 
 interface CurrentUserResponse {
-  user?: {
-    id: string;
-    email: string;
-    username: string;
-    role?: string;
-  };
+  id: string;
+  email: string;
+  username: string;
+  role?: string;
+  avatarUrl?: string;
+  avatarFileId?: string;
 }
 
 export default function DashboardUserMenu({ translations }: DashboardUserMenuProps) {
-  const [user, setUser] = useState<CurrentUserResponse['user'] | null>(null);
+  const [user, setUser] = useState<CurrentUserResponse | null>(null);
   const [isFetchingUser, setIsFetchingUser] = useState<boolean>(true);
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { avatarUrl, isLoading: avatarLoading } = useCurrentUserAvatar();
 
   useEffect(() => {
     let cancelled = false;
@@ -43,9 +43,9 @@ export default function DashboardUserMenu({ translations }: DashboardUserMenuPro
           const token = localStorage.getItem('authToken');
           if (token) headers['Authorization'] = `Bearer ${token}`;
         } catch {}
-        const res = await fetch('/api/user/current', { headers, cache: 'no-store' });
+        const res = await fetch(`${API_BASE_URL}/auth/profile`, { headers, cache: 'no-store' });
         const data: CurrentUserResponse = await res.json();
-        if (!cancelled) setUser(data.user || null);
+        if (!cancelled) setUser(data || null);
       } catch {
         if (!cancelled) setUser(null);
       }
@@ -65,7 +65,7 @@ export default function DashboardUserMenu({ translations }: DashboardUserMenuPro
   }, []);
 
   // Loading skeleton to avoid content popping (matches original style)
-  if (isFetchingUser || avatarLoading) {
+  if (isFetchingUser) {
     return (
       <div className="flex items-center space-x-2 px-3 py-2">
         <div className="w-8 h-8 bg-primary/20 rounded-full animate-pulse" />
@@ -101,9 +101,9 @@ export default function DashboardUserMenu({ translations }: DashboardUserMenuPro
         onClick={() => setOpen(!open)}
         className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-surface-light transition-colors"
       >
-        {avatarUrl ? (
+        {user?.avatarUrl ? (
           <div className="relative w-8 h-8 rounded-full overflow-hidden">
-            <Image src={avatarUrl} alt="User avatar" fill className="object-cover" />
+            <img src={`${API_BASE_URL}${user.avatarUrl}`} alt="User avatar" className="w-full h-full object-cover" />
           </div>
         ) : (
           <span className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-background text-sm font-medium">

@@ -43,7 +43,7 @@ export async function registerHandler(request: FastifyRequest, reply: FastifyRep
   // Validate invite usage policy
   let inviteRecord: any | null = null;
   if (config.registrationMode === 'INVITE') {
-    // Validate invite code exists, not used, not expired
+    // Validate invite code exists, not used, not expired (usedById = null means unused)
     if (!inviteCode || typeof inviteCode !== 'string') {
       return reply.status(400).send({ error: 'Invite code required.' });
     }
@@ -51,7 +51,7 @@ export async function registerHandler(request: FastifyRequest, reply: FastifyRep
     inviteRecord = await prisma.invite.findFirst({
       where: {
         code: inviteCode,
-        usedById: null,
+        usedById: null, // Check that invite hasn't been used
         OR: [
           { expiresAt: null },
           { expiresAt: { gt: now } }
@@ -99,12 +99,19 @@ export async function registerHandler(request: FastifyRequest, reply: FastifyRep
     }
   });
 
-  // If INVITE mode, consume the invite by deleting it (destroy after use)
+  // If INVITE mode, mark the invite as used
   if (config.registrationMode === 'INVITE' && inviteRecord) {
     try {
-      await prisma.invite.delete({ where: { id: inviteRecord.id } });
-    } catch {
-      // ignore errors
+      await prisma.invite.update({
+        where: { id: inviteRecord.id },
+        data: {
+          usedById: user.id,
+          usedAt: new Date()
+        }
+      });
+    } catch (err) {
+      console.error('[registerHandler] Failed to mark invite as used:', err);
+      // Don't fail registration if invite update fails, but log the error
     }
   }
 

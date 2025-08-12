@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { API_BASE_URL } from '@/lib/api';
 
 interface OverviewStats {
   users?: number;
@@ -24,13 +25,13 @@ export default function AdminDashboardClient({ language }: { language?: string }
         const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
         const headers: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {};
 
-        const resUser = await fetch('/api/user/current', { headers, cache: 'no-store' });
+        const resUser = await fetch(`${API_BASE_URL}/auth/profile`, { headers, cache: 'no-store' });
         const dataUser = await resUser.json();
-        const userRole = dataUser?.user?.role as string | undefined;
+        const userRole = dataUser?.role as string | undefined;
         setRole(userRole || null);
 
         if (userRole === 'ADMIN' || userRole === 'OWNER') {
-          const resStats = await fetch('/api/admin/overview-stats', { headers, cache: 'no-store' });
+          const resStats = await fetch(`${API_BASE_URL}/admin/overview-stats`, { headers, cache: 'no-store' });
           if (resStats.ok) {
             const data = await resStats.json();
             setStats(data || null);

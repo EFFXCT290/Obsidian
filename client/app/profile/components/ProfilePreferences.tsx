@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useI18n } from '@/app/hooks/useI18n';
+import { API_BASE_URL } from '@/lib/api';
 
 export default function ProfilePreferences() {
   const { t } = useI18n();
@@ -17,7 +18,7 @@ export default function ProfilePreferences() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch('/api/user/preferences', { headers: authHeaders(), cache: 'no-store' });
+        const res = await fetch(`${API_BASE_URL}/user/preferences`, { headers: authHeaders(), cache: 'no-store' });
         const data = await res.json();
         if (res.ok) {
           if (data.preferredLanguage) setPreferredLanguage(data.preferredLanguage);
@@ -28,7 +29,7 @@ export default function ProfilePreferences() {
   }, []);
 
   const save = async () => {
-    await fetch('/api/user/preferences', { method: 'PUT', headers: authHeaders(), body: JSON.stringify({ preferredLanguage, allowEmailNotifications: allowEmail }) });
+    await fetch(`${API_BASE_URL}/user/preferences`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify({ preferredLanguage, allowEmailNotifications: allowEmail }) });
   };
 
   return (

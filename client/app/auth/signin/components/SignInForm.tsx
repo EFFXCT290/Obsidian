@@ -10,6 +10,9 @@ import Link from 'next/link';
 import AuthInput from '@/app/auth/shared/AuthInput';
 import { useRouter } from 'next/navigation';
 import { showNotification } from '@/app/utils/notifications';
+import { API_BASE_URL } from '@/lib/api';
+
+
 
 interface SignInFormProps {
   registrationMode: string;
@@ -71,9 +74,19 @@ export default function SignInForm({ registrationMode, language = 'es', serverTr
 
     setIsSubmitting(true); setLoading(true); setErrors({});
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ login: formData.login, password: formData.password })
+      // Use the Fastify backend API instead of Next.js API route
+      // Determine if login is email or username
+      const isEmail = formData.login.includes('@');
+      const requestBody = {
+        email: isEmail ? formData.login : null,
+        username: isEmail ? null : formData.login,
+        password: formData.password
+      };
+      
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody)
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || getServerTranslation('errorNotification', 'auth.login.error'));

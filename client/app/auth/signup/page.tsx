@@ -9,7 +9,7 @@ import { headers } from 'next/headers';
 import { serverT, getPreferredLanguage } from '@/app/lib/server-i18n';
 import AuthCard from '../shared/AuthCard';
 import { SignUpForm } from './components/SignUpForm';
-import { apiClient } from '@/lib/api';
+import { API_BASE_URL } from '@/lib/api';
 import { FormFieldSkeleton, ButtonSkeleton, TextSkeleton } from '../../components/ui/Skeleton';
 import { LanguageSync } from '../../components/LanguageSync';
 import { LanguageSelector } from '../../components/LanguageSelector';
@@ -51,7 +51,18 @@ export default async function RegisterPage() {
   // }
   
   // Direct database access - no HTTP overhead
-  const { registrationMode } = await apiClient.getRegistrationMode();
+  let registrationMode = 'OPEN'; // Default fallback
+  try {
+    const response = await fetch(`${API_BASE_URL}/config/registration-mode`);
+    if (response.ok) {
+      const data = await response.json();
+      registrationMode = data.registrationMode || 'OPEN';
+    } else {
+      console.error('Failed to fetch registration mode:', response.status);
+    }
+  } catch (error) {
+    console.error('Error fetching registration mode:', error);
+  }
 
   // Server-side translations with debug logging
   const title = serverT('auth.register.title', language);
