@@ -43,53 +43,33 @@ export async function announceHandler(request: FastifyRequest, reply: FastifyRep
     // If it's already a hex string (40 chars), use it directly
     if (info_hash.length === 40 && /^[0-9a-fA-F]+$/.test(info_hash)) {
       infoHashHex = info_hash.toLowerCase();
-    } else {
-      // Check if it's URL-encoded (contains % characters)
-      if (info_hash.includes('%')) {
-        try {
-          // Manual URL decoding for malformed URLs
-          let decoded = info_hash;
-          
-          // Replace common percent-encoded sequences
-          const percentDecodeMap: { [key: string]: string } = {
-            '%ae': '\xae',
-            '%e4': '\xe4',
-            '%db': '\xdb',
-            '%ed': '\xed',
-            '%02': '\x02',
-            '%01': '\x01',
-            '%2c': '\x2c',
-            '%05': '\x05',
-            '%c0': '\xc0',
-            '%d2': '\xd2',
-            '%e8': '\xe8',
-            '%f6': '\xf6'
-          };
-          
-          for (const [encoded, replacement] of Object.entries(percentDecodeMap)) {
-            decoded = decoded.replace(new RegExp(encoded, 'g'), replacement);
-          }
-          
-          console.log('[announceHandler] Manually decoded:', decoded);
-          console.log('[announceHandler] Manually decoded length:', decoded.length);
-          console.log('[announceHandler] Manually decoded as hex:', Buffer.from(decoded, 'binary').toString('hex'));
-          
-          // The decoded string should be 20 bytes of binary data
-          if (decoded.length === 20) {
-            infoHashHex = Buffer.from(decoded, 'binary').toString('hex');
-          } else {
-            // Fallback: treat as binary directly
-            infoHashHex = Buffer.from(info_hash, 'binary').toString('hex');
-          }
-        } catch (error) {
-          // If manual decode fails, treat as binary data directly
-          console.log('[announceHandler] Manual decode failed, treating as binary:', error instanceof Error ? error.message : String(error));
-          infoHashHex = Buffer.from(info_hash, 'binary').toString('hex');
+    } else if (info_hash.includes('%')) {
+      // Handle malformed URL-encoded info hash
+      try {
+        // First try proper URL decoding
+        const decoded = decodeURIComponent(info_hash);
+        infoHashHex = Buffer.from(decoded, 'binary').toString('hex');
+        console.log('[announceHandler] URL decoded info_hash:', decoded);
+        console.log('[announceHandler] Converted to hex:', infoHashHex);
+      } catch (error) {
+        console.log('[announceHandler] URL decode failed, trying manual decode...');
+        // Manual decode for malformed URLs - replace %xx with actual bytes
+        let decoded = info_hash;
+        const percentMatches = info_hash.match(/%[0-9a-fA-F]{2}/g) || [];
+        
+        for (const match of percentMatches) {
+          const hexByte = match.substring(1); // Remove %
+          const byte = parseInt(hexByte, 16);
+          decoded = decoded.replace(match, String.fromCharCode(byte));
         }
-      } else {
-        // Otherwise treat as binary and convert to hex
-        infoHashHex = Buffer.from(info_hash, 'binary').toString('hex');
+        
+        console.log('[announceHandler] Manually decoded:', decoded);
+        infoHashHex = Buffer.from(decoded, 'binary').toString('hex');
+        console.log('[announceHandler] Manual decode result:', infoHashHex);
       }
+    } else {
+      // Otherwise treat as binary and convert to hex
+      infoHashHex = Buffer.from(info_hash, 'binary').toString('hex');
     }
   } else {
     infoHashHex = Buffer.from(info_hash, 'binary').toString('hex');
@@ -333,13 +313,24 @@ export async function scrapeHandler(request: FastifyRequest, reply: FastifyReply
         // Check if it's URL-encoded (contains % characters)
         if (info_hash.includes('%')) {
           try {
-            // Try URL decode first, then convert to hex
+            // Try URL decode first
             const decoded = decodeURIComponent(info_hash);
             hex = Buffer.from(decoded, 'binary').toString('hex');
           } catch (error) {
-            // If URL decode fails, treat as binary data directly
-            console.log('[scrapeHandler] URL decode failed, treating as binary:', error instanceof Error ? error.message : String(error));
-            hex = Buffer.from(info_hash, 'binary').toString('hex');
+            console.log('[scrapeHandler] URL decode failed, trying manual decode...');
+            // Manual decode for malformed URLs - replace %xx with actual bytes
+            let decoded = info_hash;
+            const percentMatches = info_hash.match(/%[0-9a-fA-F]{2}/g) || [];
+            
+            for (const match of percentMatches) {
+              const hexByte = match.substring(1); // Remove %
+              const byte = parseInt(hexByte, 16);
+              decoded = decoded.replace(match, String.fromCharCode(byte));
+            }
+            
+            console.log('[scrapeHandler] Manually decoded:', decoded);
+            hex = Buffer.from(decoded, 'binary').toString('hex');
+            console.log('[scrapeHandler] Manual decode result:', hex);
           }
         } else {
           // Otherwise treat as binary and convert to hex

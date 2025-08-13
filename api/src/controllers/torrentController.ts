@@ -157,40 +157,7 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
     return reply.status(400).send({ error: 'El torrent debe estar marcado como privado.' });
   }
 
-  // VALIDATION: Announce must include user's passkey
-  const announceCandidates: string[] = [];
-  if (typeof (parsed as any)?.announce === 'string') {
-    announceCandidates.push((parsed as any).announce);
-  }
-  if (Array.isArray((parsed as any)?.announce)) {
-    announceCandidates.push(...((parsed as any).announce as string[]));
-  }
-  if (Array.isArray((parsed as any)?.announceList)) {
-    for (const group of (parsed as any).announceList) {
-      if (Array.isArray(group)) announceCandidates.push(...group);
-    }
-  }
-  let passkeyFound = false;
-  for (const url of announceCandidates) {
-    try {
-      const u = new URL(String(url));
-      const pk = u.searchParams.get('passkey');
-      if (pk && pk === user.passkey) {
-        passkeyFound = true;
-        break;
-      }
-    } catch {
-      // ignore malformed announce entries
-      if (typeof url === 'string' && url.includes(`passkey=${user.passkey}`)) {
-        passkeyFound = true;
-        break;
-      }
-    }
-  }
-  if (!passkeyFound) {
-    console.log('[uploadTorrentHandler] Rejected: passkey not found in announce URLs');
-    return reply.status(400).send({ error: 'El torrent debe incluir tu passkey en la URL de announce.' });
-  }
+
 
   // VALIDATION: No emojis in provided torrent name
   const emojiRegex = /\p{Extended_Pictographic}|[\u200D\uFE0F]/u;
@@ -274,19 +241,12 @@ async function modifyTorrentAnnounceUrls(torrentBuffer: Buffer, passkey: string)
     const baseUrl = process.env.API_BASE_URL || 'http://localhost:3001';
     const newAnnounce = `${baseUrl}/announce?passkey=${passkey}`;
     
-    // Filter out non-bencode-compatible values and create new torrent data
-    const modifiedTorrent: any = {};
-    
-    // Copy only bencode-compatible values
-    for (const [key, value] of Object.entries(parsed)) {
-      if (typeof value === 'string' || typeof value === 'number' || Array.isArray(value)) {
-        modifiedTorrent[key] = value;
-      }
-    }
-    
-    // Set the announce URLs
-    modifiedTorrent.announce = newAnnounce;
-    modifiedTorrent['announce-list'] = [[newAnnounce]];
+    // Create new torrent data with modified announce
+    const modifiedTorrent = {
+      ...parsed,
+      announce: newAnnounce,
+      'announce-list': [[newAnnounce]] // Replace announce list with our tracker
+    };
     
     // Re-encode the torrent
     const encoded = bencode.encode(modifiedTorrent);
@@ -616,8 +576,76 @@ export async function recalculateUserStatsHandler(request: FastifyRequest, reply
   if (!user || (user.role !== 'ADMIN' && user.role !== 'OWNER' && user.role !== 'FOUNDER')) {
     return reply.status(403).send({ error: 'Forbidden' });
   }
-  // Implementation for recalculating user stats
-  return reply.send({ success: true, message: 'User stats recalculated' });
+
+  try {
+    // Get all users
+    const users = await prisma.user.findMany();
+    const results = [];
+
+    for (const userRecord of users) {
+      // Get all announces for this user, grouped by peerId
+      const announces = await prisma.announce.findMany({
+        where: { userId: userRecord.id },
+        orderBy: { lastAnnounceAt: 'asc' }
+      });
+
+      let totalUpload = BigInt(0);
+      let totalDownload = BigInt(0);
+
+      // Group announces by peerId to calculate deltas properly
+      const peerGroups: { [peerId: string]: any[] } = {};
+      announces.forEach(announce => {
+        if (!peerGroups[announce.peerId]) {
+          peerGroups[announce.peerId] = [];
+        }
+        peerGroups[announce.peerId].push(announce);
+      });
+
+      // Calculate totals for each peer
+      for (const [peerId, peerAnnounces] of Object.entries(peerGroups)) {
+        peerAnnounces.sort((a, b) => a.lastAnnounceAt.getTime() - b.lastAnnounceAt.getTime());
+        
+        let lastUploaded = BigInt(0);
+        let lastDownloaded = BigInt(0);
+
+        for (const announce of peerAnnounces) {
+          const uploadDelta = announce.uploaded - lastUploaded;
+          const downloadDelta = announce.downloaded - lastDownloaded;
+          
+          if (uploadDelta > BigInt(0)) totalUpload += uploadDelta;
+          if (downloadDelta > BigInt(0)) totalDownload += downloadDelta;
+          
+          lastUploaded = announce.uploaded;
+          lastDownloaded = announce.downloaded;
+        }
+      }
+
+      // Update user record
+      await prisma.user.update({
+        where: { id: userRecord.id },
+        data: {
+          upload: totalUpload,
+          download: totalDownload
+        }
+      });
+
+      results.push({
+        userId: userRecord.id,
+        username: userRecord.username,
+        upload: totalUpload.toString(),
+        download: totalDownload.toString(),
+        ratio: totalDownload > BigInt(0) ? Number(totalUpload) / Number(totalDownload) : 0
+      });
+    }
+
+    return reply.send({
+      message: 'User stats recalculated successfully',
+      results
+    });
+  } catch (error) {
+    console.error('[recalculateUserStatsHandler] Error:', error);
+    return reply.status(500).send({ error: 'Failed to recalculate user stats' });
+  }
 }
 
 // New secure download token handlers
