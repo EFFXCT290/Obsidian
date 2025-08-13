@@ -30,7 +30,7 @@ export default function AdminDashboardClient({ language }: { language?: string }
         const userRole = dataUser?.role as string | undefined;
         setRole(userRole || null);
 
-        if (userRole === 'ADMIN' || userRole === 'OWNER') {
+        if (userRole === 'ADMIN' || userRole === 'OWNER' || userRole === 'FOUNDER') {
           const resStats = await fetch(`${API_BASE_URL}/admin/overview-stats`, { headers, cache: 'no-store' });
           if (resStats.ok) {
             const data = await resStats.json();
@@ -66,7 +66,7 @@ export default function AdminDashboardClient({ language }: { language?: string }
     );
   }
 
-  if (!(role === 'ADMIN' || role === 'OWNER')) {
+      if (!(role === 'ADMIN' || role === 'OWNER' || role === 'FOUNDER')) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background text-text">
         <div className="text-center p-8 bg-surface border border-border rounded-lg">

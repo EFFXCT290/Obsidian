@@ -139,12 +139,15 @@
         "errorUnbanning": "Error al desbanear usuario",
         "errorPromoting": "Error al promover usuario",
         "errorDemoting": "Error al degradar usuario",
+        "transferFounder": "Transferir Fundador",
+        "founderRoleWarning": "El rol de Fundador no puede ser cambiado. Use el botón de transferir para transferir el rol de fundador.",
         "loading": "Cargando...",
         "roles": {
           "USER": "Usuario",
           "MOD": "Moderador",
           "ADMIN": "Administrador",
-          "OWNER": "Propietario"
+          "OWNER": "Propietario",
+          "FOUNDER": "Fundador"
         },
         "statuses": {
           "ACTIVE": "Activo",

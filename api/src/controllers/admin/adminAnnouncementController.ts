@@ -5,7 +5,7 @@ import { getAnnouncementEmail } from '../../utils/emailTemplates/announcementEma
 const prisma = new PrismaClient();
 
 function isAdminOrOwner(user: any) {
-  return user && (user.role === 'ADMIN' || user.role === 'OWNER');
+  return user && (user.role === 'ADMIN' || user.role === 'OWNER' || user.role === 'FOUNDER');
 }
 
 export async function createAnnouncementHandler(request: FastifyRequest, reply: FastifyReply) {

@@ -66,6 +66,7 @@ enum UserRole {
   MOD
   ADMIN
   OWNER
+  FOUNDER
 }
 
 enum UserStatus {

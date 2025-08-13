@@ -438,7 +438,7 @@ export async function getNfoHandler(request: FastifyRequest, reply: FastifyReply
 
 export async function approveTorrentHandler(request: FastifyRequest, reply: FastifyReply) {
   const user = (request as any).user;
-  if (!user || (user.role !== 'ADMIN' && user.role !== 'OWNER')) {
+  if (!user || (user.role !== 'ADMIN' && user.role !== 'OWNER' && user.role !== 'FOUNDER')) {
     return reply.status(403).send({ error: 'Forbidden' });
   }
   const { id } = request.params as any;
@@ -467,7 +467,7 @@ export async function approveTorrentHandler(request: FastifyRequest, reply: Fast
 
 export async function rejectTorrentHandler(request: FastifyRequest, reply: FastifyReply) {
   const user = (request as any).user;
-  if (!user || (user.role !== 'ADMIN' && user.role !== 'OWNER')) {
+  if (!user || (user.role !== 'ADMIN' && user.role !== 'OWNER' && user.role !== 'FOUNDER')) {
     return reply.status(403).send({ error: 'Forbidden' });
   }
   const { id } = request.params as any;
@@ -514,7 +514,7 @@ export async function rejectTorrentHandler(request: FastifyRequest, reply: Fasti
 
 export async function listAllTorrentsHandler(request: FastifyRequest, reply: FastifyReply) {
   const user = (request as any).user;
-  if (!user || (user.role !== 'ADMIN' && user.role !== 'OWNER')) {
+  if (!user || (user.role !== 'ADMIN' && user.role !== 'OWNER' && user.role !== 'FOUNDER')) {
     return reply.status(403).send({ error: 'Forbidden' });
   }
   
@@ -594,7 +594,7 @@ export async function listAllTorrentsHandler(request: FastifyRequest, reply: Fas
 
 export async function getTorrentStatsHandler(request: FastifyRequest, reply: FastifyReply) {
   const user = (request as any).user;
-  if (!user || (user.role !== 'ADMIN' && user.role !== 'OWNER')) {
+  if (!user || (user.role !== 'ADMIN' && user.role !== 'OWNER' && user.role !== 'FOUNDER')) {
     return reply.status(403).send({ error: 'Forbidden' });
   }
   
@@ -613,7 +613,7 @@ export async function getTorrentStatsHandler(request: FastifyRequest, reply: Fas
 
 export async function recalculateUserStatsHandler(request: FastifyRequest, reply: FastifyReply) {
   const user = (request as any).user;
-  if (!user || (user.role !== 'ADMIN' && user.role !== 'OWNER')) {
+  if (!user || (user.role !== 'ADMIN' && user.role !== 'OWNER' && user.role !== 'FOUNDER')) {
     return reply.status(403).send({ error: 'Forbidden' });
   }
   // Implementation for recalculating user stats

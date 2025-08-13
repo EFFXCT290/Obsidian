@@ -131,7 +131,7 @@ export async function deleteCommentHandler(request: FastifyRequest, reply: Fasti
   const { commentId } = request.params as any;
   const comment = await prisma.comment.findUnique({ where: { id: commentId } });
   if (!comment) return reply.status(404).send({ error: 'Comment not found' });
-  if (comment.userId !== user.id && user.role !== 'ADMIN' && user.role !== 'OWNER') {
+      if (comment.userId !== user.id && user.role !== 'ADMIN' && user.role !== 'OWNER' && user.role !== 'FOUNDER') {
     return reply.status(403).send({ error: 'Forbidden' });
   }
   await prisma.comment.update({ where: { id: commentId }, data: { deleted: true } });

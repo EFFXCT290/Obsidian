@@ -139,12 +139,15 @@
         "errorUnbanning": "Error unbanning user",
         "errorPromoting": "Error promoting user",
         "errorDemoting": "Error demoting user",
+        "transferFounder": "Transfer Founder",
+        "founderRoleWarning": "Founder role cannot be changed. Use the transfer button to transfer founder role.",
         "loading": "Loading...",
         "roles": {
           "USER": "User",
           "MOD": "Moderator",
           "ADMIN": "Administrator",
-          "OWNER": "Owner"
+          "OWNER": "Owner",
+          "FOUNDER": "Founder"
         },
         "statuses": {
           "ACTIVE": "Active",

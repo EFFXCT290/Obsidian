@@ -123,7 +123,7 @@ export default function DashboardUserMenu({ translations }: DashboardUserMenuPro
           >
             <User size={18} className="mr-2 inline" /> {translations.profile}
           </Link>
-          {(role === 'ADMIN' || role === 'OWNER') && (
+          {(role === 'ADMIN' || role === 'OWNER' || role === 'FOUNDER') && (
             <Link
               href="/admin/dashboard"
               className="block px-4 py-3 text-text hover:bg-surface-light transition-colors"

@@ -9,7 +9,7 @@ interface User {
   id: string;
   username: string;
   email: string;
-  role: 'USER' | 'MOD' | 'ADMIN' | 'OWNER';
+  role: 'USER' | 'MOD' | 'ADMIN' | 'OWNER' | 'FOUNDER';
   status: 'ACTIVE' | 'BANNED' | 'DISABLED';
   createdAt: string;
   emailVerified: boolean;
@@ -18,7 +18,7 @@ interface User {
 interface UserFormData {
   username: string;
   email: string;
-  role: 'USER' | 'MOD' | 'ADMIN' | 'OWNER';
+  role: 'USER' | 'MOD' | 'ADMIN' | 'OWNER' | 'FOUNDER';
   status: 'ACTIVE' | 'BANNED' | 'DISABLED';
   emailVerified: boolean;
 }
@@ -73,12 +73,15 @@ interface UsersClientProps {
     errorUnbanning: string;
     errorPromoting: string;
     errorDemoting: string;
+    transferFounder: string;
+    founderRoleWarning: string;
     loading: string;
     roles: {
       USER: string;
       MOD: string;
       ADMIN: string;
       OWNER: string;
+      FOUNDER: string;
     };
     statuses: {
       ACTIVE: string;
@@ -96,6 +99,7 @@ function UserItem({
   onUnban, 
   onPromote, 
   onDemote,
+  onTransferFounder,
   translations,
   currentUserRole
 }: { 
@@ -103,13 +107,15 @@ function UserItem({
   onEdit: (user: User) => void; 
   onBan: (userId: string) => void;
   onUnban: (userId: string) => void;
-  onPromote: (userId: string, role: 'MOD' | 'ADMIN') => void;
-  onDemote: (userId: string, role: 'USER' | 'MOD') => void;
+  onPromote: (userId: string, role: 'MOD' | 'ADMIN' | 'OWNER') => void;
+  onDemote: (userId: string, role: 'USER' | 'MOD' | 'ADMIN') => void;
+  onTransferFounder: (userId: string) => void;
   translations: UsersClientProps['translations'];
   currentUserRole: string;
 }) {
   const getRoleIcon = (role: string) => {
     switch (role) {
+      case 'FOUNDER': return <Crown size={16} className="text-purple-600" />;
       case 'OWNER': return <Crown size={16} className="text-yellow-500" />;
       case 'ADMIN': return <Shield size={16} className="text-red-500" />;
       case 'MOD': return <ShieldAlt size={16} className="text-blue-500" />;
@@ -126,16 +132,19 @@ function UserItem({
     }
   };
 
-  const canEditUser = currentUserRole === 'OWNER' || 
-    (currentUserRole === 'ADMIN' && user.role !== 'ADMIN' && user.role !== 'OWNER');
+  const canEditUser = currentUserRole === 'OWNER' || currentUserRole === 'FOUNDER' || 
+    (currentUserRole === 'ADMIN' && user.role !== 'ADMIN' && user.role !== 'OWNER' && user.role !== 'FOUNDER');
   
-  const canBanUser = currentUserRole === 'OWNER' || 
-    (currentUserRole === 'ADMIN' && user.role !== 'ADMIN' && user.role !== 'OWNER');
+  const canBanUser = currentUserRole === 'OWNER' || currentUserRole === 'FOUNDER' || 
+    (currentUserRole === 'ADMIN' && user.role !== 'ADMIN' && user.role !== 'OWNER' && user.role !== 'FOUNDER');
   
 
   
-  const canPromoteToAdmin = currentUserRole === 'OWNER';
-  const canPromoteToMod = currentUserRole === 'OWNER' || currentUserRole === 'ADMIN';
+  const canPromoteToFounder = currentUserRole === 'FOUNDER';
+  const canPromoteToOwner = currentUserRole === 'FOUNDER';
+  const canPromoteToAdmin = currentUserRole === 'OWNER' || currentUserRole === 'FOUNDER';
+  const canPromoteToMod = currentUserRole === 'OWNER' || currentUserRole === 'ADMIN' || currentUserRole === 'FOUNDER';
+  const canTransferFounder = currentUserRole === 'FOUNDER' && user.role !== 'FOUNDER';
 
   return (
     <div className="bg-surface rounded-lg border border-border p-4 mb-2">
@@ -165,7 +174,9 @@ function UserItem({
           <div className="text-sm text-text-secondary">
             <div className="flex items-center space-x-1">
               {getRoleIcon(user.role)}
-              <span>{translations.roles[user.role]}</span>
+              <span className="font-medium text-text">
+                {translations.roles[user.role] || user.role || 'Unknown Role'}
+              </span>
             </div>
             <div className="flex items-center space-x-1">
               {getStatusIcon(user.status)}
@@ -218,15 +229,15 @@ function UserItem({
               </button>
             )}
             
-                         {canPromoteToMod && user.role === 'USER' && (
-               <button
-                 onClick={() => onPromote(user.id, 'MOD')}
-                 className="p-2 rounded transition-colors text-blue-500 hover:text-blue-600 hover:bg-blue-50"
-                 title={translations.promote}
-               >
-                 <ShieldAlt size={16} />
-               </button>
-             )}
+                                     {canPromoteToMod && user.role === 'USER' && (
+              <button
+                onClick={() => onPromote(user.id, 'MOD')}
+                className="p-2 rounded transition-colors text-blue-500 hover:text-blue-600 hover:bg-blue-50"
+                title={translations.promote}
+              >
+                <ShieldAlt size={16} />
+              </button>
+            )}
             
             {canPromoteToAdmin && user.role === 'MOD' && (
               <button
@@ -235,6 +246,26 @@ function UserItem({
                 title={translations.promote}
               >
                 <Shield size={16} />
+              </button>
+            )}
+            
+            {canPromoteToOwner && user.role === 'ADMIN' && (
+              <button
+                onClick={() => onPromote(user.id, 'OWNER')}
+                className="p-2 rounded transition-colors text-yellow-500 hover:text-yellow-600 hover:bg-yellow-50"
+                title={translations.promote}
+              >
+                <Crown size={16} />
+              </button>
+            )}
+            
+            {canTransferFounder && (
+              <button
+                onClick={() => onTransferFounder(user.id)}
+                className="p-2 rounded transition-colors text-purple-500 hover:text-purple-600 hover:bg-purple-50"
+                title={translations.transferFounder}
+              >
+                <Crown size={16} />
               </button>
             )}
             
@@ -255,6 +286,16 @@ function UserItem({
                 title={translations.demote}
               >
                 <ShieldAlt size={16} />
+              </button>
+            )}
+            
+            {canPromoteToOwner && user.role === 'OWNER' && (
+              <button
+                onClick={() => onDemote(user.id, 'ADMIN')}
+                className="p-2 rounded transition-colors text-red-500 hover:text-red-600 hover:bg-red-50"
+                title={translations.demote}
+              >
+                <Shield size={16} />
               </button>
             )}
           </div>
@@ -358,11 +399,17 @@ function EditUserModal({
             <label htmlFor="role" className="block text-sm font-medium text-text mb-1">
               {translations.role}
             </label>
+            {user.role === 'FOUNDER' && (
+              <div className="mb-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-sm text-yellow-800">
+                {translations.founderRoleWarning}
+              </div>
+            )}
             <select
               id="role"
               value={formData.role}
               onChange={(e) => setFormData({ ...formData, role: e.target.value as any })}
               className="w-full px-3 py-2 border border-border rounded-md bg-surface text-text focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              disabled={user.role === 'FOUNDER'}
             >
               <option value="USER">{translations.roles.USER}</option>
               <option value="MOD">{translations.roles.MOD}</option>
@@ -610,7 +657,7 @@ export default function UsersClient({ translations }: UsersClientProps) {
     }
   };
 
-  const handlePromote = async (userId: string, role: 'MOD' | 'ADMIN') => {
+  const handlePromote = async (userId: string, role: 'MOD' | 'ADMIN' | 'OWNER') => {
     if (!confirm(translations.confirmPromote)) return;
 
     try {
@@ -636,7 +683,7 @@ export default function UsersClient({ translations }: UsersClientProps) {
     }
   };
 
-  const handleDemote = async (userId: string, role: 'USER' | 'MOD') => {
+  const handleDemote = async (userId: string, role: 'USER' | 'MOD' | 'ADMIN') => {
     if (!confirm(translations.confirmDemote)) return;
 
     try {
@@ -659,6 +706,33 @@ export default function UsersClient({ translations }: UsersClientProps) {
     } catch (error) {
       console.error('Error demoting user:', error);
       toast.error(translations.errorDemoting);
+    }
+  };
+
+  const handleTransferFounder = async (userId: string) => {
+    if (!confirm('Are you sure you want to transfer your founder role to this user? This action cannot be undone.')) return;
+
+    try {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
+      const headers: HeadersInit = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+      
+      const response = await fetch(`${API_BASE_URL}/admin/user/transfer-founder`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ targetUserId: userId }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to transfer founder role');
+      }
+
+      toast.success('Founder role transferred successfully');
+      loadUsers();
+      loadCurrentUserRole(); // Refresh current user role
+    } catch (error) {
+      console.error('Error transferring founder role:', error);
+      toast.error('Failed to transfer founder role');
     }
   };
 
@@ -739,6 +813,7 @@ export default function UsersClient({ translations }: UsersClientProps) {
                 onUnban={handleUnban}
                 onPromote={handlePromote}
                 onDemote={handleDemote}
+                onTransferFounder={handleTransferFounder}
                 translations={translations}
                 currentUserRole={currentUserRole}
               />

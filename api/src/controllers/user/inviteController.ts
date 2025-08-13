@@ -27,7 +27,7 @@ export async function listUserInvitesHandler(request: FastifyRequest, reply: Fas
     where: { createdById: authUser.id },
     orderBy: { createdAt: 'desc' },
   });
-  const isStaff = authUser.role === 'ADMIN' || authUser.role === 'OWNER';
+  const isStaff = authUser.role === 'ADMIN' || authUser.role === 'OWNER' || authUser.role === 'FOUNDER';
   const maxInvitesPerUser = isStaff ? Number.POSITIVE_INFINITY : (config.maxInvitesPerUser ?? 5);
   const activeCount = invites.filter(i => !i.usedById && (!i.expiresAt || i.expiresAt > new Date())).length;
   const availableInvites = isStaff ? 999999 : Math.max(0, (maxInvitesPerUser as number) - activeCount);
@@ -41,7 +41,7 @@ export async function createInviteHandler(request: FastifyRequest, reply: Fastif
   if (config.registrationMode !== 'INVITE') {
     return reply.status(403).send({ error: 'Invitations are disabled by registration mode.' });
   }
-  const isStaff = authUser.role === 'ADMIN' || authUser.role === 'OWNER';
+  const isStaff = authUser.role === 'ADMIN' || authUser.role === 'OWNER' || authUser.role === 'FOUNDER';
   const maxInvitesPerUser = isStaff ? Number.POSITIVE_INFINITY : (config.maxInvitesPerUser ?? 5);
   const expiryHours = config.inviteExpiryHours ?? 6;
   const now = new Date();

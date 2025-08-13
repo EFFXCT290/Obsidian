@@ -5,7 +5,7 @@ import { getRequestClosedEmail, getRequestRejectedEmail } from '../../utils/emai
 const prisma = new PrismaClient();
 
 function isAdminOrOwner(user: any) {
-  return user && (user.role === 'ADMIN' || user.role === 'OWNER');
+  return user && (user.role === 'ADMIN' || user.role === 'OWNER' || user.role === 'FOUNDER');
 }
 
 export async function closeRequestHandler(request: FastifyRequest, reply: FastifyReply) {

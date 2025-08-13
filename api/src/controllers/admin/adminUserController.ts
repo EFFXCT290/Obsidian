@@ -25,7 +25,15 @@ function convertBigInts(obj: any): any {
 }
 
 function isAdminOrOwner(user: any) {
-  return user && (user.role === 'ADMIN' || user.role === 'OWNER');
+  return user && (user.role === 'ADMIN' || user.role === 'OWNER' || user.role === 'FOUNDER');
+}
+
+function isOwnerOrFounder(user: any) {
+  return user && (user.role === 'OWNER' || user.role === 'FOUNDER');
+}
+
+function isFounder(user: any) {
+  return user && user.role === 'FOUNDER';
 }
 
 export async function banUserHandler(request: FastifyRequest, reply: FastifyReply) {
@@ -79,22 +87,32 @@ export async function promoteUserHandler(request: FastifyRequest, reply: Fastify
   const { role } = request.body as any;
   
   // Validate role
-  if (!role || !['MOD', 'ADMIN'].includes(role)) {
-    return reply.status(400).send({ error: 'Invalid role. Can only promote to MOD or ADMIN' });
+  if (!role || !['MOD', 'ADMIN', 'OWNER'].includes(role)) {
+    return reply.status(400).send({ error: 'Invalid role. Can only promote to MOD, ADMIN, or OWNER' });
   }
   
   // Get target user
   const targetUser = await prisma.user.findUnique({ where: { id } });
   if (!targetUser) return reply.status(404).send({ error: 'User not found' });
   
-  // Check if target is already OWNER
-  if (targetUser.role === 'OWNER') {
-    return reply.status(400).send({ error: 'Cannot promote OWNER' });
+  // Check if target is already OWNER or FOUNDER
+  if (targetUser.role === 'OWNER' || targetUser.role === 'FOUNDER') {
+    return reply.status(400).send({ error: 'Cannot promote OWNER or FOUNDER' });
   }
   
-  // Only OWNER can promote to ADMIN
-  if (role === 'ADMIN' && user.role !== 'OWNER') {
-    return reply.status(403).send({ error: 'Only owners can promote users to ADMIN' });
+  // Only OWNER or FOUNDER can promote to ADMIN
+  if (role === 'ADMIN' && !isOwnerOrFounder(user)) {
+    return reply.status(403).send({ error: 'Only owners or founders can promote users to ADMIN' });
+  }
+  
+  // Only FOUNDER can promote to OWNER
+  if (role === 'OWNER' && !isFounder(user)) {
+    return reply.status(403).send({ error: 'Only founders can promote users to OWNER' });
+  }
+  
+  // NO ONE can be promoted to FOUNDER - only role transfer allowed
+  if (role === 'FOUNDER') {
+    return reply.status(400).send({ error: 'Cannot promote to FOUNDER. Use role transfer instead.' });
   }
   
   const updated = await prisma.user.update({ where: { id }, data: { role } });
@@ -120,20 +138,44 @@ export async function demoteUserHandler(request: FastifyRequest, reply: FastifyR
   const user = (request as any).user;
   if (!isAdminOrOwner(user)) return reply.status(403).send({ error: 'Forbidden' });
   const { id } = request.params as any;
+  const { role } = request.body as any;
   const target = await prisma.user.findUnique({ where: { id } });
   if (!target) return reply.status(404).send({ error: 'User not found' });
   
-  // Cannot demote OWNER
-  if (target.role === 'OWNER') {
-    return reply.status(400).send({ error: 'Cannot demote OWNER' });
+  // Validate target role
+  if (!role || !['USER', 'MOD', 'ADMIN'].includes(role)) {
+    return reply.status(400).send({ error: 'Invalid target role. Can only demote to USER, MOD, or ADMIN' });
   }
   
-  // Only OWNER can demote ADMIN
-  if (target.role === 'ADMIN' && user.role !== 'OWNER') {
-    return reply.status(403).send({ error: 'Only owners can demote ADMIN users' });
+  // Cannot demote FOUNDER
+  if (target.role === 'FOUNDER') {
+    return reply.status(400).send({ error: 'Cannot demote FOUNDER' });
   }
   
-  const updated = await prisma.user.update({ where: { id }, data: { role: 'USER' } });
+  // Only FOUNDER can demote OWNER
+  if (target.role === 'OWNER' && !isFounder(user)) {
+    return reply.status(403).send({ error: 'Only founders can demote OWNER users' });
+  }
+  
+  // Only OWNER or FOUNDER can demote ADMIN
+  if (target.role === 'ADMIN' && !isOwnerOrFounder(user)) {
+    return reply.status(403).send({ error: 'Only owners or founders can demote ADMIN users' });
+  }
+  
+  // Validate demotion target role
+  if (target.role === 'OWNER' && role !== 'ADMIN') {
+    return reply.status(400).send({ error: 'Owners can only be demoted to ADMIN' });
+  }
+  
+  if (target.role === 'ADMIN' && role !== 'MOD') {
+    return reply.status(400).send({ error: 'Admins can only be demoted to MOD' });
+  }
+  
+  if (target.role === 'MOD' && role !== 'USER') {
+    return reply.status(400).send({ error: 'Moderators can only be demoted to USER' });
+  }
+  
+  const updated = await prisma.user.update({ where: { id }, data: { role } });
   // Notify demoted user
   if (target) {
     const { text, html } = getDemotionEmail({ username: target.username, oldRole: target.role });
@@ -149,6 +191,66 @@ export async function demoteUserHandler(request: FastifyRequest, reply: FastifyR
     });
   }
   return reply.send({ success: true, user: convertBigInts(updated) });
+}
+
+export async function transferFounderRoleHandler(request: FastifyRequest, reply: FastifyReply) {
+  const user = (request as any).user;
+  if (!isFounder(user)) return reply.status(403).send({ error: 'Only founders can transfer founder role' });
+  
+  const { targetUserId } = request.body as any;
+  if (!targetUserId) return reply.status(400).send({ error: 'Target user ID is required' });
+  
+  // Get target user
+  const targetUser = await prisma.user.findUnique({ where: { id: targetUserId } });
+  if (!targetUser) return reply.status(404).send({ error: 'Target user not found' });
+  
+  // Cannot transfer to yourself
+  if (targetUserId === user.id) {
+    return reply.status(400).send({ error: 'Cannot transfer founder role to yourself' });
+  }
+  
+  // Check if there are other founders (should only be one)
+  const founderCount = await prisma.user.count({ where: { role: 'FOUNDER' } });
+  if (founderCount > 1) {
+    return reply.status(400).send({ error: 'Multiple founders detected. Please resolve this before transferring.' });
+  }
+  
+  // Transfer founder role
+  const [newFounder, oldFounder] = await Promise.all([
+    prisma.user.update({ where: { id: targetUserId }, data: { role: 'FOUNDER' } }),
+    prisma.user.update({ where: { id: user.id }, data: { role: 'OWNER' } })
+  ]);
+  
+  // Notify both users
+  await Promise.all([
+    createNotification({
+      userId: newFounder.id,
+      type: 'promotion',
+      message: 'You have been promoted to FOUNDER.',
+      sendEmail: true,
+      email: newFounder.email,
+      emailSubject: 'You are now the Founder',
+      emailText: `Congratulations! You are now the Founder of the system.`,
+      emailHtml: `<div>Congratulations! You are now the Founder of the system.</div>`
+    }),
+    createNotification({
+      userId: oldFounder.id,
+      type: 'demotion',
+      message: 'You have transferred your founder role to another user.',
+      sendEmail: true,
+      email: oldFounder.email,
+      emailSubject: 'Founder Role Transferred',
+      emailText: `You have transferred your founder role to ${newFounder.username}.`,
+      emailHtml: `<div>You have transferred your founder role to ${newFounder.username}.</div>`
+    })
+  ]);
+  
+  return reply.send({ 
+    success: true, 
+    message: 'Founder role transferred successfully',
+    newFounder: convertBigInts(newFounder),
+    oldFounder: convertBigInts(oldFounder)
+  });
 }
 
 export async function listPeerBans(request: FastifyRequest, reply: FastifyReply) {
@@ -220,8 +322,8 @@ export async function addPeerBan(request: FastifyRequest, reply: FastifyReply) {
         emailText: text,
         emailHtml: html
       });
-      // Notify all admins/owners
-      const admins = await prisma.user.findMany({ where: { OR: [{ role: 'ADMIN' }, { role: 'OWNER' }] } });
+      // Notify all admins/owners/founders
+      const admins = await prisma.user.findMany({ where: { OR: [{ role: 'ADMIN' }, { role: 'OWNER' }, { role: 'FOUNDER' }] } });
       for (const admin of admins) {
         await createNotification({
           userId: admin.id,
@@ -261,8 +363,8 @@ export async function removePeerBan(request: FastifyRequest, reply: FastifyReply
         emailText: `Dear ${bannedUser.username},\n\nYou have been unbanned by admin ${user.username}. You may now use the tracker again.`,
         emailHtml: `<div style='font-family:sans-serif;color:#222;'><h2>You have been unbanned</h2><p>Dear <b>${bannedUser.username}</b>,</p><p>You have been unbanned by admin <b>${user.username}</b>. You may now use the tracker again.</p></div>`
       });
-      // Notify all admins/owners
-      const admins = await prisma.user.findMany({ where: { OR: [{ role: 'ADMIN' }, { role: 'OWNER' }] } });
+      // Notify all admins/owners/founders
+      const admins = await prisma.user.findMany({ where: { OR: [{ role: 'ADMIN' }, { role: 'OWNER' }, { role: 'FOUNDER' }] } });
       for (const admin of admins) {
         await createNotification({
           userId: admin.id,
@@ -410,37 +512,47 @@ export async function updateUserHandler(request: FastifyRequest, reply: FastifyR
   if (!existingUser) return reply.status(404).send({ error: 'User not found' });
   
   // Validate role permissions
-  if (role && !['USER', 'MOD', 'ADMIN', 'OWNER'].includes(role)) {
+  if (role && !['USER', 'MOD', 'ADMIN', 'OWNER', 'FOUNDER'].includes(role)) {
     return reply.status(400).send({ error: 'Invalid role' });
   }
   
   // Role change restrictions
   if (role && role !== existingUser.role) {
-    // Only OWNER can assign OWNER role
-    if (role === 'OWNER' && admin.role !== 'OWNER') {
-      return reply.status(403).send({ error: 'Only owners can assign OWNER role' });
+    // Only FOUNDER can assign FOUNDER role
+    if (role === 'FOUNDER' && !isFounder(admin)) {
+      return reply.status(403).send({ error: 'Only founders can assign FOUNDER role' });
     }
     
-    // Only OWNER can promote to ADMIN
-    if (role === 'ADMIN' && admin.role !== 'OWNER') {
-      return reply.status(403).send({ error: 'Only owners can promote users to ADMIN' });
+    // Only FOUNDER can assign OWNER role
+    if (role === 'OWNER' && !isFounder(admin)) {
+      return reply.status(403).send({ error: 'Only founders can assign OWNER role' });
     }
     
-    // Only OWNER can demote ADMIN
-    if (existingUser.role === 'ADMIN' && admin.role !== 'OWNER') {
-      return reply.status(403).send({ error: 'Only owners can demote ADMIN users' });
+    // Only OWNER or FOUNDER can promote to ADMIN
+    if (role === 'ADMIN' && !isOwnerOrFounder(admin)) {
+      return reply.status(403).send({ error: 'Only owners or founders can promote users to ADMIN' });
     }
     
-    // Cannot demote OWNER
-    if (existingUser.role === 'OWNER') {
-      return reply.status(400).send({ error: 'Cannot demote OWNER' });
+    // Only OWNER or FOUNDER can demote ADMIN
+    if (existingUser.role === 'ADMIN' && !isOwnerOrFounder(admin)) {
+      return reply.status(403).send({ error: 'Only owners or founders can demote ADMIN users' });
+    }
+    
+    // Cannot demote FOUNDER
+    if (existingUser.role === 'FOUNDER') {
+      return reply.status(400).send({ error: 'Cannot demote FOUNDER' });
+    }
+    
+    // Only FOUNDER can demote OWNER
+    if (existingUser.role === 'OWNER' && !isFounder(admin)) {
+      return reply.status(403).send({ error: 'Only founders can demote OWNER users' });
     }
   }
   
-  // Only OWNER can change usernames
+  // Only OWNER or FOUNDER can change usernames
   if (username && username !== existingUser.username) {
-    if (admin.role !== 'OWNER') {
-      return reply.status(403).send({ error: 'Only owners can change usernames' });
+    if (!isOwnerOrFounder(admin)) {
+      return reply.status(403).send({ error: 'Only owners or founders can change usernames' });
     }
   }
   

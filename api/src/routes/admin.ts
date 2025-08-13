@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { requireAuth } from '../middleware/authMiddleware.js';
 import {
-  banUserHandler, unbanUserHandler, promoteUserHandler, demoteUserHandler,
+  banUserHandler, unbanUserHandler, promoteUserHandler, demoteUserHandler, transferFounderRoleHandler,
   listPeerBans, getPeerBan, addPeerBan, removePeerBan,
   adminSetRssEnabledHandler, adminResetRssTokenHandler, listAllUsersHandler, updateUserEmailHandler, updateUserHandler
 } from '../controllers/admin/adminUserController.js';
@@ -26,6 +26,7 @@ export async function registerAdminRoutes(app: FastifyInstance) {
   app.post('/admin/user/:id/unban', { preHandler: requireAuth }, unbanUserHandler); //DONE
   app.post('/admin/user/:id/promote', { preHandler: requireAuth }, promoteUserHandler); //DONE
   app.post('/admin/user/:id/demote', { preHandler: requireAuth }, demoteUserHandler); //DONE
+  app.post('/admin/user/transfer-founder', { preHandler: requireAuth }, transferFounderRoleHandler); //DONE
   app.get('/admin/overview-stats', { preHandler: requireAuth }, getOverviewStatsHandler); //DONE
   app.get('/admin/users', { preHandler: requireAuth }, listAllUsersHandler); //DONE
   app.put('/admin/user/:id/email', { preHandler: requireAuth }, updateUserEmailHandler); //DONE

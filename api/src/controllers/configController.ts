@@ -3,7 +3,7 @@ import { getConfig, updateConfig } from '../services/configService.js';
 import { sendEmailNotification } from '../services/notificationService.js';
 
 function isAdminOrOwner(user: any) {
-  return user && (user.role === 'ADMIN' || user.role === 'OWNER');
+  return user && (user.role === 'ADMIN' || user.role === 'OWNER' || user.role === 'FOUNDER');
 }
 
 export async function getConfigHandler(request: FastifyRequest, reply: FastifyReply) {
