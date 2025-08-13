@@ -7,16 +7,12 @@ import Image from 'next/image';
 import { format, isValid, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { showNotification } from '@/app/utils/notifications';
-import { Like } from '@styled-icons/boxicons-regular/Like';
-import { Dislike } from '@styled-icons/boxicons-regular/Dislike';
-import { Download } from '@styled-icons/boxicons-regular/Download';
-import { Magnet } from '@styled-icons/boxicons-regular/Magnet';
-import { Bookmark } from '@styled-icons/boxicons-regular/Bookmark';
-import { BookmarkMinus } from '@styled-icons/boxicons-regular/BookmarkMinus';
-import { Copy } from '@styled-icons/boxicons-regular/Copy';
-import { User } from '@styled-icons/boxicons-regular/User';
+import { useI18n } from '@/app/hooks/useI18n';
 import TorrentFiles from './TorrentFiles';
 import CommentsSection from './CommentsSection';
+import ActionsPanel from './ActionsPanel';
+import NfoPanel from './NfoPanel';
+import UploaderPanel from './UploaderPanel';
 
 interface TorrentResponse {
   id: string;
@@ -43,6 +39,7 @@ interface TorrentResponse {
 // Legacy CommentItem interface removed; replaced by CommentsSection
 
 export default function TorrentDetailContent({ torrentId }: { torrentId: string }) {
+  const { t } = useI18n();
   const [, setDownloading] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
   const [posterVisible, setPosterVisible] = useState(true);
@@ -120,9 +117,9 @@ export default function TorrentDetailContent({ torrentId }: { torrentId: string 
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
-      showNotification('Descarga iniciada', 'success');
+      showNotification(t('common.downloadStarted','Descarga iniciada'), 'success');
     } catch {
-      showNotification('No se pudo descargar el torrent', 'error');
+      showNotification(t('torrentDetail.actions.downloadError','No se pudo descargar el torrent'), 'error');
     } finally {
       setDownloading(false);
     }
@@ -139,34 +136,34 @@ export default function TorrentDetailContent({ torrentId }: { torrentId: string 
       if (!data?.bookmarked) {
         const headers: Record<string, string> = { ...baseHeaders, 'Content-Type': 'application/json' };
         const res = await fetch(`${API_BASE_URL}/bookmarks`, { method: 'POST', headers, body: JSON.stringify({ torrentId }) });
-        if (!res.ok) throw new Error('Error al guardar');
+        if (!res.ok) throw new Error('bookmark-failed');
         mutate({ ...(data as TorrentResponse), bookmarked: true }, false);
-        showNotification('Marcado como favorito', 'success');
+        showNotification(t('torrentDetail.actions.bookmarkAdded','Marcado como favorito'), 'success');
       } else {
         const res = await fetch(`${API_BASE_URL}/bookmarks/${torrentId}`, { method: 'DELETE', headers: baseHeaders });
-        if (!res.ok) throw new Error('Error al eliminar');
+         if (!res.ok) throw new Error('bookmark-remove-failed');
         mutate({ ...(data as TorrentResponse), bookmarked: false }, false);
-        showNotification('Eliminado de favoritos', 'success');
+         showNotification(t('torrentDetail.actions.bookmarkRemoved','Eliminado de favoritos'), 'success');
       }
       // Revalidar inmediatamente para persistir estado al recargar
       await mutate();
     } catch {
-      showNotification('Operación de favorito fallida', 'error');
+      showNotification(t('torrentDetail.actions.bookmarkError','Operación de favorito fallida'), 'error');
     }
   };
 
   useEffect(() => {
     if (hasMounted && error) {
-      showNotification('No se pudo cargar el torrent', 'error');
+      showNotification(t('torrentDetail.actions.loadError','No se pudo cargar el torrent'), 'error');
     }
-  }, [error, hasMounted]);
+  }, [error, hasMounted, t]);
 
   return (
     <div className="max-w-6xl mx-auto p-6">
       {/* Header */}
       {hasMounted && error ? (
         <div className="mb-6">
-          <div className="bg-red-500/10 border border-red-500/20 rounded p-4">No encontrado</div>
+          <div className="bg-red-500/10 border border-red-500/20 rounded p-4">{t('torrentDetail.header.notFound','No encontrado')}</div>
         </div>
       ) : null}
       <div className="mb-6">
@@ -177,7 +174,7 @@ export default function TorrentDetailContent({ torrentId }: { torrentId: string 
           <span>{createdAtFormatted}</span>
           {hasMounted && data && data.isApproved === false && (
             <span className="px-2 py-0.5 text-xs rounded bg-yellow-500/10 text-yellow-500 border border-yellow-500/20">
-              Pendiente de aprobación
+              {t('torrentDetail.header.pendingApproval','Pendiente de aprobación')}
             </span>
           )}
         </div>
@@ -202,32 +199,32 @@ export default function TorrentDetailContent({ torrentId }: { torrentId: string 
             )}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 text-sm">
               <div>
-                <div className="text-text-secondary">Tamaño</div>
+                <div className="text-text-secondary">{t('torrentDetail.fields.size','Tamaño')}</div>
                 <div className="text-text font-medium" suppressHydrationWarning>{hasMounted ? sizeHuman : ' '}</div>
               </div>
               <div>
-                <div className="text-text-secondary">Seeders</div>
+                <div className="text-text-secondary">{t('torrentDetail.fields.seeders','Seeders')}</div>
                 <div className="text-text font-medium" suppressHydrationWarning>{hasMounted && data ? (data.seeders ?? 0) : ' '}</div>
               </div>
               <div>
-                <div className="text-text-secondary">Leechers</div>
+                <div className="text-text-secondary">{t('torrentDetail.fields.leechers','Leechers')}</div>
                 <div className="text-text font-medium" suppressHydrationWarning>{hasMounted && data ? (data.leechers ?? 0) : ' '}</div>
               </div>
               <div>
-                <div className="text-text-secondary">Completados</div>
+                <div className="text-text-secondary">{t('torrentDetail.fields.completed','Completados')}</div>
                 <div className="text-text font-medium" suppressHydrationWarning>{hasMounted && data ? (data.completed ?? 0) : ' '}</div>
               </div>
             </div>
             <div className="mb-2 text-sm text-text-secondary" suppressHydrationWarning>
-              {hasMounted && data ? `Categoría: ${data.category || 'General'}` : ' '}
+              {hasMounted && data ? `${t('torrentDetail.fields.category','Categoría')}: ${data.category || 'General'}` : ' '}
             </div>
             <div className="text-text whitespace-pre-wrap text-sm" suppressHydrationWarning>
-              {hasMounted && data ? (data.description || 'Sin descripción') : ' '}
+              {hasMounted && data ? (data.description || t('torrentDetail.fields.noDescription','Sin descripción')) : ' '}
             </div>
 
             {/* Tags */}
             <div className="mt-6">
-              <span className="text-text-secondary block text-sm mb-2">Tags</span>
+              <span className="text-text-secondary block text-sm mb-2">{t('torrentDetail.fields.tags','Tags')}</span>
               {hasMounted && (data?.tags?.length || 0) > 0 ? (
                 <div className="flex flex-wrap gap-2">
                   {data?.tags?.map((tag) => (
@@ -235,7 +232,7 @@ export default function TorrentDetailContent({ torrentId }: { torrentId: string 
                   ))}
                 </div>
               ) : (
-                <span className="text-text-secondary text-sm">Sin tags</span>
+                <span className="text-text-secondary text-sm">{t('torrentDetail.fields.noTags','Sin tags')}</span>
               )}
             </div>
           </div>
@@ -247,11 +244,22 @@ export default function TorrentDetailContent({ torrentId }: { torrentId: string 
           <NfoPanel torrentId={torrentId} />
 
           {/* Comments */}
-          <CommentsSection torrentId={torrentId} />
+          {hasMounted && data && data.isApproved === false ? (
+            <div className="bg-surface border border-border rounded p-6 text-sm text-text-secondary">
+              {t('torrentDetail.comments.disabled','Los comentarios están desactivados hasta que el torrent sea aprobado.')}
+            </div>
+          ) : (
+            <CommentsSection torrentId={torrentId} />
+          )}
         </div>
 
         {/* Sidebar actions */}
         <div className="space-y-4">
+          {hasMounted && data && data.isApproved === false ? (
+            <div className="bg-surface rounded-lg border border-border p-6 text-sm text-text-secondary">
+              {t('torrentDetail.actions.disabled','Las acciones están desactivadas hasta que el torrent sea aprobado.')}
+            </div>
+          ) : (
           <ActionsPanel
             torrentId={torrentId}
             isBookmarked={!!data?.bookmarked}
@@ -264,6 +272,7 @@ export default function TorrentDetailContent({ torrentId }: { torrentId: string 
               } catch {}
             }}
           />
+          )}
 
           <UploaderPanel uploader={data?.uploader || null} loading={!hasMounted || isLoading} />
         </div>
@@ -272,254 +281,4 @@ export default function TorrentDetailContent({ torrentId }: { torrentId: string 
   );
 }
 
-function NfoPanel({ torrentId }: { torrentId: string }) {
-  const { data, isLoading } = useSWR<string>(
-    `${API_BASE_URL}/torrent/${torrentId}/nfo`,
-    async (key: string) => {
-      const headers: Record<string, string> = {};
-      try {
-        const token = localStorage.getItem('authToken');
-        if (token) headers['Authorization'] = `Bearer ${token}`;
-      } catch {}
-      const res = await fetch(key, { headers });
-      if (!res.ok) return '';
-      const text = await res.text();
-      return text;
-    }
-  );
-  if (isLoading || !data) return null;
-  return (
-    <div className="bg-surface border border-border rounded p-4">
-      <div className="text-text font-semibold mb-2">Archivo NFO</div>
-      <pre className="text-xs text-text-secondary whitespace-pre-wrap max-h-96 overflow-auto">{data}</pre>
-    </div>
-  );
-}
-
-function UploaderPanel({ uploader, loading }: { uploader: { id: string; username: string; avatarUrl?: string | null; uploaded?: string; downloaded?: string; ratio?: number } | null; loading: boolean }) {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
-  const formatBytes = (n?: string) => {
-    const v = Number(n || 0);
-    if (!v) return '0 B';
-    const units = ['B', 'KB', 'MB', 'GB', 'TB'];
-    let i = 0; let val = v;
-    while (val >= 1024 && i < units.length - 1) { val /= 1024; i++; }
-    return `${val.toFixed(2)} ${units[i]}`;
-  };
-  return (
-    <div className="bg-surface rounded-lg border border-border p-6">
-      <h3 className="text-lg font-semibold text-text mb-4 flex items-center">
-        <User size={20} className="mr-2" />
-        Subido por
-      </h3>
-      <div className="space-y-3">
-        <div className="flex items-center space-x-3">
-          {loading || !mounted ? (
-            <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-              <User size={20} className="text-primary" />
-            </div>
-          ) : uploader?.avatarUrl ? (
-            <Image
-              src={uploader.avatarUrl?.startsWith('http') ? uploader.avatarUrl : `${API_BASE_URL}${uploader.avatarUrl}`}
-              alt="Avatar"
-              width={40}
-              height={40}
-              unoptimized
-              className="w-10 h-10 rounded-full object-cover"
-            />
-          ) : (
-            <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-              <User size={20} className="text-primary" />
-            </div>
-          )}
-          <div>
-            {loading || !mounted ? (
-              <>
-                <div className="w-24 h-4 bg-text-secondary/10 rounded animate-pulse mb-1"></div>
-                <div className="w-16 h-3 bg-text-secondary/10 rounded animate-pulse"></div>
-              </>
-            ) : (
-              <>
-                <p className="text-text font-medium" suppressHydrationWarning>{uploader?.username || 'Anónimo'}</p>
-                {uploader?.ratio !== undefined && (
-                  <p className="text-text-secondary text-sm" suppressHydrationWarning>Ratio: {Number(uploader.ratio || 0).toFixed(2)}</p>
-                )}
-              </>
-            )}
-          </div>
-        </div>
-        <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-text-secondary">Subido</span>
-              {loading || !mounted || !uploader ? (
-                <div className="w-16 h-3 bg-text-secondary/10 rounded animate-pulse"></div>
-              ) : (
-                <span className="text-text" suppressHydrationWarning>{formatBytes(uploader.uploaded)}</span>
-              )}
-            </div>
-            <div className="flex justify-between">
-              <span className="text-text-secondary">Descargado</span>
-              {loading || !mounted || !uploader ? (
-                <div className="w-16 h-3 bg-text-secondary/10 rounded animate-pulse"></div>
-              ) : (
-                <span className="text-text" suppressHydrationWarning>{formatBytes(uploader.downloaded)}</span>
-              )}
-            </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ActionsPanel({ torrentId, isBookmarked, onBookmark, onDownload, userVote, onVotePersist }: { torrentId: string; isBookmarked: boolean; onBookmark: () => void; onDownload: () => void; userVote: 'up' | 'down' | null; onVotePersist: (v: 'up' | 'down' | null) => void; }) {
-  const [generating, setGenerating] = useState(false);
-  const [vote, setVote] = useState<'up' | 'down' | null>(userVote ?? null);
-  const [mounted, setMounted] = useState(false);
-  const [linkCopied, setLinkCopied] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
-  useEffect(() => { setVote(userVote ?? null); }, [userVote]);
-  const displayBookmarked = mounted ? isBookmarked : false;
-
-  const handleMagnet = async () => {
-    try {
-      setGenerating(true);
-      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-      try { const token = localStorage.getItem('authToken'); if (token) headers['Authorization'] = `Bearer ${token}`; } catch {}
-      const res = await fetch(`${API_BASE_URL}/torrent/${torrentId}/magnet`, { method: 'POST', headers });
-      const data = await res.json();
-      if (!res.ok || !data?.magnetLink) throw new Error('No se pudo generar magnet');
-      window.location.href = data.magnetLink;
-    } catch {
-      showNotification('No se pudo generar el enlace magnet', 'error');
-    } finally {
-      setGenerating(false);
-    }
-  };
-
-  const sendVote = async (type: 'up' | 'down') => {
-    try {
-      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-      try { const token = localStorage.getItem('authToken'); if (token) headers['Authorization'] = `Bearer ${token}`; } catch {}
-      const res = await fetch(`${API_BASE_URL}/torrent/${torrentId}/vote`, { method: 'POST', headers, body: JSON.stringify({ type }) });
-      if (!res.ok) throw new Error('Voting failed');
-      const newVote = vote === type ? null : type;
-      setVote(newVote);
-      onVotePersist(newVote);
-      showNotification('Voto registrado', 'success');
-    } catch {
-      showNotification('No se pudo votar', 'error');
-    }
-  };
-
-  return (
-    <div className="bg-surface rounded-lg border border-border p-6">
-      <h3 className="text-lg font-semibold text-text mb-4">Acciones</h3>
-      <div className="space-y-3">
-        <div className="flex space-x-2">
-          <button
-            onClick={onDownload}
-            className="flex-1 bg-primary text-background py-3 px-4 rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
-          >
-            <Download size={20} />
-            <span>Torrent</span>
-          </button>
-          <button
-            onClick={handleMagnet}
-            disabled={generating}
-            className="flex-1 bg-red-500 text-white py-3 px-4 rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
-            title={generating ? 'Generando…' : 'Magnet'}
-          >
-            <Magnet size={20} />
-            <span>{generating ? 'Generando…' : 'Magnet'}</span>
-          </button>
-        </div>
-        <button
-          onClick={onBookmark}
-          className="w-full bg-surface-light border border-border text-text py-3 px-4 rounded-lg hover:bg-surface transition-colors flex items-center justify-center space-x-2"
-          suppressHydrationWarning
-        >
-          {displayBookmarked ? (
-            <>
-              <BookmarkMinus size={20} />
-              <span>Quitar de favoritos</span>
-            </>
-          ) : (
-            <>
-              <Bookmark size={20} />
-              <span>Añadir a favoritos</span>
-            </>
-          )}
-        </button>
-        <div className="flex space-x-2">
-          {(() => {
-            const isUpActive = mounted && vote === 'up';
-            const upClass = isUpActive
-              ? 'bg-green-500/10 border-green-500/20 text-green-500'
-              : 'bg-surface-light border-border text-text hover:bg-surface';
-            return (
-              <button
-                onClick={() => sendVote('up')}
-                className={`flex-1 py-2 px-3 rounded-lg border transition-colors flex items-center justify-center space-x-1 ${upClass}`}
-              >
-                <Like size={16} />
-                <span>Me gusta</span>
-              </button>
-            );
-          })()}
-          {(() => {
-            const isDownActive = mounted && vote === 'down';
-            const downClass = isDownActive
-              ? 'bg-red-500/10 border-red-500/20 text-red-500'
-              : 'bg-surface-light border-border text-text hover:bg-surface';
-            return (
-              <button
-                onClick={() => sendVote('down')}
-                className={`flex-1 py-2 px-3 rounded-lg border transition-colors flex items-center justify-center space-x-1 ${downClass}`}
-              >
-                <Dislike size={16} />
-                <span>No me gusta</span>
-              </button>
-            );
-          })()}
-        </div>
-        <button
-          onClick={async () => {
-            try {
-              setLinkCopied(true);
-              if (navigator.clipboard && window.isSecureContext) {
-                await navigator.clipboard.writeText(window.location.href);
-              } else {
-                const textArea = document.createElement('textarea');
-                textArea.value = window.location.href;
-                textArea.style.position = 'fixed';
-                textArea.style.left = '-999999px';
-                textArea.style.top = '-999999px';
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-              }
-              showNotification('Enlace copiado', 'success');
-            } catch {
-              showNotification('No se pudo copiar el enlace', 'error');
-            } finally {
-              setTimeout(() => setLinkCopied(false), 2000);
-            }
-          }}
-          className={`w-full border py-2 px-4 rounded-lg transition-all duration-300 flex items-center justify-center space-x-2 ${
-            linkCopied ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-surface-light border-border text-text hover:bg-surface'
-          }`}
-        >
-          <Copy size={16} />
-          <span>Copiar enlace</span>
-        </button>
-      </div>
-    </div>
-  );
-}
-
 // CommentsPanel has been replaced by CommentsSection for feature parity with NexusTracker v2.
-
-

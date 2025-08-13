@@ -4,21 +4,23 @@ import { } from 'react';
 import { Folder } from '@styled-icons/boxicons-regular/Folder';
 import { Search } from '@styled-icons/boxicons-regular/Search';
 import FileTree from './FileTree';
+import { useI18n } from '@/app/hooks/useI18n';
 interface FileItem { path: string; size: number }
 
 interface Props { files: FileItem[]; loading?: boolean }
 
 export default function TorrentFiles({ files, loading = false }: Props) {
+  const { t } = useI18n();
   return (
     <div className="bg-surface rounded-lg border border-border p-6">
       <h2 className="text-xl font-semibold text-text mb-4 flex items-center">
         <Folder size={20} className="mr-2" />
         {loading ? (
           <>
-            Archivos <span className="text-text-secondary">(<div className="w-8 h-4 bg-text-secondary/10 rounded animate-pulse inline-block"></div>)</span>
+            {t('torrentDetail.fileList.title', 'Archivos')} <span className="text-text-secondary">(<div className="w-8 h-4 bg-text-secondary/10 rounded animate-pulse inline-block"></div>)</span>
           </>
         ) : (
-          `Archivos (${files.length})`
+          `${t('torrentDetail.fileList.title', 'Archivos')} (${files.length})`
         )}
       </h2>
 
@@ -28,7 +30,7 @@ export default function TorrentFiles({ files, loading = false }: Props) {
             <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-secondary" />
             <input
               type="text"
-              placeholder="Buscar archivos..."
+              placeholder={t('torrentDetail.fileList.search', 'Buscar archivos...')}
               disabled
               className="w-full pl-10 pr-4 py-2 bg-background border border-border rounded-lg text-text placeholder-text-secondary focus:outline-none focus:border-primary transition-colors disabled:opacity-50"
             />

@@ -291,7 +291,8 @@
     "users": "Usuarios",
     "torrents": "Torrents",
     "downloads": "Descargas",
-    "uploaded": "Subido"
+    "uploaded": "Subido",
+    "downloadStarted": "Descarga iniciada"
   },
   "language": {
     "selector": {
@@ -559,6 +560,76 @@
         "Elige la categoría y el source más adecuados.",
         "Usa etiquetas relevantes para mejorar el descubrimiento."
       ]
+    }
+  }
+  ,
+  "torrentDetail": {
+    "header": {
+      "pendingApproval": "Pendiente de aprobación",
+      "notFound": "No encontrado"
+    },
+    "fields": {
+      "commentsTitle": "Comentarios",
+      "size": "Tamaño",
+      "seeders": "Seeders",
+      "leechers": "Leechers",
+      "completed": "Completados",
+      "category": "Categoría",
+      "tags": "Tags",
+      "noTags": "Sin tags",
+      "noDescription": "Sin descripción"
+    },
+    "fileList": {
+      "title": "Archivos",
+      "search": "Buscar archivos...",
+      "noResults": "No se encontraron resultados",
+      "noFiles": "Sin archivos",
+      "summary": "Total: {{files}} archivos, {{totalSize}}"
+    },
+    "actions": {
+      "title": "Acciones",
+      "torrent": "Torrent",
+      "magnet": "Magnet",
+      "magnetGenerating": "Generando…",
+      "addBookmark": "Añadir a favoritos",
+      "removeBookmark": "Quitar de favoritos",
+      "like": "Me gusta",
+      "dislike": "No me gusta",
+      "copyLink": "Copiar enlace",
+      "copied": "Enlace copiado",
+      "copyError": "No se pudo copiar el enlace",
+      "bookmarkAdded": "Marcado como favorito",
+      "bookmarkRemoved": "Eliminado de favoritos",
+      "bookmarkError": "Operación de favorito fallida",
+      "downloadError": "No se pudo descargar el torrent",
+      "loadError": "No se pudo cargar el torrent",
+      "disabled": "Las acciones están desactivadas hasta que el torrent sea aprobado."
+    },
+    "comments": {
+      "disabled": "Los comentarios están desactivados hasta que el torrent sea aprobado.",
+      "empty": "No hay comentarios",
+      "created": "Comentario agregado",
+      "createError": "No se pudo crear el comentario",
+      "replied": "Respuesta publicada",
+      "replyError": "No se pudo responder",
+      "loginRequired": "Inicia sesión para comentar",
+      "reply": "Responder",
+      "send": "Enviar",
+      "cancel": "Cancelar",
+      "newCommentTitle": "Nuevo comentario",
+      "placeholder": "Escribe tu comentario...",
+      "sending": "Enviando…",
+      "addComment": "Añadir comentario",
+      "page": "Página",
+      "of": "de"
+    },
+    "nfo": { "title": "Archivo NFO" },
+    "uploader": {
+      "title": "Subido por",
+      "uploaded": "Subido",
+      "downloaded": "Descargado",
+      "ratio": "Ratio",
+      "anonymous": "Anónimo"
     }
   }
 }

@@ -284,6 +284,79 @@
       }
     }
   },
+  "torrentDetail": {
+    "header": {
+      "pendingApproval": "Pending approval",
+      "notFound": "Not found"
+    },
+    "fields": {
+      "commentsTitle": "Comments",
+      "size": "Size",
+      "seeders": "Seeders",
+      "leechers": "Leechers",
+      "completed": "Completed",
+      "category": "Category",
+      "tags": "Tags",
+      "noTags": "No tags",
+      "noDescription": "No description"
+    },
+    "fileList": {
+      "title": "Files",
+      "search": "Search files...",
+      "noResults": "No results found",
+      "noFiles": "No files",
+      "summary": "Total: {{files}} files, {{totalSize}}"
+    },
+    "actions": {
+      "title": "Actions",
+      "torrent": "Torrent",
+      "magnet": "Magnet",
+      "magnetGenerating": "Generating…",
+      "addBookmark": "Add to favorites",
+      "removeBookmark": "Remove from favorites",
+      "like": "Like",
+      "dislike": "Dislike",
+      "copyLink": "Copy link",
+      "copied": "Link copied",
+      "copyError": "Failed to copy link",
+      "bookmarkAdded": "Added to favorites",
+      "bookmarkRemoved": "Removed from favorites",
+      "bookmarkError": "Favorite operation failed",
+      "downloadError": "Failed to download torrent",
+      "loadError": "Failed to load torrent",
+      "disabled": "Actions are disabled until the torrent is approved.",
+      "voteOk": "Vote recorded",
+      "voteError": "Failed to vote",
+      "magnetError": "Failed to generate magnet link",
+      "errorLoading": "Error loading comments"
+    },
+    "comments": {
+      "disabled": "Comments are disabled until the torrent is approved.",
+      "empty": "No comments",
+      "loginRequired": "Sign in to comment",
+      "reply": "Reply",
+      "send": "Send",
+      "cancel": "Cancel",
+      "newCommentTitle": "New comment",
+      "placeholder": "Write your comment...",
+      "sending": "Sending…",
+      "addComment": "Add comment",
+      "created": "Comment added",
+      "createError": "Failed to create comment",
+      "replied": "Reply posted",
+      "replyError": "Failed to reply",
+      "page": "Page",
+      "of": "of"
+    },
+    "nfo": { "title": "NFO File" },
+    "uploader": {
+      "title": "Uploaded by",
+      "uploaded": "Uploaded",
+      "downloaded": "Downloaded",
+      "ratio": "Ratio",
+      "anonymous": "Anonymous"
+    }
+  },
   "common": {
     "loading": "Loading...",
     "submitting": "Submitting form...",
@@ -291,7 +364,8 @@
     "users": "Users",
     "torrents": "Torrents",
     "downloads": "Downloads",
-    "uploaded": "Uploaded"
+    "uploaded": "Uploaded",
+    "downloadStarted": "Download started"
   },
   "language": {
     "selector": {

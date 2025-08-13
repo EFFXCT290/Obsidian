@@ -57,11 +57,11 @@ export default function CommentsSection({ torrentId }: { torrentId: string }) {
       setComments(data.comments || []);
       setPagination(data.pagination || { page: 1, limit: 10, total: 0, totalPages: 0 });
     } catch {
-      showNotification('Error cargando comentarios', 'error');
+      showNotification(t('torrentDetail.actions.errorLoading','Error cargando comentarios'), 'error');
     } finally {
       setLoading(false);
     }
-  }, [torrentId, pagination.page, pagination.limit]);
+  }, [torrentId, pagination.page, pagination.limit, t]);
 
   useEffect(() => { fetchComments(); }, [fetchComments]);
 
@@ -98,7 +98,7 @@ export default function CommentsSection({ torrentId }: { torrentId: string }) {
 
   const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newComment.trim()) { showNotification('Mensaje vacío', 'error'); return; }
+    if (!newComment.trim()) { showNotification(t('torrentDetail.comments.empty','Mensaje vacío'), 'error'); return; }
     try {
       setSubmitting(true);
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
@@ -108,14 +108,14 @@ export default function CommentsSection({ torrentId }: { torrentId: string }) {
       await fetchComments();
       setNewComment('');
       setShowModal(false);
-      showNotification('Comentario agregado', 'success');
+      showNotification(t('torrentDetail.comments.created','Comentario agregado'), 'success');
     } catch {
-      showNotification('No se pudo crear el comentario', 'error');
+      showNotification(t('torrentDetail.comments.createError','No se pudo crear el comentario'), 'error');
     } finally { setSubmitting(false); }
   };
 
   const handleSubmitReply = async (parentId: string) => {
-    if (!replyContent.trim()) { showNotification('Mensaje vacío', 'error'); return; }
+    if (!replyContent.trim()) { showNotification(t('torrentDetail.comments.empty','Mensaje vacío'), 'error'); return; }
     try {
       setSubmitting(true);
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
@@ -125,9 +125,9 @@ export default function CommentsSection({ torrentId }: { torrentId: string }) {
       await fetchComments();
       setReplyingTo(null);
       setReplyContent('');
-      showNotification('Respuesta publicada', 'success');
+      showNotification(t('torrentDetail.comments.replied','Respuesta publicada'), 'success');
     } catch {
-      showNotification('No se pudo responder', 'error');
+      showNotification(t('torrentDetail.comments.replyError','No se pudo responder'), 'error');
     } finally { setSubmitting(false); }
   };
 
@@ -140,7 +140,7 @@ export default function CommentsSection({ torrentId }: { torrentId: string }) {
       if (!res.ok) throw new Error('Error voting');
       await fetchComments();
     } catch {
-      showNotification('Error al votar', 'error');
+      showNotification(t('torrentDetail.actions.voteError','Error al votar'), 'error');
     }
   };
 
@@ -208,17 +208,17 @@ export default function CommentsSection({ torrentId }: { torrentId: string }) {
               {canReply && isLoggedIn && (
                 <button type="button" onClick={() => setReplyingTo(isReplying ? null : comment.id)} className="text-xs text-text-secondary hover:text-text hover:bg-surface px-2 py-1 rounded transition-colors flex items-center space-x-1">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
-                  <span>Responder</span>
+                  <span>{t('torrentDetail.comments.reply','Responder')}</span>
                 </button>
               )}
             </div>
             {isReplying && (
               <div className="mb-3">
                 <form onSubmit={e => { e.preventDefault(); handleSubmitReply(comment.id); }}>
-                  <textarea value={replyContent} onChange={e => setReplyContent(e.target.value)} placeholder="Escribe tu respuesta..." className="w-full p-3 border border-border rounded-md text-sm resize-none focus:ring-2 focus:ring-primary focus:border-transparent mb-2 bg-background text-text" rows={3} />
+                  <textarea value={replyContent} onChange={e => setReplyContent(e.target.value)} placeholder={t('torrentDetail.comments.placeholder','Escribe tu respuesta...')} className="w-full p-3 border border-border rounded-md text-sm resize-none focus:ring-2 focus:ring-primary focus:border-transparent mb-2 bg-background text-text" rows={3} />
                   <div className="flex space-x-2">
-                    <button type="submit" className="px-3 py-1.5 bg-primary text-background text-sm rounded-md hover:bg-primary-dark disabled:opacity-50 transition-colors" disabled={submitting || !replyContent.trim()}>Enviar</button>
-                    <button type="button" className="px-3 py-1.5 border border-border text-text text-sm rounded-md hover:bg-surface transition-colors" onClick={() => { setReplyingTo(null); setReplyContent(''); }}>Cancelar</button>
+                    <button type="submit" className="px-3 py-1.5 bg-primary text-background text-sm rounded-md hover:bg-primary-dark disabled:opacity-50 transition-colors" disabled={submitting || !replyContent.trim()}>{t('torrentDetail.comments.send','Enviar')}</button>
+                    <button type="button" className="px-3 py-1.5 border border-border text-text text-sm rounded-md hover:bg-surface transition-colors" onClick={() => { setReplyingTo(null); setReplyContent(''); }}>{t('torrentDetail.comments.cancel','Cancelar')}</button>
                   </div>
                 </form>
               </div>
@@ -237,14 +237,14 @@ export default function CommentsSection({ torrentId }: { torrentId: string }) {
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-semibold text-text flex items-center">
           <CommentIcon size={20} className="mr-2" />
-          Comentarios
+          {t('torrentDetail.fields.commentsTitle','Comentarios')}
         </h2>
         <button
-          onClick={() => (isLoggedIn ? setShowModal(true) : showNotification('Inicia sesión para comentar', 'error'))}
+          onClick={() => (isLoggedIn ? setShowModal(true) : showNotification(t('torrentDetail.comments.loginRequired','Inicia sesión para comentar'), 'error'))}
           className="px-3 py-2 bg-primary text-background rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50"
           disabled={!isLoggedIn}
         >
-          Añadir comentario
+          {t('torrentDetail.comments.addComment','Añadir comentario')}
         </button>
       </div>
 
@@ -254,7 +254,7 @@ export default function CommentsSection({ torrentId }: { torrentId: string }) {
           <div className="mb-4"><div className="flex"><div className="flex flex-col items-center mr-3 min-w-[24px]"><div className="w-px bg-border h-full min-h-[60px]"></div></div><div className="flex-1 min-w-0"><div className="flex items-center space-x-2 mb-2"><div className="w-6 h-6 bg-text-secondary/10 rounded-full animate-pulse"></div><div className="flex items-center space-x-2"><div className="w-16 h-4 bg-text-secondary/10 rounded animate-pulse"></div><div className="w-16 h-4 bg-text-secondary/10 rounded animate-pulse"></div></div></div><div className="text-sm leading-relaxed mb-3 space-y-2"><div className="w-full h-4 bg-text-secondary/10 rounded animate-pulse"></div><div className="w-2/3 h-4 bg-text-secondary/10 rounded animate-pulse"></div></div><div className="flex items-center space-x-4 mb-3"><div className="flex items-center space-x-1"><div className="w-6 h-6 bg-text-secondary/10 rounded animate-pulse"></div><div className="w-8 h-4 bg-text-secondary/10 rounded animate-pulse"></div><div className="w-6 h-6 bg-text-secondary/10 rounded animate-pulse"></div></div><div className="w-16 h-4 bg-text-secondary/10 rounded animate-pulse"></div></div></div></div></div>
         </div>
       ) : comments.length === 0 ? (
-        <div className="text-center py-8 text-text-secondary"><CommentIcon size={48} className="mx-auto mb-4 opacity-50" /><p>No hay comentarios</p></div>
+          <div className="text-center py-8 text-text-secondary"><CommentIcon size={48} className="mx-auto mb-4 opacity-50" /><p>{t('torrentDetail.comments.empty','No hay comentarios')}</p></div>
       ) : (
         <div className="space-y-4">{comments.map(c => renderComment(c, 0))}</div>
       )}
@@ -263,7 +263,7 @@ export default function CommentsSection({ torrentId }: { torrentId: string }) {
         <div className="flex justify-center mt-6">
           <div className="flex space-x-2">
             <button onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))} disabled={pagination.page === 1} className="px-3 py-2 border border-border text-text rounded hover:bg-surface-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Anterior</button>
-            <span className="px-3 py-2 text-text-secondary">Página {pagination.page} de {pagination.totalPages}</span>
+             <span className="px-3 py-2 text-text-secondary">{t('torrentDetail.comments.page','Página')} {pagination.page} {t('torrentDetail.comments.of','de')} {pagination.totalPages}</span>
             <button onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))} disabled={pagination.page === pagination.totalPages} className="px-3 py-2 border border-border text-text rounded hover:bg-surface-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Siguiente</button>
           </div>
         </div>
@@ -273,15 +273,15 @@ export default function CommentsSection({ torrentId }: { torrentId: string }) {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowModal(false)}>
           <div className="bg-surface rounded-lg border border-border p-6 w-full max-w-md mx-4" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-text">Nuevo comentario</h3>
+              <h3 className="text-lg font-semibold text-text">{t('torrentDetail.comments.newCommentTitle','Nuevo comentario')}</h3>
               <button onClick={() => setShowModal(false)} className="text-text-secondary hover:text-text transition-colors"><X size={20} /></button>
             </div>
             <form onSubmit={handleSubmitComment}>
-              <textarea value={newComment} onChange={e => setNewComment(e.target.value)} placeholder="Escribe tu comentario..." className="w-full px-4 py-3 bg-background border border-border rounded-lg text-text placeholder-text-secondary focus:outline-none focus:border-primary transition-colors resize-none mb-4" rows={4} maxLength={280} disabled={submitting} autoFocus />
+              <textarea value={newComment} onChange={e => setNewComment(e.target.value)} placeholder={t('torrentDetail.comments.placeholder','Escribe tu comentario...')} className="w-full px-4 py-3 bg-background border border-border rounded-lg text-text placeholder-text-secondary focus:outline-none focus:border-primary transition-colors resize-none mb-4" rows={4} maxLength={280} disabled={submitting} autoFocus />
               <div className="flex items-center justify-between mb-4"><span className="text-text-secondary text-sm">{newComment.length}/280</span></div>
               <div className="flex space-x-3">
-                <button type="button" onClick={() => setShowModal(false)} disabled={submitting} className="flex-1 px-4 py-2 border border-border text-text rounded-lg hover:bg-surface-light transition-colors disabled:opacity-50">Cancelar</button>
-                <button type="submit" disabled={submitting || !newComment.trim()} className="flex-1 px-4 py-2 bg-primary text-background rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"><Send size={16} /><span>{submitting ? 'Enviando…' : 'Enviar'}</span></button>
+                <button type="button" onClick={() => setShowModal(false)} disabled={submitting} className="flex-1 px-4 py-2 border border-border text-text rounded-lg hover:bg-surface-light transition-colors disabled:opacity-50">{t('torrentDetail.comments.cancel','Cancelar')}</button>
+                <button type="submit" disabled={submitting || !newComment.trim()} className="flex-1 px-4 py-2 bg-primary text-background rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"><Send size={16} /><span>{submitting ? t('torrentDetail.comments.sending','Enviando…') : t('torrentDetail.comments.send','Enviar')}</span></button>
               </div>
             </form>
           </div>

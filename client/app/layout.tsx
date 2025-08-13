@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
+import { headers } from 'next/headers';
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ToasterProvider from './components/ToasterProvider';
 import SWRProvider from './components/SWRProvider';
+import { getPreferredLanguage } from './lib/server-i18n';
+import { LanguageSync } from './components/LanguageSync';
 
 /**
  * Font configuration for the application
@@ -49,17 +52,20 @@ export const metadata: Metadata = {
  * 
  * @param children - React components to be rendered within the layout
  */
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const hdrs = headers();
+  const serverLanguage = await getPreferredLanguage(hdrs as unknown as Headers);
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang={serverLanguage} className="dark" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-text`}
         suppressHydrationWarning
       >
+        <LanguageSync serverLanguage={serverLanguage} />
         <ToasterProvider />
         <SWRProvider>
           {children}
