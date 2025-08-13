@@ -58,4 +58,3 @@ export function generateTagSuggestions(filename: string, opts?: { sourceName?: s
   return Array.from(suggestions).slice(0, 10);
 }
 
-

@@ -51,7 +51,7 @@ export async function announceHandler(request: FastifyRequest, reply: FastifyRep
         infoHashHex = Buffer.from(decoded, 'binary').toString('hex');
         console.log('[announceHandler] URL decoded info_hash:', decoded);
         console.log('[announceHandler] Converted to hex:', infoHashHex);
-      } catch (error) {
+      } catch (_error) {
         console.log('[announceHandler] URL decode failed, trying manual decode...');
         // Manual decode for malformed URLs - replace %xx with actual bytes
         let decoded = info_hash;
@@ -225,7 +225,7 @@ export async function announceHandler(request: FastifyRequest, reply: FastifyRep
     return reply.send(bencode.encode({ 'failure reason': 'Too many hit and runs. Please seed your torrents.' }));
   }
   // Get peer list for this torrent
-  const peers: Peer[] = await getActivePeers(torrent.id, peer_id, 50);
+  const peers: Peer[] = await getActivePeers(torrent.id, peer_id as string, 50);
   console.log('[announceHandler] Found peers for torrent:', peers.length);
   peers.forEach((peer, index) => {
     console.log(`[announceHandler] Peer ${index + 1}: IP=${peer.ip}, Port=${peer.port}, PeerID=${peer.peerId}`);
@@ -253,10 +253,8 @@ export async function announceHandler(request: FastifyRequest, reply: FastifyRep
     // IPv6 peers: 16 bytes IP + 2 bytes port
     const bufArray6 = ipv6Peers.map((p: Peer) => {
       const ipBuf = Buffer.alloc(16);
-      const _ipParts = p.ip.split(':');
-      // Use Node.js to parse IPv6 string to buffer
-      const _filled = ipBuf.write(p.ip, 0, 16, 'utf8');
-      // If not filled, leave as zeros
+      // Best-effort write; ignore return value to satisfy linter
+      ipBuf.write(p.ip, 0, 16, 'utf8');
       const port = Number(p.port);
       const buf = Buffer.alloc(18);
       ipBuf.copy(buf, 0, 0, 16);
@@ -316,7 +314,7 @@ export async function scrapeHandler(request: FastifyRequest, reply: FastifyReply
             // Try URL decode first
             const decoded = decodeURIComponent(info_hash);
             hex = Buffer.from(decoded, 'binary').toString('hex');
-          } catch (error) {
+          } catch (_error) {
             console.log('[scrapeHandler] URL decode failed, trying manual decode...');
             // Manual decode for malformed URLs - replace %xx with actual bytes
             let decoded = info_hash;

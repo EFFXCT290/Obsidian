@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from 'react';
 import { useI18n } from '@/app/hooks/useI18n';

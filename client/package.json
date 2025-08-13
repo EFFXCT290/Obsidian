@@ -13,6 +13,7 @@
     "@styled-icons/boxicons-regular": "^10.47.0",
     "@types/sortablejs": "^1.15.8",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "next": "15.4.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",

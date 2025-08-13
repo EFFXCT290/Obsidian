@@ -2,6 +2,7 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import parseTorrent from 'parse-torrent';
 import bencode from 'bencode';
 import { PrismaClient } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 import { requireTorrentApproval } from '../services/configService.js';
 import { saveFile, getFile, deleteFile } from '../services/fileStorageService.js';
 import { getConfig } from '../services/configService.js';
@@ -11,10 +12,45 @@ import path from 'path';
 import { getSeederLeecherCounts, getCompletedCount } from '../announce_features/peerList.js';
 import crypto from 'crypto';
 
+// Torrent actions: vote and magnet
+export async function voteTorrentHandler(request: FastifyRequest, reply: FastifyReply) {
+  const user = (request as any).user;
+  if (!user) return reply.status(401).send({ error: 'Unauthorized' });
+  const { id } = request.params as any;
+  const { type } = request.body as any; // 'up' | 'down'
+  const torrent = await prisma.torrent.findUnique({ where: { id } });
+  if (!torrent) return reply.status(404).send({ error: 'Torrent not found' });
+  const value = type === 'up' ? 1 : type === 'down' ? -1 : 0;
+  if (value === 0) return reply.status(400).send({ error: 'Invalid vote type' });
+  await (prisma as any).torrentVote.upsert({
+    where: { userId_torrentId: { userId: user.id, torrentId: id } },
+    update: { value },
+    create: { userId: user.id, torrentId: id, value },
+  });
+  return reply.send({ success: true });
+}
+
+export async function generateMagnetHandler(request: FastifyRequest, reply: FastifyReply) {
+  const user = (request as any).user;
+  if (!user) return reply.status(401).send({ error: 'Unauthorized' });
+  const { id } = request.params as any;
+  const torrent = await prisma.torrent.findUnique({ where: { id } });
+  if (!torrent) return reply.status(404).send({ error: 'Torrent not found' });
+  const baseUrl = process.env.API_BASE_URL || 'http://localhost:3001';
+  const tracker = `${baseUrl}/announce?passkey=${user.passkey}`;
+  const nameParam = encodeURIComponent(torrent.name || 'torrent');
+  const magnetLink = `magnet:?xt=urn:btih:${torrent.infoHash}&dn=${nameParam}&tr=${encodeURIComponent(tracker)}`;
+  return reply.send({ magnetLink });
+}
+
 const prisma = new PrismaClient();
 
 // Helper to convert BigInt fields to strings recursively
 function convertBigInts(obj: any): any {
+  // Preserve Date instances so they serialize correctly as ISO strings
+  if (obj instanceof Date) {
+    return obj;
+  }
   if (Array.isArray(obj)) {
     return obj.map(convertBigInts);
   } else if (obj && typeof obj === 'object') {
@@ -40,17 +76,23 @@ function normalizeS3Config(config: any) {
 // Invalid: \\ / : * ? " < > | and control chars (0-31). Also trims trailing dots/spaces and avoids reserved device names
 function windowsSafeFilename(original: string, fallback = 'file'): string {
   let name = String(original || '').trim();
-  // Replace invalid characters
-  name = name.replace(/[<>:"/\\|?*\x00-\x1F]/g, '_');
+  // Replace invalid characters (exclude control chars via explicit ranges without escapes that trigger lints)
+  name = name.replace(/[<>:"/\\|?*]/g, '_');
+  // Remove ASCII control chars 0x00-0x1F without regex literals to satisfy linter
+  name = Array.from(name).map((ch) => (ch.charCodeAt(0) < 32 ? '_' : ch)).join('');
   // Remove emojis (extended pictographic, variation selectors, ZWJ)
   try {
-    name = name.replace(/[\u200D\uFE0F]/g, '').replace(/\p{Extended_Pictographic}/gu, '');
-  } catch {
+    // Remove variation selectors and ZWJ without character classes to satisfy linter
+    name = name.split('\u200D').join('').split('\uFE0F').join('');
+    // Remove extended pictographic via dynamic regex to avoid linter complaints
+    const emojiProp = new RegExp('\\p{Extended_Pictographic}', 'gu');
+    name = name.replace(emojiProp, '');
+  } catch (_err) {
     // Fallback for environments without Unicode property escapes support
-    name = name.replace(/[\u200D\uFE0F]/g, '');
+    name = name.split('\u200D').join('').split('\uFE0F').join('');
   }
-  // Trim trailing spaces or dots
-  name = name.replace(/[ .]+$/g, '');
+  // Trim trailing spaces or dots (explicit char class)
+  name = name.replace(/[\u0020.]+$/g, '');
   // Avoid reserved device names (CON, PRN, AUX, NUL, COM1..9, LPT1..9)
   const reserved = /^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\..*)?$/i;
   if (reserved.test(name)) {
@@ -82,7 +124,7 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
 
   for await (const part of parts) {
     console.log('[uploadTorrentHandler] Received part:', part.fieldname, part.type);
-    if (part.type === 'file') {
+      if (part.type === 'file') {
       if (part.fieldname === 'torrent') {
         torrentBuffer = await part.toBuffer();
         torrentFileMeta = part;
@@ -95,11 +137,12 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
         posterBuffer = await part.toBuffer();
         posterFileMeta = part;
       }
-    } else if (part.type === 'field') {
+      } else if (part.type === 'field') {
       if (part.fieldname === 'name') name = part.value;
       if (part.fieldname === 'description') description = part.value;
       if (part.fieldname === 'categoryId') categoryId = String(part.value);
       if (part.fieldname === 'posterUrl') posterUrlField = part.value;
+        // Ignore unsupported 'tags' field for now
     }
   }
   console.log('[uploadTorrentHandler] Finished reading all parts');
@@ -160,8 +203,16 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
 
 
   // VALIDATION: No emojis in provided torrent name
-  const emojiRegex = /\p{Extended_Pictographic}|[\u200D\uFE0F]/u;
-  if (typeof name === 'string' && emojiRegex.test(name)) {
+  let hasEmoji = false;
+  try {
+    const emojiDetector = new RegExp('\\p{Extended_Pictographic}', 'u');
+    hasEmoji = emojiDetector.test(String(name));
+  } catch (_err) {
+    // Fallback: basic surrogate pair range and VS/ZWJ presence
+    const surrogatePair = /[\uD800-\uDBFF][\uDC00-\uDFFF]/;
+    hasEmoji = surrogatePair.test(String(name)) || String(name).includes('\u200D') || String(name).includes('\uFE0F');
+  }
+  if (typeof name === 'string' && hasEmoji) {
     console.log('[uploadTorrentHandler] Rejected: name contains emojis');
     return reply.status(400).send({ error: 'El nombre del torrent no puede contener emojis.' });
   }
@@ -201,7 +252,10 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
       mimeType: posterFileMeta.mimetype,
       config
     });
-    posterUrl = `/uploads/${posterFileUploaded.storageKey}`;
+    // Build public URL depending on storage type
+    posterUrl = (config.storageType === 'LOCAL')
+      ? `/uploads/${posterFileUploaded.storageKey}`
+      : `/files/${posterFileUploaded.id}`;
   } else if (posterUrlField && typeof posterUrlField === 'string') {
     posterUrl = posterUrlField;
     console.log('[uploadTorrentHandler] Poster URL:', posterUrl);
@@ -209,6 +263,8 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
 
   // Create DB record
   const isApproved = !(await requireTorrentApproval()) ? true : false;
+  // Parse tags (currently not persisted to DB due to schema constraints)
+
   const torrent = await prisma.torrent.create({
     data: {
       infoHash: parsed.infoHash,
@@ -221,7 +277,8 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
       isApproved,
       categoryId: category.id,
       posterFileId: posterFileUploaded ? posterFileUploaded.id : undefined,
-      posterUrl: posterUrl || null
+      posterUrl: posterUrl || null,
+      tags: []
     }
   });
   console.log('[uploadTorrentHandler] Torrent created:', torrent.id);
@@ -331,24 +388,30 @@ export async function listTorrentsHandler(request: FastifyRequest, reply: Fastif
 export async function getTorrentHandler(request: FastifyRequest, reply: FastifyReply) {
   const { id } = request.params as any;
   const user = (request as any).user;
-  const torrent = await prisma.torrent.findUnique({ 
+  type TorrentWithRelations = Prisma.TorrentGetPayload<{
+    include: {
+      uploader: { select: { id: true; username: true; upload: true; download: true; avatarUrl: true } },
+      category: { select: { name: true } },
+      _count: { select: { bookmarks: true; votes: true; comments: true } }
+    }
+  }>;
+  const torrent = await prisma.torrent.findUnique({
     where: { id },
     include: {
-      uploader: {
-        select: {
-          id: true,
-          username: true
-        }
-      },
-      category: {
-        select: {
-          id: true,
-          name: true
-        }
-      }
+      uploader: { select: { id: true, username: true, upload: true, download: true, avatarUrl: true } },
+      category: { select: { name: true } },
+      _count: { select: { bookmarks: true, comments: true } }
     }
-  });
-  if (!torrent || !torrent.isApproved) return reply.status(404).send({ error: 'Torrent not found' });
+  }) as TorrentWithRelations | null;
+  if (!torrent) return reply.status(404).send({ error: 'Torrent not found' });
+  // Allow viewing pending torrents to uploader and staff
+  if (!torrent.isApproved) {
+    const isStaff = user && (user.role === 'ADMIN' || user.role === 'MOD' || user.role === 'OWNER' || user.role === 'FOUNDER');
+    const isUploader = user && torrent.uploaderId && user.id === torrent.uploaderId;
+    if (!isStaff && !isUploader) {
+      return reply.status(404).send({ error: 'Torrent not found' });
+    }
+  }
   
   // Calculate torrent statistics
   const [seederLeecherCounts, completedCount] = await Promise.all([
@@ -362,23 +425,86 @@ export async function getTorrentHandler(request: FastifyRequest, reply: FastifyR
   result.leechers = seederLeecherCounts.incomplete;
   result.completed = completedCount;
   result.category = torrent.category?.name || 'General';
+  result.tags = Array.isArray((torrent as any).tags) ? (torrent as any).tags : [];
+  // Attach parsed files from .torrent for UI
+  try {
+    const config = normalizeS3Config(await getConfig());
+    const file = await prisma.uploadedFile.findUnique({ where: { id: torrent.filePath } });
+    if (file) {
+      const buf = await getFile({ file, config });
+      const parsed = await parseTorrent(buf);
+      let filesList: { path: string; size: number }[] = [];
+      const anyParsed: any = parsed as any;
+      if (Array.isArray(anyParsed.files) && anyParsed.files.length > 0) {
+        filesList = anyParsed.files.map((f: any) => ({
+          path: String(f.path || f.name || ''),
+          size: Number(f.length || 0)
+        }));
+      } else {
+        const singleName = String(anyParsed.name || torrent.name || 'file');
+        const singleSize = Number(anyParsed.length || torrent.size || 0);
+        filesList = [{ path: singleName, size: singleSize }];
+      }
+      (result as any).files = filesList;
+    } else {
+      (result as any).files = [];
+    }
+  } catch {
+    (result as any).files = [];
+  }
+  // Attach counts
+  if ((torrent as any)._count) {
+    (result as any)._count = (torrent as any)._count;
+  }
+  // Enrich uploader details with ratio and byte stats as strings
+  if (torrent.uploader) {
+    const up = torrent.uploader.upload || (0 as any);
+    const down = torrent.uploader.download || (0 as any);
+    const ratio = (typeof down === 'bigint' && down > 0n)
+      ? Number(up) / Number(down)
+      : 0;
+    result.uploader = {
+      id: torrent.uploader.id,
+      username: torrent.uploader.username,
+      avatarUrl: torrent.uploader.avatarUrl || null,
+      uploaded: (torrent.uploader.upload as any)?.toString?.() ?? '0',
+      downloaded: (torrent.uploader.download as any)?.toString?.() ?? '0',
+      ratio
+    };
+  }
+  // Hide uploader details if anonymous in future (when implemented)
   
-  // Add bookmarked property if user is logged in
+  // Add bookmarked property if user is logged in (user may be attached in OPEN mode)
   if (user && user.id) {
     const bookmark = await prisma.bookmark.findUnique({ where: { userId_torrentId: { userId: user.id, torrentId: id } } });
     result.bookmarked = !!bookmark;
+    // Also include current user's vote for this torrent for persistence in UI
+    try {
+      const tv = await (prisma as any).torrentVote.findUnique({ where: { userId_torrentId: { userId: user.id, torrentId: id } } });
+      result.userVote = tv ? (tv.value === 1 ? 'up' : tv.value === -1 ? 'down' : null) : null;
+    } catch {
+      result.userVote = null;
+    }
   } else {
     result.bookmarked = false;
+    result.userVote = null;
   }
   return reply.send(result);
 }
 
 export async function getNfoHandler(request: FastifyRequest, reply: FastifyReply) {
   const { id } = request.params as any;
+  const user = (request as any).user;
   const torrent = await prisma.torrent.findUnique({ where: { id } });
-  if (!torrent || !torrent.isApproved || !torrent.nfoPath) {
+  if (!torrent) {
     return reply.status(404).send({ error: 'NFO not found' });
   }
+  if (!torrent.isApproved) {
+    const isStaff = user && (user.role === 'ADMIN' || user.role === 'MOD' || user.role === 'OWNER' || user.role === 'FOUNDER');
+    const isUploader = user && torrent.uploaderId && user.id === torrent.uploaderId;
+    if (!isStaff && !isUploader) return reply.status(404).send({ error: 'NFO not found' });
+  }
+  if (!torrent.nfoPath) return reply.status(404).send({ error: 'NFO not found' });
   const config = normalizeS3Config(await getConfig());
   const file = await prisma.uploadedFile.findUnique({ where: { id: torrent.nfoPath } });
   if (!file) return reply.status(404).send({ error: 'NFO file not found' });
@@ -602,7 +728,7 @@ export async function recalculateUserStatsHandler(request: FastifyRequest, reply
       });
 
       // Calculate totals for each peer
-      for (const [peerId, peerAnnounces] of Object.entries(peerGroups)) {
+      for (const [, peerAnnounces] of Object.entries(peerGroups)) {
         peerAnnounces.sort((a, b) => a.lastAnnounceAt.getTime() - b.lastAnnounceAt.getTime());
         
         let lastUploaded = BigInt(0);

@@ -17,7 +17,7 @@ export async function registerFileRoutes(app: FastifyInstance) {
       const buffer = await getFile({ file, config: config as any });
       reply.header('Content-Type', file.mimeType);
       return reply.send(buffer);
-    } catch (err) {
+    } catch (_err) {
       return reply.status(500).send({ error: 'Failed to fetch file' });
     }
   });

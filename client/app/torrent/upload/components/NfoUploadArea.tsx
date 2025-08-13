@@ -1,7 +1,6 @@
-'use client';
+"use client";
 
 import React from 'react';
-import { Upload } from '@styled-icons/boxicons-regular/Upload';
 import { File } from '@styled-icons/boxicons-regular/File';
 import { X } from '@styled-icons/boxicons-regular/X';
 import { useI18n } from '@/app/hooks/useI18n';

@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 // Helper: Build threaded comments up to 4 levels, but at the limit, do not fetch further replies
-async function buildThreadedComments(comments: any[], opUserId: string, level = 0): Promise<any[]> {
+async function buildThreadedComments(comments: any[], opUserId: string, currentUserId: string | null, level = 0): Promise<any[]> {
   if (level > 4) return [];
   return await Promise.all(
     comments.map(async (comment: any) => {
@@ -20,6 +20,10 @@ async function buildThreadedComments(comments: any[], opUserId: string, level = 
         const count = await prisma.comment.count({ where: { parentId: comment.id, deleted: false } });
         hasMoreReplies = count > 0;
       }
+      const upvotes = comment.votes.filter((v: any) => v.value === 1).length;
+      const downvotes = comment.votes.filter((v: any) => v.value === -1).length;
+      const userVoteValue = currentUserId ? comment.votes.find((v: any) => v.userId === currentUserId)?.value : null;
+      const userVote = userVoteValue === 1 ? 'upvote' : userVoteValue === -1 ? 'downvote' : null;
       return {
         id: comment.id,
         content: comment.deleted ? '[deleted]' : comment.content,
@@ -33,11 +37,11 @@ async function buildThreadedComments(comments: any[], opUserId: string, level = 
           role: comment.user.role,
         } : null,
         isOP: comment.userId === opUserId,
-        upvotes: comment.votes.filter((v: any) => v.value === 1).length,
-        downvotes: comment.votes.filter((v: any) => v.value === -1).length,
+        _count: { upvotes, downvotes },
+        userVote,
         score: comment.votes.reduce((acc: number, v: any) => acc + v.value, 0),
         parentId: comment.parentId,
-        replies: level < 4 ? await buildThreadedComments(replies, opUserId, level + 1) : [],
+        replies: level < 4 ? await buildThreadedComments(replies, opUserId, currentUserId, level + 1) : [],
         hasMoreReplies,
       };
     })
@@ -63,17 +67,34 @@ export function convertBigInts(obj: any): any {
 // GET /torrent/:id/comments
 export async function listCommentsForTorrentHandler(request: FastifyRequest, reply: FastifyReply) {
   const { id } = request.params as any;
+  const { page = 1, limit = 10 } = (request.query as any) || {};
+  const p = Math.max(1, Number(page) || 1);
+  const take = Math.min(50, Math.max(1, Number(limit) || 10));
+  const skip = (p - 1) * take;
+  const user = (request as any).user || null;
+  const currentUserId: string | null = user?.id || null;
+
   const torrent = await prisma.torrent.findUnique({ where: { id } });
   if (!torrent) return reply.status(404).send({ error: 'Torrent not found' });
-  // OP is uploader
   const opUserId = torrent.uploaderId;
-  const rootComments = await prisma.comment.findMany({
-    where: { torrentId: id, parentId: null, deleted: false },
-    orderBy: { createdAt: 'asc' },
-    include: { user: true, votes: true },
-  });
-  const threaded = await buildThreadedComments(rootComments, opUserId);
-  return reply.send(convertBigInts(threaded));
+
+  const [rootComments, total] = await Promise.all([
+    prisma.comment.findMany({
+      where: { torrentId: id, parentId: null, deleted: false },
+      orderBy: { createdAt: 'asc' },
+      skip,
+      take,
+      include: { user: true, votes: true },
+    }),
+    prisma.comment.count({ where: { torrentId: id, parentId: null, deleted: false } })
+  ]);
+
+  const threaded = await buildThreadedComments(rootComments, opUserId, currentUserId);
+  const totalPages = Math.max(1, Math.ceil(total / take));
+  return reply.send(convertBigInts({
+    comments: threaded,
+    pagination: { page: p, limit: take, total, totalPages }
+  }));
 }
 
 // POST /torrent/:id/comments

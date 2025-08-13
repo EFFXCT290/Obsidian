@@ -52,6 +52,7 @@ model User {
   avatarUrl      String?
   comments       Comment[]
   commentVotes   CommentVote[]
+  torrentVotes   TorrentVote[]
   downloadTokens DownloadToken[]
 
   // Preferences
@@ -116,6 +117,8 @@ model Torrent {
   posterFileId String? @unique
   posterUrl   String?
   comments    Comment[]
+  votes       TorrentVote[]
+  tags        String[]   @default([])
 }
 
 model Announce {
@@ -151,8 +154,8 @@ model Invite {
 model Config {
   id               Int      @id @default(1)
   registrationMode RegMode  @default(OPEN)
-  storageType      StorageType @default(LOCAL)
-  requireTorrentApproval Boolean @default(true)
+  storageType      StorageType @default(DB)
+  requireTorrentApproval Boolean @default(false)
   requiredSeedingMinutes Int @default(4320) // 72 hours
   minRatio Float @default(0.5)
   bonusPointsPerHour Int @default(1)
@@ -410,6 +413,20 @@ model CommentVote {
   user      User     @relation(fields: [userId], references: [id])
   comment   Comment  @relation(fields: [commentId], references: [id])
   @@unique([userId, commentId])
+}
+
+model TorrentVote {
+  id        String   @id @default(cuid())
+  userId    String
+  torrentId String
+  value     Int      // 1 for upvote, -1 for downvote
+  createdAt DateTime @default(now())
+
+  // Relations
+  user    User    @relation(fields: [userId], references: [id])
+  torrent Torrent @relation(fields: [torrentId], references: [id])
+
+  @@unique([userId, torrentId])
 }
 
 model DownloadToken {

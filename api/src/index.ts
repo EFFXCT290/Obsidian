@@ -21,9 +21,12 @@ const app = Fastify({
   }
 });
 
-// Register CORS with dynamic origin from .env
+// Register CORS with dynamic origin from .env, with sensible local defaults
+const defaultCorsOrigins = ['http://localhost:3000', 'http://127.0.0.1:3000'];
+const envOrigins = process.env.CORS_ORIGIN?.split(',').map(s => s.trim()).filter(Boolean) || [];
+const corsOrigins = envOrigins.length > 0 ? envOrigins : defaultCorsOrigins;
 await app.register(cors, {
-  origin: process.env.CORS_ORIGIN?.split(',') || false,
+  origin: corsOrigins,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD'],
   credentials: true
 });

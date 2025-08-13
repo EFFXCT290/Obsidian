@@ -30,11 +30,32 @@ export async function listBookmarksHandler(request: FastifyRequest, reply: Fasti
 export async function addBookmarkHandler(request: FastifyRequest, reply: FastifyReply) {
   const user = (request as any).user;
   if (!user) return reply.status(401).send({ error: 'Unauthorized' });
-  const { torrentId, note } = request.body as any;
+  const contentType = (request.headers['content-type'] || '').toString();
+  let torrentId: string | undefined;
+  let note: string | undefined;
+  if (contentType.includes('application/json')) {
+    const body = request.body as any;
+    torrentId = body?.torrentId;
+    note = body?.note;
+  } else if (contentType.includes('application/x-www-form-urlencoded') || contentType.includes('multipart/form-data')) {
+    const body = request.body as any;
+    torrentId = body?.torrentId;
+    note = body?.note;
+  } else {
+    const body = request.body as any;
+    torrentId = body?.torrentId;
+    note = body?.note;
+  }
   if (!torrentId) return reply.status(400).send({ error: 'torrentId is required' });
   // Check if torrent exists
-  const torrent = await prisma.torrent.findUnique({ where: { id: torrentId, isApproved: true } });
+  const torrent = await prisma.torrent.findUnique({ where: { id: torrentId } });
   if (!torrent) return reply.status(404).send({ error: 'Torrent not found' });
+  // If not approved, allow only uploader and staff to bookmark
+  if (!torrent.isApproved) {
+    const isStaff = user.role === 'ADMIN' || user.role === 'OWNER' || user.role === 'FOUNDER';
+    const isUploader = torrent.uploaderId === user.id;
+    if (!isStaff && !isUploader) return reply.status(403).send({ error: 'Forbidden' });
+  }
   // Upsert bookmark
   const bookmark = await prisma.bookmark.upsert({
     where: { userId_torrentId: { userId: user.id, torrentId } },
