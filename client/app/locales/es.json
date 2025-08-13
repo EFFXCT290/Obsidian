@@ -529,8 +529,14 @@
       }
     },
     "options": {
-      "anonymous": "Subir como anónimo",
-      "freeleech": "Marcar como freeleech"
+      "anonymous": {
+        "label": "Subida anónima",
+        "desc": "Oculta tu nombre de usuario como uploader"
+      },
+      "freeleech": {
+        "label": "Freeleech",
+        "desc": "No cuenta tráfico de descarga"
+      }
     },
     "actions": {
       "upload": "Subir",
@@ -591,16 +597,16 @@
       "torrent": "Torrent",
       "magnet": "Magnet",
       "magnetGenerating": "Generando…",
-      "addBookmark": "Añadir a favoritos",
-      "removeBookmark": "Quitar de favoritos",
+      "addBookmark": "Añadir a Marcadores",
+      "removeBookmark": "Quitar de Marcadores",
       "like": "Me gusta",
       "dislike": "No me gusta",
       "copyLink": "Copiar enlace",
       "copied": "Enlace copiado",
       "copyError": "No se pudo copiar el enlace",
-      "bookmarkAdded": "Marcado como favorito",
-      "bookmarkRemoved": "Eliminado de favoritos",
-      "bookmarkError": "Operación de favorito fallida",
+      "bookmarkAdded": "Añadido a marcadores",
+      "bookmarkRemoved": "Eliminado de marcadores",
+      "bookmarkError": "Operación de marcador fallida",
       "downloadError": "No se pudo descargar el torrent",
       "loadError": "No se pudo cargar el torrent",
       "disabled": "Las acciones están desactivadas hasta que el torrent sea aprobado."

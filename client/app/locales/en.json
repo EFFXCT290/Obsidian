@@ -312,16 +312,16 @@
       "torrent": "Torrent",
       "magnet": "Magnet",
       "magnetGenerating": "Generating…",
-      "addBookmark": "Add to favorites",
-      "removeBookmark": "Remove from favorites",
+      "addBookmark": "Add to Bookmarks",
+      "removeBookmark": "Remove from Bookmarks",
       "like": "Like",
       "dislike": "Dislike",
       "copyLink": "Copy link",
       "copied": "Link copied",
       "copyError": "Failed to copy link",
-      "bookmarkAdded": "Added to favorites",
-      "bookmarkRemoved": "Removed from favorites",
-      "bookmarkError": "Favorite operation failed",
+      "bookmarkAdded": "Added to bookmarks",
+      "bookmarkRemoved": "Removed from bookmarks",
+      "bookmarkError": "Bookmark operation failed",
       "downloadError": "Failed to download torrent",
       "loadError": "Failed to load torrent",
       "disabled": "Actions are disabled until the torrent is approved.",
@@ -602,8 +602,14 @@
       }
     },
     "options": {
-      "anonymous": "Upload as anonymous",
-      "freeleech": "Mark as freeleech"
+      "anonymous": {
+        "label": "Anonymous upload",
+        "desc": "Hide your username as uploader"
+      },
+      "freeleech": {
+        "label": "Freeleech",
+        "desc": "Download traffic does not count"
+      }
     },
     "actions": {
       "upload": "Upload",

@@ -15,6 +15,7 @@ import UploadOptions from '@/app/torrent/upload/components/UploadOptions';
 import UploadActions from '@/app/torrent/upload/components/UploadActions';
 import UploadTips from '@/app/torrent/upload/components/UploadTips';
 import { API_BASE_URL } from '@/lib/api';
+import { useI18n } from '@/app/hooks/useI18n';
 
 const uploadSchema = z.object({
   name: z.string().min(1, 'Required').max(255, 'Too long'),
@@ -30,6 +31,7 @@ type UploadFormData = z.infer<typeof uploadSchema>;
 
 export default function UploadContent() {
   const router = useRouter();
+  const { t } = useI18n();
   const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
   const [isDragOver, setIsDragOver] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
@@ -71,27 +73,27 @@ export default function UploadContent() {
   };
 
   const handleFileSelect = useCallback((file: File) => {
-    if (file.size > MAX_FILE_SIZE) { toast.error('Torrent file is too large (max 10MB)'); return; }
+    if (file.size > MAX_FILE_SIZE) { toast.error(t('upload.toasts.torrentTooLarge','El archivo .torrent es demasiado grande (máx 10MB)')); return; }
     setUploadedFile(file);
     setValue('name', sanitizeToWindowsName(file.name), { shouldValidate: true, shouldDirty: true });
-  }, [setValue, MAX_FILE_SIZE]);
+  }, [setValue, MAX_FILE_SIZE, t]);
 
   const handleDragOver = useCallback((e: React.DragEvent) => { e.preventDefault(); setIsDragOver(true); }, []);
   const handleDragLeave = useCallback((e: React.DragEvent) => { e.preventDefault(); setIsDragOver(false); }, []);
   const handleDrop = useCallback((e: React.DragEvent) => { e.preventDefault(); setIsDragOver(false); const f = Array.from(e.dataTransfer.files).find((x: File) => x.name.endsWith('.torrent')); if (f) handleFileSelect(f); }, [handleFileSelect]);
 
   const handleImageSelect = useCallback((file: File) => {
-    if (file.size > MAX_FILE_SIZE) { toast.error('Image is too large (max 10MB)'); return; }
+    if (file.size > MAX_FILE_SIZE) { toast.error(t('upload.toasts.imageTooLarge','La imagen es demasiado grande (máx 10MB)')); return; }
     setUploadedImage(file);
     const reader = new FileReader();
     reader.onload = (e) => setImagePreview(e.target?.result as string);
     reader.readAsDataURL(file);
-  }, [MAX_FILE_SIZE]);
+  }, [MAX_FILE_SIZE, t]);
   const handleImageRemove = useCallback(() => { setUploadedImage(null); setImagePreview(null); }, []);
   const handleNfoSelect = useCallback((file: File) => {
-    if (file.size > MAX_FILE_SIZE) { toast.error('NFO file is too large (max 10MB)'); return; }
+    if (file.size > MAX_FILE_SIZE) { toast.error(t('upload.toasts.nfoTooLarge','El NFO es demasiado grande (máx 10MB)')); return; }
     setUploadedNfo(file);
-  }, [MAX_FILE_SIZE]);
+  }, [MAX_FILE_SIZE, t]);
   const handleNfoRemove = useCallback(() => setUploadedNfo(null), []);
 
   const addTag = useCallback((tag: string) => { if (!watchedTags.includes(tag)) setValue('tags', [...watchedTags, tag], { shouldValidate: true, shouldDirty: true }); }, [watchedTags, setValue]);
@@ -99,7 +101,7 @@ export default function UploadContent() {
   const addCustomTag = useCallback((customTag: string) => { if (!watchedTags.includes(customTag)) setValue('tags', [...watchedTags, customTag], { shouldValidate: true, shouldDirty: true }); }, [watchedTags, setValue]);
 
   const onSubmit = useCallback(async (data: UploadFormData) => {
-    if (!uploadedFile) { toast.error('Selecciona un archivo .torrent'); return; }
+    if (!uploadedFile) { toast.error(t('upload.toasts.missingTorrent','Selecciona un archivo .torrent')); return; }
     setIsUploading(true);
     try {
       const formData = new FormData();
@@ -116,26 +118,26 @@ export default function UploadContent() {
 
       const res = await fetch(`${API_BASE_URL}/torrent/upload`, { method: 'POST', headers, body: formData });
       if (!res.ok) {
-        let message = 'Error al subir el torrent';
+        let message = t('upload.toasts.error','Error al subir el torrent');
         try { const payload = await res.json(); if (typeof payload?.error === 'string') message = payload.error; else if (typeof payload?.message === 'string') message = payload.message; } catch {}
         toast.error(message);
         return;
       }
       const result = await res.json();
-      toast.success('Torrent subido correctamente');
+      toast.success(t('upload.toasts.success','Torrent subido correctamente'));
       router.push(`/torrent/${result.id}`);
     } catch (e) {
-      toast.error((e as Error).message || 'Error al subir el torrent');
+      toast.error((e as Error).message || t('upload.toasts.error','Error al subir el torrent'));
     } finally {
       setIsUploading(false);
     }
-  }, [uploadedFile, uploadedImage, uploadedNfo, router]);
+  }, [uploadedFile, uploadedImage, uploadedNfo, router, t]);
 
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-text mb-2"><Upload className="inline mr-2 align-text-bottom" size={28} />Upload torrent</h1>
-        <p className="text-text-secondary">Share your content with the community.</p>
+        <h1 className="text-3xl font-bold text-text mb-2"><Upload className="inline mr-2 align-text-bottom" size={28} />{t('upload.title','Subir torrent')}</h1>
+        <p className="text-text-secondary">{t('upload.subtitle','Comparte tu contenido con la comunidad.')}</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -147,7 +149,7 @@ export default function UploadContent() {
         <UploadForm loading={loading} uploadedFile={uploadedFile} watchedCategory={watchedCategoryId} watchedName={watchedName} watchedDescription={watchedDescription} watchedTags={watchedTags} onAddTag={addTag} onRemoveTag={removeTag} onAddCustomTag={addCustomTag} register={register} errors={errors} />
 
         <div className="lg:col-span-2">
-          <label className="block text-sm font-medium text-text mb-2">Attach NFO</label>
+          <label className="block text-sm font-medium text-text mb-2">{t('upload.areas.nfo.title','Adjuntar NFO (opcional)')}</label>
           <NfoUploadArea uploadedNfo={uploadedNfo} onNfoSelect={handleNfoSelect} onNfoRemove={handleNfoRemove} onDragOver={(e: React.DragEvent) => { e.preventDefault(); setIsNfoDragOver(true); }} onDragLeave={(e: React.DragEvent) => { e.preventDefault(); setIsNfoDragOver(false); }} onDrop={(e: React.DragEvent) => { e.preventDefault(); setIsNfoDragOver(false); const f = Array.from(e.dataTransfer.files).find((x: File) => x.name.toLowerCase().endsWith('.nfo')); if (f) handleNfoSelect(f); }} isDragOver={isNfoDragOver} loading={loading} />
         </div>
 
@@ -157,16 +159,16 @@ export default function UploadContent() {
 
         <UploadActions isValid={isValid} hasFile={!!uploadedFile} isUploading={isUploading} disabledReasons={(() => {
           const reasons: string[] = [];
-          if (!uploadedFile) reasons.push('Selecciona un archivo .torrent.');
-          if (!watch('name')) reasons.push('Introduce un nombre para el torrent.');
-          if (!watch('description') || watch('description').length < 10) reasons.push('Añade una descripción (mínimo 10 caracteres).');
-          if (!watch('category')) reasons.push('Selecciona una categoría.');
-          if (!watch('source')) reasons.push('Selecciona un source.');
-          if (!watch('tags') || watch('tags').length === 0) reasons.push('Añade al menos una etiqueta.');
+          if (!uploadedFile) reasons.push(t('upload.actions.reasons.missingTorrent','Selecciona un archivo .torrent.'));
+          if (!watch('name')) reasons.push(t('upload.actions.reasons.missingName','Introduce un nombre para el torrent.'));
+          if (!watch('description') || watch('description').length < 10) reasons.push(t('upload.actions.reasons.missingDescription','Añade una descripción (mínimo 10 caracteres).'));
+          if (!watch('category')) reasons.push(t('upload.actions.reasons.missingCategory','Selecciona una categoría.'));
+          if (!watch('source')) reasons.push(t('upload.actions.reasons.missingSource','Selecciona un source.'));
+          if (!watch('tags') || watch('tags').length === 0) reasons.push(t('upload.actions.reasons.missingTags','Añade al menos una etiqueta.'));
           const zodMsgs = Array.from(new Set(Object.values(errors).map((e) => (e as { message?: string } | undefined)?.message).filter(Boolean)));
           reasons.push(...zodMsgs as string[]);
           return reasons;
-        })()} notes={(uploadedFile ? ['Recuerda: el .torrent debe estar marcado como privado y contener tu passkey en la URL de announce.'] : [])} loading={loading} />
+        })()} notes={(uploadedFile ? [t('upload.actions.notePrivate','Recuerda: el .torrent debe estar marcado como privado y contener tu passkey en la URL de announce.')] : [])} loading={loading} />
       </form>
 
       <UploadTips loading={loading} />

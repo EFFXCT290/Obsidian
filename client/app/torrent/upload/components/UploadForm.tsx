@@ -35,14 +35,14 @@ export default function UploadForm({ loading = false, uploadedFile, watchedCateg
   const nameIssues = useMemo(() => {
     const issues: string[] = [];
     const value = String(watchedName || '');
-    if (!value.trim()) { issues.push('El nombre no puede estar vacío.'); return issues; }
-    if (/[<>:"/\\|?*\x00-\x1F]/.test(value)) issues.push('Contiene caracteres no permitidos: \\ / : * ? " < > | o de control.');
-    try { if (/\p{Extended_Pictographic}|[\u200D\uFE0F]/u.test(value)) issues.push('No se permiten emojis en el nombre.'); } catch { if (/[\u200D\uFE0F]/.test(value)) issues.push('No se permiten emojis en el nombre.'); }
-    if (/[ .]+$/.test(value)) issues.push('No puede terminar con espacios o puntos.');
-    if (/^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(\..*)?$/i.test(value.trim())) issues.push('No puede usar nombres reservados de Windows (CON, PRN, AUX, NUL, COM1-9, LPT1-9).');
-    if (value.length > 200) issues.push('El nombre es demasiado largo (máximo 200 caracteres).');
+    if (!value.trim()) { issues.push(t('upload.form.name.issues.empty','El nombre no puede estar vacío.')); return issues; }
+    if (/[<>:"/\\|?*\x00-\x1F]/.test(value)) issues.push(t('upload.form.name.issues.invalidChars','Contiene caracteres no permitidos: \\ / : * ? " < > | o de control.'));
+    try { if (/\p{Extended_Pictographic}|[\u200D\uFE0F]/u.test(value)) issues.push(t('upload.form.name.issues.emojis','No se permiten emojis en el nombre.')); } catch { if (/[\u200D\uFE0F]/.test(value)) issues.push(t('upload.form.name.issues.emojis','No se permiten emojis en el nombre.')); }
+    if (/[ .]+$/.test(value)) issues.push(t('upload.form.name.issues.trailing','No puede terminar con espacios o puntos.'));
+    if (/^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(\..*)?$/i.test(value.trim())) issues.push(t('upload.form.name.issues.reserved','No puede usar nombres reservados de Windows (CON, PRN, AUX, NUL, COM1-9, LPT1-9).'));
+    if (value.length > 200) issues.push(t('upload.form.name.issues.tooLong','El nombre es demasiado largo (máximo 200 caracteres).'));
     return issues;
-  }, [watchedName]);
+  }, [watchedName, t]);
 
   useEffect(() => { (async () => { const res = await fetch(`${API_BASE_URL}/categories`, { cache: 'no-store' }); if (res.ok) setCategories(await res.json()); })(); }, []);
   useEffect(() => { (async () => { try { setSources([]); if (!watchedCategory) return; const res = await fetch(`${API_BASE_URL}/category/${watchedCategory}/sources`, { cache: 'no-store' }); if (res.ok) { const data = await res.json(); const merged = [...(data.own || []), ...(data.inherited || [])] as SourceItem[]; const unique = Array.from(new Map(merged.map(s => [s.id, s])).values()); setSources(unique); } } catch {} })(); }, [watchedCategory]);

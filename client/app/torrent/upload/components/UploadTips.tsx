@@ -1,10 +1,12 @@
 "use client";
 
 import React from 'react';
+import { useI18n } from '@/app/hooks/useI18n';
 
 interface Props { loading?: boolean }
 
 export default function UploadTips({ loading = false }: Props) {
+  const { t } = useI18n();
   if (loading) {
     return (
       <div className="mt-8">
@@ -15,11 +17,12 @@ export default function UploadTips({ loading = false }: Props) {
   }
   return (
     <div className="mt-8 bg-surface border border-border rounded-lg p-4 text-sm text-text-secondary">
-      <p className="mb-2 font-medium text-text">Consejos de subida</p>
+      <p className="mb-2 font-medium text-text">{t('upload.tips.title', 'Consejos')}</p>
       <ul className="list-disc list-inside space-y-1">
-        <li>Incluye una descripción clara y las etiquetas adecuadas.</li>
-        <li>La imagen del póster es opcional, pero recomendable.</li>
-        <li>El archivo .torrent debe ser privado y contener tu passkey.</li>
+        <li>{t('upload.tips.items.0', 'Asegúrate de que el archivo .torrent es válido y corresponde al contenido.')}</li>
+        <li>{t('upload.tips.items.1', 'Proporciona una descripción clara y concisa.')}</li>
+        <li>{t('upload.tips.items.2', 'Elige la categoría y el source más adecuados.')}</li>
+        <li>{t('upload.tips.items.3', 'Usa etiquetas relevantes para mejorar el descubrimiento.')}</li>
       </ul>
     </div>
   );
