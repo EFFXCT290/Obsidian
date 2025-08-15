@@ -16,15 +16,15 @@ export async function registerStatsRoutes(app: FastifyInstance) {
   // Get site statistics from database
   app.get('/stats', async (request, reply) => {
     try {
-      const [usersCount, torrentsCount, announcesAgg] = await Promise.all([
+      const [usersCount, torrentsCount, completedDownloads, announcesAgg] = await Promise.all([
         prisma.user.count(),
         prisma.torrent.count(),
+        prisma.announce.count({ where: { event: 'completed' } }),
         prisma.announce.aggregate({
-          _sum: { downloaded: true, uploaded: true },
+          _sum: { uploaded: true },
         }),
       ]);
 
-      const totalDownloaded = Number(announcesAgg._sum.downloaded || 0);
       const totalUploaded = Number(announcesAgg._sum.uploaded || 0);
 
       // Format bytes to human readable string; return "0 megabytes" if zero
@@ -40,9 +40,8 @@ export async function registerStatsRoutes(app: FastifyInstance) {
       return {
         totalUsers: usersCount,
         totalTorrents: torrentsCount,
-        totalDownloads: totalDownloaded,
+        totalDownloads: completedDownloads,
         totalUploadBytes: totalUploaded,
-        totalDownloadsFormatted: formatBytes(totalDownloaded),
         totalUploadFormatted: formatBytes(totalUploaded),
       };
     } catch (error) {
