@@ -8,6 +8,7 @@ import { format, isValid, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { showNotification } from '@/app/utils/notifications';
 import { useI18n } from '@/app/hooks/useI18n';
+import { InfoCircle, X } from '@styled-icons/boxicons-regular';
 import TorrentFiles from './TorrentFiles';
 import CommentsSection from './CommentsSection';
 import ActionsPanel from './ActionsPanel';
@@ -32,6 +33,10 @@ interface TorrentResponse {
   bookmarked?: boolean;
   userVote?: 'up' | 'down' | null;
   isApproved?: boolean;
+  isRejected?: boolean;
+  rejectionReason?: string;
+  rejectedBy?: { id: string; username: string };
+  rejectedAt?: string;
 }
 
 // Legacy comment types removed
@@ -43,6 +48,7 @@ export default function TorrentDetailContent({ torrentId }: { torrentId: string 
   const [, setDownloading] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
   const [posterVisible, setPosterVisible] = useState(true);
+  const [showRejectionInfoModal, setShowRejectionInfoModal] = useState(false);
   useEffect(() => { setHasMounted(true); }, []);
 
   const { data, error, isLoading, mutate } = useSWR<TorrentResponse>(
@@ -172,7 +178,23 @@ export default function TorrentDetailContent({ torrentId }: { torrentId: string 
         </h1>
         <div className="text-sm text-text-secondary mt-1 flex items-center gap-2" suppressHydrationWarning>
           <span>{createdAtFormatted}</span>
-          {hasMounted && data && data.isApproved === false && (
+          {hasMounted && data && data.isRejected && (
+            <div className="flex items-center gap-1">
+              <span className="px-2 py-0.5 text-xs rounded bg-red-500/10 text-red-500 border border-red-500/20">
+                {t('torrentDetail.header.rejected','Rechazado')}
+              </span>
+              {data.rejectionReason && (
+                <button
+                  onClick={() => setShowRejectionInfoModal(true)}
+                  className="text-red-500 hover:text-red-700 transition-colors"
+                  title={t('torrentDetail.header.viewRejectionReason','Ver motivo del rechazo')}
+                >
+                  <InfoCircle size={14} />
+                </button>
+              )}
+            </div>
+          )}
+          {hasMounted && data && data.isApproved === false && !data.isRejected && (
             <span className="px-2 py-0.5 text-xs rounded bg-yellow-500/10 text-yellow-500 border border-yellow-500/20">
               {t('torrentDetail.header.pendingApproval','Pendiente de aprobación')}
             </span>
@@ -277,6 +299,62 @@ export default function TorrentDetailContent({ torrentId }: { torrentId: string 
           <UploaderPanel uploader={data?.uploader || null} loading={!hasMounted || isLoading} />
         </div>
       </div>
+
+      {/* Rejection Info Modal */}
+      {showRejectionInfoModal && data && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-surface border border-border rounded-lg p-6 max-w-md w-full mx-4">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-text">
+                {t('torrentDetail.modals.rejectionInfo.title','Información del Rechazo')}
+              </h3>
+              <button
+                onClick={() => setShowRejectionInfoModal(false)}
+                className="text-text-secondary hover:text-text transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-text-secondary mb-2">
+                  {t('torrentDetail.modals.rejectionInfo.reason','Motivo del rechazo:')}
+                </label>
+                <div className="bg-background border border-border rounded-lg p-3 text-text">
+                  {data.rejectionReason || t('torrentDetail.modals.rejectionInfo.noReason','No se especificó motivo')}
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-text-secondary mb-2">
+                  {t('torrentDetail.modals.rejectionInfo.rejectedBy','Rechazado por:')}
+                </label>
+                <div className="text-text">
+                  {data.rejectedBy?.username || t('torrentDetail.modals.rejectionInfo.unknown','Desconocido')}
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-text-secondary mb-2">
+                  {t('torrentDetail.modals.rejectionInfo.rejectedAt','Fecha de rechazo:')}
+                </label>
+                <div className="text-text">
+                  {data.rejectedAt ? 
+                    format(parsePossiblyInvalidDate(data.rejectedAt) || new Date(), 'dd/MM/yyyy HH:mm', { locale: es }) : 
+                    t('torrentDetail.modals.rejectionInfo.unknown','Desconocido')
+                  }
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-end mt-6">
+              <button
+                onClick={() => setShowRejectionInfoModal(false)}
+                className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+              >
+                {t('torrentDetail.modals.rejectionInfo.close','Cerrar')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

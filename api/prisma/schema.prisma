@@ -26,6 +26,7 @@ model User {
   emailVerified  Boolean   @default(false)
   passkey        String    @unique
   torrents       Torrent[] @relation("UserTorrents")
+  rejectedTorrents Torrent[] @relation("TorrentRejectedBy")
   announces      Announce[]
   invitesCreated Invite[]  @relation("InvitesCreated")
   invitesUsed    Invite[]  @relation("InvitesUsed")
@@ -104,6 +105,11 @@ model Torrent {
   nfoPath     String?
   size        BigInt
   isApproved  Boolean    @default(false)
+  isRejected  Boolean    @default(false)
+  rejectionReason String?
+  rejectedBy  User?      @relation("TorrentRejectedBy", fields: [rejectedById], references: [id])
+  rejectedById String?
+  rejectedAt  DateTime?
   announces   Announce[]
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt

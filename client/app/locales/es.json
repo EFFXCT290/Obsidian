@@ -158,8 +158,73 @@
       "torrentApprovals": {
         "title": "Aprobaciones de Torrents",
         "description": "Revisar y aprobar torrents pendientes de subida.",
-        "comingSoon": "Próximamente",
-        "comingSoonDescription": "El sistema de aprobación de torrents estará disponible pronto."
+        "stats": {
+          "total": "Total de Torrents",
+          "approved": "Aprobados",
+          "pending": "Pendientes"
+        },
+        "filters": {
+          "all": "Todos",
+          "approved": "Aprobados",
+          "pending": "Pendientes",
+          "rejected": "Rechazados",
+          "search": "Buscar torrents..."
+        },
+        "table": {
+          "name": "Nombre",
+          "uploader": "Subidor",
+          "category": "Categoría",
+          "size": "Tamaño",
+          "date": "Fecha",
+          "status": "Estado",
+          "actions": "Acciones"
+        },
+        "status": {
+          "approved": "Aprobado",
+          "pending": "Pendiente",
+          "rejected": "Rechazado"
+        },
+        "actions": {
+          "approve": "Aprobar",
+          "reject": "Rechazar",
+          "view": "Ver",
+          "viewRejectionReason": "Ver motivo del rechazo",
+          "approving": "Aprobando...",
+          "rejecting": "Rechazando..."
+        },
+        "modals": {
+          "approve": {
+            "title": "Aprobar Torrent",
+            "message": "¿Estás seguro de que quieres aprobar este torrent?",
+            "confirm": "Aprobar",
+            "cancel": "Cancelar"
+          },
+          "reject": {
+            "title": "Rechazar Torrent",
+            "message": "¿Estás seguro de que quieres rechazar este torrent?",
+            "reason": "Razón del rechazo (opcional):",
+            "confirm": "Rechazar",
+            "cancel": "Cancelar"
+          },
+          "rejectionInfo": {
+            "title": "Información del Rechazo",
+            "reason": "Motivo del rechazo:",
+            "rejectedBy": "Rechazado por:",
+            "rejectedAt": "Fecha de rechazo:",
+            "noReason": "No se especificó motivo",
+            "unknown": "Desconocido",
+            "close": "Cerrar"
+          }
+        },
+        "notifications": {
+          "approved": "Torrent aprobado exitosamente",
+          "rejected": "Torrent rechazado exitosamente",
+          "error": "Error al procesar la acción"
+        },
+        "empty": {
+          "title": "No hay torrents pendientes",
+          "description": "Todos los torrents han sido procesados."
+        }
       },
       "torrentManagement": {
         "title": "Gestión de Torrents",
@@ -572,7 +637,9 @@
   "torrentDetail": {
     "header": {
       "pendingApproval": "Pendiente de aprobación",
-      "notFound": "No encontrado"
+      "notFound": "No encontrado",
+      "rejected": "Rechazado",
+      "viewRejectionReason": "Ver motivo del rechazo"
     },
     "fields": {
       "commentsTitle": "Comentarios",
@@ -630,6 +697,17 @@
       "of": "de"
     },
     "nfo": { "title": "Archivo NFO" },
+    "modals": {
+      "rejectionInfo": {
+        "title": "Información del Rechazo",
+        "reason": "Motivo del rechazo:",
+        "rejectedBy": "Rechazado por:",
+        "rejectedAt": "Fecha de rechazo:",
+        "noReason": "No se especificó motivo",
+        "unknown": "Desconocido",
+        "close": "Cerrar"
+      }
+    },
     "uploader": {
       "title": "Subido por",
       "uploaded": "Subido",

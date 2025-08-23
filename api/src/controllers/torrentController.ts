@@ -4,7 +4,7 @@ import bencode from 'bencode';
 import { PrismaClient } from '@prisma/client';
 import type { Prisma } from '@prisma/client';
 import { requireTorrentApproval } from '../services/configService.js';
-import { saveFile, getFile, deleteFile } from '../services/fileStorageService.js';
+import { saveFile, getFile } from '../services/fileStorageService.js';
 import { getConfig } from '../services/configService.js';
 import { createNotification } from '../services/notificationService.js';
 import { getTorrentApprovedEmail, getTorrentRejectedEmail } from '../utils/emailTemplates/torrentApprovalEmail.js';
@@ -552,50 +552,77 @@ export async function approveTorrentHandler(request: FastifyRequest, reply: Fast
 }
 
 export async function rejectTorrentHandler(request: FastifyRequest, reply: FastifyReply) {
-  const user = (request as any).user;
-  if (!user || (user.role !== 'ADMIN' && user.role !== 'OWNER' && user.role !== 'FOUNDER')) {
-    return reply.status(403).send({ error: 'Forbidden' });
-  }
-  const { id } = request.params as any;
-  const torrent = await prisma.torrent.findUnique({ where: { id } });
-  if (!torrent) return reply.status(404).send({ error: 'Torrent not found' });
-  // Notify uploader before deleting
-  if (torrent.uploaderId) {
-    const uploader = await prisma.user.findUnique({ where: { id: torrent.uploaderId } });
-    if (uploader) {
-      const { text, html } = getTorrentRejectedEmail({ username: uploader.username, torrentName: torrent.name });
-      await createNotification({
-        userId: uploader.id,
-        type: 'torrent_rejected',
-        message: `Your torrent "${torrent.name}" has been rejected.`,
-        sendEmail: true,
-        email: uploader.email,
-        emailSubject: 'Your torrent has been rejected',
-        emailText: text,
-        emailHtml: html
-      });
-    }
-  }
-  // Delete files
   try {
-    const config = normalizeS3Config(await getConfig());
-    if (torrent.filePath) {
-      const file = await prisma.uploadedFile.findUnique({ where: { id: torrent.filePath } });
-      if (file) await deleteFile({ file, config });
+    console.log('Reject torrent request received:', { 
+      params: request.params, 
+      body: request.body,
+      headers: request.headers,
+      user: (request as any).user 
+    });
+    
+    const user = (request as any).user;
+    if (!user || (user.role !== 'ADMIN' && user.role !== 'OWNER' && user.role !== 'FOUNDER')) {
+      console.log('Forbidden: User role not allowed:', user?.role);
+      return reply.status(403).send({ error: 'Forbidden' });
     }
-    if (torrent.nfoPath) {
-      const file = await prisma.uploadedFile.findUnique({ where: { id: torrent.nfoPath } });
-      if (file) await deleteFile({ file, config });
+    const { id } = request.params as any;
+    const { reason } = request.body as any;
+    
+    console.log('Processing rejection for torrent:', id, 'with reason:', reason);
+  
+  const torrent = await prisma.torrent.findUnique({ 
+    where: { id },
+    include: {
+      uploader: {
+        select: {
+          id: true,
+          username: true,
+          email: true
+        }
+      }
     }
-    if (torrent.posterFileId) {
-      const file = await prisma.uploadedFile.findUnique({ where: { id: torrent.posterFileId } });
-      if (file) await deleteFile({ file, config });
-    }
-  } catch {
-    // Ignore deletion errors
+  });
+  
+  if (!torrent) return reply.status(404).send({ error: 'Torrent not found' });
+  
+  if ((torrent as any).isRejected) {
+    return reply.status(400).send({ error: 'Torrent is already rejected' });
   }
-  await prisma.torrent.delete({ where: { id } });
+  
+  // Update torrent status to rejected using raw SQL to avoid Prisma client issues
+  await prisma.$executeRaw`
+    UPDATE "Torrent" 
+    SET "isRejected" = true, 
+        "rejectionReason" = ${reason || null}, 
+        "rejectedById" = ${user.id}, 
+        "rejectedAt" = ${new Date()}
+    WHERE id = ${id}
+  `;
+  
+  // Notify uploader
+  if (torrent.uploader) {
+    const { text, html } = getTorrentRejectedEmail({ 
+      username: torrent.uploader.username, 
+      torrentName: torrent.name 
+    });
+    
+    await createNotification({
+      userId: torrent.uploader.id,
+      type: 'torrent_rejected',
+      message: `Your torrent "${torrent.name}" has been rejected.${reason ? ` Reason: ${reason}` : ''}`,
+      sendEmail: true,
+      email: torrent.uploader.email,
+      emailSubject: 'Your torrent has been rejected',
+      emailText: text,
+      emailHtml: html
+    });
+  }
+  
   return reply.send({ success: true });
+  } catch (error) {
+    console.error('Error in rejectTorrentHandler:', error);
+    return reply.status(500).send({ error: 'Internal server error' });
+  }
 }
 
 export async function listAllTorrentsHandler(request: FastifyRequest, reply: FastifyReply) {
@@ -613,8 +640,12 @@ export async function listAllTorrentsHandler(request: FastifyRequest, reply: Fas
   // Filter by approval status
   if (status === 'approved') {
     where.isApproved = true;
+    (where as any).isRejected = false;
   } else if (status === 'pending') {
     where.isApproved = false;
+    (where as any).isRejected = false;
+  } else if (status === 'rejected') {
+    (where as any).isRejected = true;
   }
   // If no status filter, show all
   
@@ -627,7 +658,7 @@ export async function listAllTorrentsHandler(request: FastifyRequest, reply: Fas
   }
   
   const [torrents, total] = await Promise.all([
-    prisma.torrent.findMany({
+    (prisma.torrent as any).findMany({
       where,
       skip,
       take,
@@ -638,6 +669,12 @@ export async function listAllTorrentsHandler(request: FastifyRequest, reply: Fas
             id: true,
             username: true,
             role: true
+          }
+        },
+        rejectedBy: {
+          select: {
+            id: true,
+            username: true
           }
         },
         category: {
@@ -665,7 +702,7 @@ export async function listAllTorrentsHandler(request: FastifyRequest, reply: Fas
         seeders: seederLeecherCounts.complete,
         leechers: seederLeecherCounts.incomplete,
         completed: completedCount,
-        category: torrent.category?.name || 'General'
+        category: torrent.category || { id: 'general', name: 'General' }
       };
     })
   );
