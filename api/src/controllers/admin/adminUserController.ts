@@ -453,7 +453,9 @@ export async function listAllUsersHandler(request: FastifyRequest, reply: Fastif
         role: true,
         status: true,
         createdAt: true,
-        emailVerified: true
+        emailVerified: true,
+        rssEnabled: true,
+        rssToken: true
       }
     }),
     prisma.user.count({ where })

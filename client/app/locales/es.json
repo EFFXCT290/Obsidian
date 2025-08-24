@@ -229,14 +229,93 @@
       "torrentManagement": {
         "title": "Gestión de Torrents",
         "description": "Administrar torrents existentes, categorías y metadatos.",
-        "comingSoon": "Próximamente",
-        "comingSoonDescription": "El sistema de gestión de torrents estará disponible pronto."
+        "search": {
+          "placeholder": "Buscar torrents por nombre..."
+        },
+        "filters": {
+          "allCategories": "Todas las Categorías",
+          "clear": "Limpiar"
+        },
+        "edit": {
+          "name": "Nombre",
+          "description": "Descripción",
+          "category": "Categoría",
+          "save": "Guardar Cambios",
+          "cancel": "Cancelar"
+        },
+        "info": {
+          "size": "Tamaño",
+          "category": "Categoría",
+          "uploader": "Subidor",
+          "created": "Creado",
+          "updated": "Actualizado"
+        },
+        "actions": {
+          "edit": "Editar Torrent",
+          "delete": "Eliminar Torrent"
+        },
+        "delete": {
+          "confirmTitle": "Eliminar Torrent",
+          "confirmMessage": "¿Estás seguro de que quieres eliminar este torrent? Esta acción no se puede deshacer.",
+          "confirm": "Eliminar",
+          "cancel": "Cancelar"
+        },
+        "pagination": {
+          "previous": "Anterior",
+          "next": "Siguiente",
+          "page": "Página {current} de {total}"
+        },
+        "noResults": {
+          "title": "No se encontraron torrents",
+          "description": "Intenta ajustar tus criterios de búsqueda o filtros."
+        },
+        "notifications": {
+          "updated": "Torrent actualizado exitosamente",
+          "deleted": "Torrent eliminado exitosamente",
+          "error": "Ocurrió un error al gestionar los torrents"
+        }
       },
       "rssManagement": {
         "title": "Gestión de RSS",
         "description": "Configurar y administrar feeds RSS y configuraciones.",
-        "comingSoon": "Próximamente",
-        "comingSoonDescription": "El sistema de gestión de RSS estará disponible pronto."
+        "search": {
+          "placeholder": "Buscar usuarios por nombre o email...",
+          "clear": "Limpiar"
+        },
+        "user": {
+          "email": "Email",
+          "created": "Creado",
+          "emailVerified": "Email Verificado",
+          "emailNotVerified": "Email No Verificado"
+        },
+        "rss": {
+          "enabled": "RSS Habilitado",
+          "disabled": "RSS Deshabilitado",
+          "token": "Token RSS",
+          "showToken": "Mostrar Token",
+          "hideToken": "Ocultar Token"
+        },
+        "actions": {
+          "enable": "Habilitar RSS",
+          "disable": "Deshabilitar RSS",
+          "resetToken": "Restablecer Token"
+        },
+        "pagination": {
+          "previous": "Anterior",
+          "next": "Siguiente"
+        },
+        "noResults": {
+          "title": "No se encontraron usuarios",
+          "description": "Intenta ajustar tus criterios de búsqueda."
+        },
+        "notifications": {
+          "rssEnabled": "Acceso RSS habilitado exitosamente",
+          "rssDisabled": "Acceso RSS deshabilitado exitosamente",
+          "tokenReset": "Token RSS restablecido exitosamente",
+          "tokenCopied": "Token RSS copiado al portapapeles",
+          "copyError": "Error al copiar token al portapapeles",
+          "error": "Ocurrió un error al gestionar la configuración RSS"
+        }
       },
       "announcements": {
         "title": "Anuncios",

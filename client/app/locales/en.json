@@ -229,14 +229,93 @@
       "torrentManagement": {
         "title": "Torrent Management",
         "description": "Manage existing torrents, categories, and metadata.",
-        "comingSoon": "Coming Soon",
-        "comingSoonDescription": "Torrent management system will be available soon."
+        "search": {
+          "placeholder": "Search torrents by name..."
+        },
+        "filters": {
+          "allCategories": "All Categories",
+          "clear": "Clear"
+        },
+        "edit": {
+          "name": "Name",
+          "description": "Description",
+          "category": "Category",
+          "save": "Save Changes",
+          "cancel": "Cancel"
+        },
+        "info": {
+          "size": "Size",
+          "category": "Category",
+          "uploader": "Uploader",
+          "created": "Created",
+          "updated": "Updated"
+        },
+        "actions": {
+          "edit": "Edit Torrent",
+          "delete": "Delete Torrent"
+        },
+        "delete": {
+          "confirmTitle": "Delete Torrent",
+          "confirmMessage": "Are you sure you want to delete this torrent? This action cannot be undone.",
+          "confirm": "Delete",
+          "cancel": "Cancel"
+        },
+        "pagination": {
+          "previous": "Previous",
+          "next": "Next",
+          "page": "Page {current} of {total}"
+        },
+        "noResults": {
+          "title": "No torrents found",
+          "description": "Try adjusting your search criteria or filters."
+        },
+        "notifications": {
+          "updated": "Torrent updated successfully",
+          "deleted": "Torrent deleted successfully",
+          "error": "An error occurred while managing torrents"
+        }
       },
       "rssManagement": {
         "title": "RSS Management",
         "description": "Configure and manage RSS feeds and settings.",
-        "comingSoon": "Coming Soon",
-        "comingSoonDescription": "RSS management system will be available soon."
+        "search": {
+          "placeholder": "Search users by username or email...",
+          "clear": "Clear"
+        },
+        "user": {
+          "email": "Email",
+          "created": "Created",
+          "emailVerified": "Email Verified",
+          "emailNotVerified": "Email Not Verified"
+        },
+        "rss": {
+          "enabled": "RSS Enabled",
+          "disabled": "RSS Disabled",
+          "token": "RSS Token",
+          "showToken": "Show Token",
+          "hideToken": "Hide Token"
+        },
+        "actions": {
+          "enable": "Enable RSS",
+          "disable": "Disable RSS",
+          "resetToken": "Reset Token"
+        },
+        "pagination": {
+          "previous": "Previous",
+          "next": "Next"
+        },
+        "noResults": {
+          "title": "No users found",
+          "description": "Try adjusting your search criteria."
+        },
+        "notifications": {
+          "rssEnabled": "RSS access enabled successfully",
+          "rssDisabled": "RSS access disabled successfully",
+          "tokenReset": "RSS token reset successfully",
+          "tokenCopied": "RSS token copied to clipboard",
+          "copyError": "Failed to copy token to clipboard",
+          "error": "An error occurred while managing RSS settings"
+        }
       },
       "announcements": {
         "title": "Announcements",

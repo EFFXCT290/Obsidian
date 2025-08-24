@@ -317,15 +317,35 @@ async function modifyTorrentAnnounceUrls(torrentBuffer: Buffer, passkey: string)
 }
 
 export async function listTorrentsHandler(request: FastifyRequest, reply: FastifyReply) {
-  const { page = 1, limit = 20, q } = request.query as any;
+  const { page = 1, limit = 20, q, categoryId, status } = request.query as any;
   const take = Math.min(Number(limit) || 20, 100);
   const skip = (Number(page) - 1) * take;
-  const where: any = { isApproved: true };
+  const where: any = {};
+  
+  // Handle status filtering
+  if (status === 'approved') {
+    where.isApproved = true;
+  } else if (status === 'pending') {
+    where.isApproved = false;
+    where.isRejected = false;
+  } else if (status === 'rejected') {
+    where.isRejected = true;
+  } else {
+    // Default to approved torrents for public access
+    where.isApproved = true;
+  }
+  
+  // Handle search query
   if (q) {
     where.OR = [
       { name: { contains: q, mode: 'insensitive' } },
       { description: { contains: q, mode: 'insensitive' } }
     ];
+  }
+  
+  // Handle category filtering
+  if (categoryId && categoryId !== 'all') {
+    where.categoryId = categoryId;
   }
   const [torrents, total] = await Promise.all([
     prisma.torrent.findMany({
@@ -340,11 +360,13 @@ export async function listTorrentsHandler(request: FastifyRequest, reply: Fastif
         infoHash: true, 
         size: true, 
         createdAt: true, 
+        updatedAt: true,
         uploaderId: true,
         uploader: {
           select: {
             id: true,
-            username: true
+            username: true,
+            role: true
           }
         },
         category: {
@@ -371,8 +393,7 @@ export async function listTorrentsHandler(request: FastifyRequest, reply: Fastif
         size: torrent.size?.toString?.() ?? "0",
         seeders: seederLeecherCounts.complete,
         leechers: seederLeecherCounts.incomplete,
-        completed: completedCount,
-        category: torrent.category?.name || 'General'
+        completed: completedCount
       };
     })
   );
@@ -690,7 +711,7 @@ export async function listAllTorrentsHandler(request: FastifyRequest, reply: Fas
 
   // Calculate stats for each torrent
   const torrentsWithStats = await Promise.all(
-    torrents.map(async (torrent) => {
+    torrents.map(async (torrent: any) => {
       const [seederLeecherCounts, completedCount] = await Promise.all([
         getSeederLeecherCounts(torrent.id),
         getCompletedCount(torrent.id)
@@ -701,8 +722,7 @@ export async function listAllTorrentsHandler(request: FastifyRequest, reply: Fas
         size: torrent.size?.toString?.() ?? "0",
         seeders: seederLeecherCounts.complete,
         leechers: seederLeecherCounts.incomplete,
-        completed: completedCount,
-        category: torrent.category || { id: 'general', name: 'General' }
+        completed: completedCount
       };
     })
   );
@@ -903,6 +923,138 @@ export async function downloadTorrentWithTokenHandler(request: FastifyRequest, r
   } catch (err) {
     console.error('[downloadTorrentWithTokenHandler] Error:', err);
     return reply.status(500).send({ error: 'Could not read torrent file' });
+  }
+}
+
+// Torrent management endpoints for admins
+export async function editTorrentHandler(request: FastifyRequest, reply: FastifyReply) {
+  const user = (request as any).user;
+  if (!user) return reply.status(401).send({ error: 'Unauthorized' });
+  
+  // Check if user is admin
+  if (!['ADMIN', 'OWNER', 'FOUNDER'].includes(user.role)) {
+    return reply.status(403).send({ error: 'Forbidden: Admin access required' });
+  }
+  
+  const { id } = request.params as any;
+  const { name, description, categoryId } = request.body as any;
+  
+  // Validate required fields
+  if (!name || !name.trim()) {
+    return reply.status(400).send({ error: 'Name is required' });
+  }
+  
+  if (!categoryId) {
+    return reply.status(400).send({ error: 'Category is required' });
+  }
+  
+  // Check if torrent exists and is approved
+  const existingTorrent = await prisma.torrent.findUnique({
+    where: { id },
+    include: { category: true }
+  });
+  
+  if (!existingTorrent) {
+    return reply.status(404).send({ error: 'Torrent not found' });
+  }
+  
+  if (!existingTorrent.isApproved) {
+    return reply.status(400).send({ error: 'Can only edit approved torrents' });
+  }
+  
+  // Check if category exists
+  const category = await prisma.category.findUnique({ where: { id: categoryId } });
+  if (!category) {
+    return reply.status(400).send({ error: 'Invalid category' });
+  }
+  
+  try {
+    // Update torrent
+    const updatedTorrent = await prisma.torrent.update({
+      where: { id },
+      data: {
+        name: name.trim(),
+        description: description?.trim() || null,
+        categoryId,
+        updatedAt: new Date()
+      },
+      include: {
+        category: true,
+        uploader: {
+          select: { id: true, username: true, role: true }
+        }
+      }
+    });
+    
+    // Create notification for uploader
+    await createNotification({
+      userId: existingTorrent.uploaderId,
+      type: 'TORRENT_EDITED',
+      message: `Your torrent "${updatedTorrent.name}" has been edited by an administrator.`,
+      adminId: user.id
+    });
+    
+    return reply.send({
+      success: true,
+      torrent: convertBigInts(updatedTorrent)
+    });
+  } catch (error) {
+    console.error('[editTorrentHandler] Error:', error);
+    return reply.status(500).send({ error: 'Failed to update torrent' });
+  }
+}
+
+export async function deleteTorrentHandler(request: FastifyRequest, reply: FastifyReply) {
+  const user = (request as any).user;
+  if (!user) return reply.status(401).send({ error: 'Unauthorized' });
+  
+  // Check if user is admin
+  if (!['ADMIN', 'OWNER', 'FOUNDER'].includes(user.role)) {
+    return reply.status(403).send({ error: 'Forbidden: Admin access required' });
+  }
+  
+  const { id } = request.params as any;
+  
+  // Check if torrent exists and is approved
+  const existingTorrent = await prisma.torrent.findUnique({
+    where: { id },
+    include: { 
+      category: true,
+      uploader: {
+        select: { id: true, username: true, role: true }
+      }
+    }
+  });
+  
+  if (!existingTorrent) {
+    return reply.status(404).send({ error: 'Torrent not found' });
+  }
+  
+  if (!existingTorrent.isApproved) {
+    return reply.status(400).send({ error: 'Can only delete approved torrents' });
+  }
+  
+  try {
+    // Delete torrent (this will cascade to related records)
+    await prisma.torrent.delete({
+      where: { id }
+    });
+    
+    // Create notification for uploader
+    await createNotification({
+      userId: existingTorrent.uploaderId,
+      type: 'TORRENT_DELETED',
+      message: `Your torrent "${existingTorrent.name}" has been deleted by an administrator.`,
+      adminId: user.id
+    });
+    
+    return reply.send({
+      success: true,
+      message: 'Torrent deleted successfully'
+    });
+  } catch (error) {
+    console.error('[deleteTorrentHandler] Error:', error);
+    return reply.status(500).send({ error: 'Failed to delete torrent' });
   }
 }
 

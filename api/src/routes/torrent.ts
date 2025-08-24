@@ -13,7 +13,9 @@ import {
   createDownloadTokenHandler,
   downloadTorrentWithTokenHandler,
   voteTorrentHandler,
-  generateMagnetHandler
+  generateMagnetHandler,
+  editTorrentHandler,
+  deleteTorrentHandler
 } from '../controllers/torrentController.js';
 import { requireAuthIfNotOpen } from '../middleware/authOrOpenMiddleware.js';
 import {
@@ -36,6 +38,8 @@ export async function registerTorrentRoutes(app: FastifyInstance) {
   app.post('/torrent/:id/magnet', { preHandler: requireAuth }, generateMagnetHandler);
   app.post('/admin/torrent/:id/approve', { preHandler: requireAuth }, approveTorrentHandler); //DONE
   app.post('/admin/torrent/:id/reject', { preHandler: requireAuth }, rejectTorrentHandler); //DONE
+  app.put('/admin/torrent/:id', { preHandler: requireAuth }, editTorrentHandler); //DONE
+  app.delete('/admin/torrent/:id', { preHandler: requireAuth }, deleteTorrentHandler); //DONE
   app.get('/admin/torrents', { preHandler: requireAuth }, listAllTorrentsHandler); //DONE
   app.get('/admin/torrents/stats', { preHandler: requireAuth }, getTorrentStatsHandler); //DONE
   app.post('/admin/recalculate-user-stats', { preHandler: requireAuth }, recalculateUserStatsHandler); //DONE

@@ -69,8 +69,10 @@ export async function registerAdminRoutes(app: FastifyInstance) {
   app.post('/admin/wiki/:id/unlock', { preHandler: requireAuth }, unlockWikiPageHandler); //DONE
   app.post('/admin/wiki/:id/show', { preHandler: requireAuth }, showWikiPageHandler); //DONE
   app.post('/admin/wiki/:id/hide', { preHandler: requireAuth }, hideWikiPageHandler); //DONE
+  // RSS
   app.post('/admin/user/:id/rss-enabled', { preHandler: requireAuth }, adminSetRssEnabledHandler); //DONE
   app.post('/admin/user/:id/rss-token', { preHandler: requireAuth }, adminResetRssTokenHandler); //DONE
+  // Notifications
   app.get('/admin/notifications', { preHandler: requireAuth }, getAdminNotificationsHandler);
 
 
