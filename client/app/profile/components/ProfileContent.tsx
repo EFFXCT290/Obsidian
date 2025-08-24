@@ -18,11 +18,19 @@ export default function ProfileContent() {
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [rssToken, setRssToken] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
   const { data: currentData, isLoading: userLoading } = useSWR(token ? [`${API_BASE_URL}/auth/profile`, token] : null, async ([url, _token]) => {
     const headers: HeadersInit = { 'Content-Type': 'application/json' };
+    if (_token) headers['Authorization'] = `Bearer ${_token as string}`;
+    const res = await fetch(url as string, { headers, cache: 'no-store' });
+    return res.json();
+  });
+
+  const { data: rssData, isLoading: rssLoading } = useSWR(token ? [`${API_BASE_URL}/user/rss-token`, token] : null, async ([url, _token]) => {
+    const headers: HeadersInit = {};
     if (_token) headers['Authorization'] = `Bearer ${_token as string}`;
     const res = await fetch(url as string, { headers, cache: 'no-store' });
     return res.json();
@@ -54,7 +62,15 @@ export default function ProfileContent() {
     setLoading(false);
   }, [currentData]);
 
+  useEffect(() => {
+    if (rssData) {
+      setRssToken(rssData.rssToken || null);
+    }
+  }, [rssData]);
+
   const announceUrl = user?.passkey ? `${typeof window !== 'undefined' && window.location.protocol === 'https:' ? 'https' : 'http'}://${typeof window !== 'undefined' ? window.location.host : 'localhost:3000'}/announce?passkey=${user.passkey}` : '';
+  const rssUrl = rssToken ? `${typeof window !== 'undefined' && window.location.protocol === 'https:' ? 'https' : 'http'}://${typeof window !== 'undefined' ? window.location.host : 'localhost:3000'}/rss?token=${rssToken}` : '';
+  const scrapeUrl = user?.passkey ? `${typeof window !== 'undefined' && window.location.protocol === 'https:' ? 'https' : 'http'}://${typeof window !== 'undefined' ? window.location.host : 'localhost:3000'}/scrape?passkey=${user.passkey}` : '';
 
   const handleCopyAnnounceUrl = async () => {
     if (!announceUrl) return;
@@ -63,6 +79,34 @@ export default function ProfileContent() {
     } catch {
       const el = document.createElement('textarea');
       el.value = announceUrl;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+    }
+  };
+
+  const handleCopyRssUrl = async () => {
+    if (!rssUrl) return;
+    try {
+      await navigator.clipboard.writeText(rssUrl);
+    } catch {
+      const el = document.createElement('textarea');
+      el.value = rssUrl;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+    }
+  };
+
+  const handleCopyScrapeUrl = async () => {
+    if (!scrapeUrl) return;
+    try {
+      await navigator.clipboard.writeText(scrapeUrl);
+    } catch {
+      const el = document.createElement('textarea');
+      el.value = scrapeUrl;
       document.body.appendChild(el);
       el.select();
       document.execCommand('copy');
@@ -116,7 +160,7 @@ export default function ProfileContent() {
     }
   };
 
-  if (loading || userLoading) return <div className="p-6 text-text">Loading profile...</div>;
+  if (loading || userLoading || rssLoading) return <div className="p-6 text-text">Loading profile...</div>;
 
   return (
     <div className="min-h-screen bg-background text-text p-6">
@@ -135,7 +179,16 @@ export default function ProfileContent() {
             loading={!user}
           />
           <div className="md:col-span-2 space-y-6">
-            <ProfileStats announceUrl={announceUrl} profile={profile} onCopyAnnounceUrl={handleCopyAnnounceUrl} loading={!user} />
+            <ProfileStats 
+              announceUrl={announceUrl} 
+              rssUrl={rssUrl}
+              scrapeUrl={scrapeUrl}
+              profile={profile} 
+              onCopyAnnounceUrl={handleCopyAnnounceUrl} 
+              onCopyRssUrl={handleCopyRssUrl}
+              onCopyScrapeUrl={handleCopyScrapeUrl}
+              loading={!user} 
+            />
             <ProfileInvitations />
             <ProfilePreferences />
             <RecentActivity />
