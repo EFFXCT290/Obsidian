@@ -104,23 +104,36 @@ export async function fillRequestHandler(request: FastifyRequest, reply: Fastify
     data: { status: 'FILLED', filledById: user.id, filledTorrentId: torrent.id }
   });
   // Notify requestor
+  let notificationSent = false;
+  let notificationError = null;
   if (req.userId) {
-    const requestUser = await prisma.user.findUnique({ where: { id: req.userId } });
-    if (requestUser) {
-      const { text, html } = getRequestFilledEmail({ username: requestUser.username, requestTitle: req.title, torrentName: torrent.name });
-      await createNotification({
-        userId: req.userId,
-        type: 'request_filled',
-        message: `Your request "${req.title}" has been filled with torrent: ${torrent.name}`,
-        sendEmail: true,
-        email: requestUser.email,
-        emailSubject: 'Your request has been filled',
-        emailText: text,
-        emailHtml: html
-      });
+    try {
+      const requestUser = await prisma.user.findUnique({ where: { id: req.userId } });
+      if (requestUser) {
+        const { text, html } = getRequestFilledEmail({ username: requestUser.username, requestTitle: req.title, torrentName: torrent.name });
+        await createNotification({
+          userId: req.userId,
+          type: 'request_filled',
+          message: `Your request "${req.title}" has been filled with torrent: ${torrent.name}`,
+          sendEmail: true,
+          email: requestUser.email,
+          emailSubject: 'Your request has been filled',
+          emailText: text,
+          emailHtml: html
+        });
+        notificationSent = true;
+      }
+    } catch (error) {
+      console.error('Error sending request filled notification:', error);
+      notificationError = error instanceof Error ? error.message : 'Unknown error';
     }
   }
-  return reply.send(updated);
+  
+  return reply.send({
+    ...updated,
+    notificationSent,
+    notificationError
+  });
 }
 
 // GET /requests/:id/comments

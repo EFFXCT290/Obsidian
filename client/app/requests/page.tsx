@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { headers } from 'next/headers';
 import DashboardWrapper from '../dashboard/components/DashboardWrapper';
 import { serverT, getPreferredLanguage } from '../lib/server-i18n';
+import RequestsClient from './components/RequestsClient';
 
 function RequestsSkeleton() {
   return (
@@ -34,7 +35,7 @@ export default async function RequestsPage() {
   // Server-side translations
   const translations = {
     title: serverT('sidebar.nav.requests', language),
-    description: 'Solicita contenido específico o ayuda a llenar peticiones de otros usuarios.',
+    description: serverT('requests.description', language),
   };
 
   return (
@@ -47,11 +48,7 @@ export default async function RequestsPage() {
         </div>
 
         <Suspense fallback={<RequestsSkeleton />}>
-          <div className="text-center py-8">
-            <div className="text-text-secondary">
-              Contenido de peticiones en desarrollo...
-            </div>
-          </div>
+          <RequestsClient />
         </Suspense>
       </div>
     </DashboardWrapper>
