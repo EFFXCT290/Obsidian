@@ -1,1378 +1,1399 @@
 {
-  "home": {
-    "title": "Obsidian Tracker",
-    "subtitle": "El Rastreador de Torrents SobrePotenciado",
-    "description": "Un rastreador de torrents moderno",
-    "welcome": {
-      "title": "Bienvenido a Obsidian Tracker",
-      "description": "Por favor inicia sesión o regístrate para acceder al rastreador"
-    },
-    "footer": {
-      "description": "Un rastreador de torrents moderno construido con Next.js y Fastify",
-      "login": "Iniciar Sesión",
-      "register": "Registrarse",
-      "about": "Acerca de",
-      "stats": "Estadísticas",
-      "api": "API"
-    }
-  },
-  "sidebar": {
-    "nav": {
-      "home": "Inicio",
-      "categories": "Categorías",
-      "requests": "Peticiones",
-      "announcements": "Anuncios",
-      "wiki": "Wiki",
-      "rss": "RSS",
-      "bookmarks": "Marcadores"
-    }
-  },
-  "requests": {
-    "description": "Solicita contenido específico o ayuda a llenar peticiones de otros usuarios.",
-    "createRequest": "Crear Petición",
-    "myRequests": "Mis Peticiones",
-    "allRequests": "Todas las Peticiones",
-    "openRequests": "Peticiones Abiertas",
-    "filledRequests": "Peticiones Llenadas",
-    "closedRequests": "Peticiones Cerradas",
-    "rejectedRequests": "Peticiones Rechazadas",
-    "noRequests": "No se encontraron peticiones",
-    "searchPlaceholder": "Buscar peticiones...",
-    "filterBy": "Filtrar por",
-    "status": "Estado",
-    "category": "Categoría",
-    "createdBy": "Creado Por",
-    "filledBy": "Llenado Por",
-    "createdAt": "Fecha de Creación",
-    "viewRequest": "Ver Petición",
-    "fillRequest": "Llenar Petición",
-    "requestDetails": "Detalles de la Petición",
-    "backToList": "Volver a la Lista",
-    "requestNotFound": "Petición no encontrada",
-    "loadingRequest": "Cargando petición...",
-    "comments": "Comentarios",
-    "noComments": "Aún no hay comentarios",
-    "addComment": "Agregar Comentario",
-    "commentPlaceholder": "Escribe un comentario...",
-    "postComment": "Publicar Comentario",
-    "commentPosted": "Comentario publicado exitosamente",
-    "errorPostingComment": "Error publicando comentario",
-    "createNewRequest": "Crear Nueva Petición",
-    "requestTitle": "Título de la Petición",
-    "requestDescription": "Descripción de la Petición",
-    "selectCategory": "Seleccionar Categoría",
-    "submitRequest": "Enviar Petición",
-    "requestCreated": "Petición creada exitosamente",
-    "errorCreatingRequest": "Error creando petición",
-    "fillWithTorrent": "Llenar con Torrent",
-    "selectTorrent": "Seleccionar Torrent",
-    "searchTorrents": "Buscar torrents...",
-    "noTorrentsFound": "No se encontraron torrents",
-    "fillRequestSuccess": "Petición llenada exitosamente",
-    "errorFillingRequest": "Error llenando petición",
-    "requestAlreadyFilled": "Esta petición ya ha sido llenada",
-    "requestNotOpen": "Esta petición no está abierta",
-    "invalidTorrent": "Torrent inválido o no aprobado",
-    "titlePlaceholder": "Ingresa un título descriptivo para tu petición",
-    "descriptionPlaceholder": "Proporciona detalles adicionales sobre lo que estás buscando...",
-    "mustBeLoggedIn": "Debes estar conectado para realizar esta acción",
-    "failedToLoadRequests": "Error al cargar peticiones",
-    "failedToLoadRequest": "Error al cargar petición",
-    "failedToLoadComments": "Error al cargar comentarios",
-    "failedToLoadTorrents": "Error al cargar torrents",
-    "failedToPostComment": "Error al publicar comentario",
-    "failedToFillRequest": "Error al llenar petición",
-    "errorLoadingRequests": "Error cargando peticiones",
-    "errorLoadingRequest": "Error cargando petición",
-    "errorLoadingComments": "Error cargando comentarios",
-    "errorLoadingTorrents": "Error cargando torrents",
-    "noRequestsForFilter": "No se encontraron peticiones para este filtro",
-    "viewTorrent": "Ver Torrent",
-    "filledWith": "Llenado con:",
-    "postingComment": "Publicando...",
-    "creatingRequest": "Creando...",
-    "fileSizes": {
-      "bytes": "Bytes",
-      "kb": "KB",
-      "mb": "MB",
-      "gb": "GB",
-      "tb": "TB"
-    },
-    "titleRequired": "El título es requerido",
-    "categoryRequired": "La categoría es requerida",
-    "failedToCreateRequest": "Error al crear petición",
-    "notificationError": "Petición llenada pero no se pudo enviar la notificación"
-  },
-  "bookmarks": {
-    "description": "Gestiona tus torrents marcados como favoritos",
-    "mustBeLoggedIn": "Debes iniciar sesión para ver los marcadores",
-    "errorLoadingBookmarks": "Error al cargar marcadores",
-    "searchPlaceholder": "Buscar marcadores...",
-    "resultsCount": "marcadores encontrados",
-    "pageInfo": "Página",
-    "of": "de",
-    "noResults": "No se encontraron marcadores que coincidan con tu búsqueda",
-    "noBookmarks": "Aún no tienes marcadores",
-    "noBookmarksDescription": "Comienza a marcar torrents para verlos aquí",
-    "editNote": "Editar nota",
-    "removeBookmark": "Eliminar marcador",
-    "notePlaceholder": "Agregar una nota...",
-    "saving": "Guardando...",
-    "save": "Guardar",
-    "cancel": "Cancelar",
-    "viewTorrent": "Ver Torrent",
-    "previous": "Anterior",
-    "next": "Siguiente",
-    "confirmDelete": "¿Estás seguro de que quieres eliminar este marcador?",
-    "confirmDeleteTitle": "Eliminar Marcador",
-    "confirmDeleteMessage": "¿Estás seguro de que quieres eliminar este marcador? Esta acción no se puede deshacer.",
-    "delete": "Eliminar",
-    "bookmarkRemoved": "Marcador eliminado exitosamente",
-    "errorRemovingBookmark": "Error al eliminar marcador",
-    "noteUpdated": "Nota actualizada exitosamente",
-    "errorUpdatingNote": "Error al actualizar nota"
-  },
-  "rss": {
-    "description": "Gestiona tu feed RSS personalizado para torrents",
-    "mustBeLoggedIn": "Debes iniciar sesión para acceder al RSS",
-    "errorLoadingToken": "Error al cargar token RSS",
-    "tokenRegenerated": "Token RSS regenerado exitosamente",
-    "errorRegeneratingToken": "Error al regenerar token RSS",
-    "copiedToClipboard": "Copiado al portapapeles",
-    "errorCopying": "Error al copiar al portapapeles",
-    "disabled": "RSS está deshabilitado",
-    "disabledMessage": "El acceso RSS ha sido deshabilitado para tu cuenta. Por favor contacta a un administrador.",
-    "yourRssToken": "Tu Token RSS",
-    "token": "Token RSS",
-    "copyToken": "Copiar token",
-    "regenerateToken": "Regenerar token",
-    "tokenInfo": "Información del Token",
-    "tokenInfoMessage": "Mantén tu token RSS privado. Cualquiera con este token puede acceder a tu feed RSS.",
-    "feedUrls": "URLs del Feed RSS",
-    "allTorrents": "Todos los Torrents",
-    "bookmarkedTorrents": "Torrents Marcados",
-    "limitedCount": "Cantidad Limitada (10 torrents)",
-    "copyUrl": "Copiar URL",
-    "openFeed": "Abrir feed",
-    "howToUse": "Cómo Usar RSS",
-    "searchParameters": "Parámetros de Búsqueda",
-    "searchDescription": "Buscar torrents por nombre o descripción",
-    "categoryDescription": "Filtrar por ID de categoría",
-    "countDescription": "Limitar número de torrents (máx 20)",
-    "bookmarksDescription": "Mostrar solo tus torrents marcados",
-    "rssReaders": "Lectores RSS",
-    "rssReadersDescription": "Puedes usar cualquier lector RSS para suscribirte a estos feeds. Opciones populares incluyen:",
-    "reader1": "Thunderbird (Cliente de email con soporte RSS)",
-    "reader2": "Feedly (Lector RSS basado en web)",
-    "reader3": "RSS Guard (Lector RSS de escritorio)",
-    "reader4": "Aplicaciones móviles como Feedly, Inoreader, etc.",
-    "security": "Seguridad",
-    "securityDescription": "Tu token RSS es único para tu cuenta. Manténlo privado y regenéralo si sospechas que ha sido comprometido."
-  },
-  "wiki": {
-    "description": "Explora la documentación y guías de la comunidad",
-    "pageDescription": "Página de documentación de la wiki",
-    "searchPlaceholder": "Buscar páginas de wiki...",
-    "pagesFound": "páginas encontradas",
-    "pageInfo": "Página",
-    "of": "de",
-    "noResults": "No se encontraron resultados",
-    "noPages": "No hay páginas de wiki disponibles",
-    "noResultsDescription": "Intenta ajustar tus términos de búsqueda",
-    "noPagesDescription": "Las páginas de wiki aparecerán aquí cuando sean creadas",
-    "createdBy": "Creado por",
-    "updated": "Actualizado",
-    "parentPage": "Página padre",
-    "readMore": "Leer más",
-    "subPages": "Sub-páginas",
-    "expand": "Expandir",
-    "collapse": "Contraer",
-    "previous": "Anterior",
-    "next": "Siguiente",
-    "wiki": "Wiki",
-    "backToWiki": "Volver al Wiki"
-  },
-  "dashboard": {
-    "latestTorrents": "Últimos Torrents",
-    "pinnedAnnouncements": "Anuncios Fijados",
-    "viewAll": "Ver Todo",
-    "noTorrents": "No hay torrents disponibles",
-    "noAnnouncements": "No hay anuncios disponibles",
-    "size": "Tamaño",
-    "uploader": "Subidor",
-    "category": "Categoría",
-    "seeders": "Seeders",
-    "leechers": "Leechers",
-    "completed": "Completados",
-    "uploaded": "Subido",
-    "by": "por",
-    "previous": "Anterior",
-    "next": "Siguiente",
-    "page": "Página",
-    "of": "de",
-    "allAnnouncements": "Todos los Anuncios",
-    "createdBy": "Creado por",
-    "createdAt": "Fecha de creación",
-    "updatedAt": "Fecha de actualización",
-    "loading": "Cargando anuncios...",
-    "backToAnnouncements": "Volver a Anuncios",
-    "notFound": "Anuncio no encontrado",
-    "error": "Error cargando el anuncio",
-    "description": "Mantente informado con los últimos anuncios y notificaciones del sitio."
-  },
-  "categories": {
-    "title": "Categorías",
-    "description": "Explora las diferentes categorías de contenido disponibles.",
-    "popularTags": "Tags Populares",
-    "browseCategories": "Explorar Categorías",
-    "latestTorrents": "Últimos Torrents",
-    "viewAll": "Ver Todo",
-    "searchPlaceholder": "Buscar categorías...",
-    "noTorrents": "No hay torrents disponibles",
-    "seeders": "Seeders",
-    "leechers": "Leechers",
-    "completed": "Completados",
-    "uploaded": "Subido",
-    "by": "por",
-    "size": "Tamaño",
-    "loading": "Cargando categorías..."
-  },
-  "categoryTorrents": {
-    "title": "Torrents de Categoría",
-    "description": "Explora todos los torrents disponibles en esta categoría.",
-    "breadcrumbHome": "Inicio",
-    "breadcrumbCategories": "Categorías",
-    "noTorrents": "No hay torrents disponibles en esta categoría.",
-    "loading": "Cargando torrents...",
-    "filters": {
-      "allSources": "Todas las fuentes",
-      "sortBy": "Ordenar por",
-      "newest": "Más recientes",
-      "oldest": "Más antiguos",
-      "mostSeeded": "Más seeders",
-      "leastSeeded": "Menos seeders",
-      "largest": "Más grandes",
-      "smallest": "Más pequeños"
-    },
-    "torrent": {
-      "seeders": "Seeders",
-      "leechers": "Leechers",
-      "completed": "Completados",
-      "uploaded": "Subido",
-      "by": "por",
-      "size": "Tamaño",
-      "download": "Descargar"
-    },
-    "pagination": {
-      "previous": "Anterior",
-      "next": "Siguiente",
-      "page": "Página",
-      "of": "de"
-    }
-  },
-  "search": {
-    "title": "Búsqueda",
-    "description": "Busca torrents por nombre, tag o categoría.",
-    "noResults": "No se encontraron resultados.",
-    "loading": "Buscando...",
-    "filters": {
-      "sortBy": "Ordenar por",
-      "newest": "Más recientes",
-      "oldest": "Más antiguos",
-      "mostSeeded": "Más seeders",
-      "leastSeeded": "Menos seeders",
-      "largest": "Más grandes",
-      "smallest": "Más pequeños"
-    },
-    "torrent": {
-      "seeders": "Seeders",
-      "leechers": "Leechers",
-      "completed": "Completados",
-      "uploaded": "Subido",
-      "by": "por",
-      "size": "Tamaño",
-      "download": "Descargar"
-    },
-    "pagination": {
-      "previous": "Anterior",
-      "next": "Siguiente",
-      "page": "Página",
-      "of": "de"
-    }
-  },
-  "header": {
-    "search": { "placeholder": "Buscar..." },
-    "upload": "Subir",
-    "userMenu": {
-      "profile": "Perfil",
-      "adminPanel": "Panel Admin",
-      "moderatorPanel": "Panel Moderador",
-      "logout": "Cerrar sesión"
-    }
-  },
-      "admin": {
-      "nav": {
-        "dashboard": "Resumen",
-        "users": "Usuarios",
-        "torrentApprovals": "Aprobaciones de Torrents",
-        "torrentManagement": "Gestión de Torrents",
-        "categories": "Categorías",
-        "announcements": "Anuncios",
-        "wiki": "Wiki",
-        "peerban": "Bloqueos",
-        "rssManagement": "Gestión de RSS",
-        "settings": "Ajustes",
-        "configuration": "Configuración",
-        "requests": "Peticiones"
-      },
-      "backToSite": "Volver al sitio",
-      "title": "Panel de administración",
-      "categories": {
-        "title": "Gestión de Categorías",
-        "description": "Administra las categorías del tracker y su jerarquía.",
-        "addNew": "Agregar Categoría",
-        "addCategory": "Agregar Nueva Categoría",
-        "editCategory": "Editar Categoría",
-        "list": "Lista de Categorías",
-        "name": "Nombre",
-        "icon": "Icono",
-        "order": "Orden",
-        "parentCategory": "Categoría Padre",
-        "noParent": "Sin categoría padre",
-        "torrents": "torrents",
-        "requests": "peticiones",
-        "create": "Crear",
-        "update": "Actualizar",
-        "edit": "Editar",
-        "delete": "Eliminar",
-        "cancel": "Cancelar",
-        "nameRequired": "El nombre es requerido",
-        "confirmDelete": "¿Estás seguro de que quieres eliminar esta categoría?",
-        "noCategories": "No hay categorías disponibles",
-        "created": "Categoría creada exitosamente",
-        "updated": "Categoría actualizada exitosamente",
-        "deleted": "Categoría eliminada exitosamente",
-        "errorLoading": "Error al cargar las categorías",
-        "errorCreating": "Error al crear la categoría",
-        "errorUpdating": "Error al actualizar la categoría",
-        "errorDeleting": "Error al eliminar la categoría",
-        "dragToReorder": "Arrastra para reordenar",
-        "reorderSuccess": "Orden actualizado exitosamente",
-        "reorderError": "Error al actualizar el orden",
-        "moveToCategory": "Mover a categoría",
-        "moveToMain": "Mover a categoría principal",
-        "moveSuccess": "Categoría movida exitosamente",
-        "moveError": "Error al mover la categoría",
-        "dropZone": "Zona de destino",
-        "dropHereToMove": "Suelta aquí para mover",
-        "errorHasSubcategories": "No se puede mover una categoría con subcategorías. Mueve las subcategorías primero.",
-        "errorSubcategoryParent": "No se puede mover una categoría dentro de una subcategoría. Solo las categorías principales pueden tener subcategorías.",
-        "errorCircularReference": "No se puede mover la categoría: crearía una referencia circular.",
-        "errorSelfParent": "Una categoría no puede ser su propio padre."
-      },
-      "users": {
-        "title": "Gestión de Usuarios",
-        "description": "Administra usuarios del tracker, roles y permisos.",
-        "search": "Buscar",
-        "searching": "Buscando...",
-        "searchPlaceholder": "Buscar por nombre de usuario o email...",
-        "users": "Usuarios",
-        "noUsers": "No se encontraron usuarios",
-        "editUser": "Editar Usuario",
-        "userDetails": "Detalles del Usuario",
-        "username": "Nombre de Usuario",
-        "email": "Email",
-        "role": "Rol",
-        "status": "Estado",
-        "emailVerified": "Email Verificado",
-        "createdAt": "Creado El",
-        "actions": "Acciones",
-        "edit": "Editar",
-        "ban": "Banear",
-        "unban": "Desbanear",
-        "enable": "Habilitar",
-        "promote": "Promover",
-        "demote": "Degradar",
-        "close": "Cerrar",
-        "save": "Guardar",
-        "saving": "Guardando...",
-        "cancel": "Cancelar",
-        "confirmBan": "¿Estás seguro de que quieres banear a este usuario?",
-        "confirmUnban": "¿Estás seguro de que quieres desbanear a este usuario?",
-        "confirmPromote": "¿Estás seguro de que quieres promover a este usuario?",
-        "confirmDemote": "¿Estás seguro de que quieres degradar a este usuario?",
-        "userBanned": "Usuario baneado exitosamente",
-        "userUnbanned": "Usuario desbaneado exitosamente",
-        "userPromoted": "Usuario promovido exitosamente",
-        "userDemoted": "Usuario degradado exitosamente",
-        "userUpdated": "Usuario actualizado exitosamente",
-        "errorLoading": "Error al cargar usuarios",
-        "errorUpdating": "Error al actualizar usuario",
-        "errorBanning": "Error al banear usuario",
-        "errorUnbanning": "Error al desbanear usuario",
-        "errorPromoting": "Error al promover usuario",
-        "errorDemoting": "Error al degradar usuario",
-        "transferFounder": "Transferir Fundador",
-        "founderRoleWarning": "El rol de Fundador no puede ser cambiado. Use el botón de transferir para transferir el rol de fundador.",
-        "loading": "Cargando...",
-        "roles": {
-          "USER": "Usuario",
-          "MOD": "Moderador",
-          "ADMIN": "Administrador",
-          "OWNER": "Propietario",
-          "FOUNDER": "Fundador"
-        },
-        "statuses": {
-          "ACTIVE": "Activo",
-          "BANNED": "Baneado",
-          "DISABLED": "Deshabilitado"
-        }
-      },
-      "torrentApprovals": {
-        "title": "Aprobaciones de Torrents",
-        "description": "Revisar y aprobar torrents pendientes de subida.",
-        "stats": {
-          "total": "Total de Torrents",
-          "approved": "Aprobados",
-          "pending": "Pendientes"
-        },
-        "filters": {
-          "all": "Todos",
-          "approved": "Aprobados",
-          "pending": "Pendientes",
-          "rejected": "Rechazados",
-          "search": "Buscar torrents..."
-        },
-        "table": {
-          "name": "Nombre",
-          "uploader": "Subidor",
-          "category": "Categoría",
-          "size": "Tamaño",
-          "date": "Fecha",
-          "status": "Estado",
-          "actions": "Acciones"
-        },
-        "status": {
-          "approved": "Aprobado",
-          "pending": "Pendiente",
-          "rejected": "Rechazado"
-        },
-        "actions": {
-          "approve": "Aprobar",
-          "reject": "Rechazar",
-          "view": "Ver",
-          "viewRejectionReason": "Ver motivo del rechazo",
-          "approving": "Aprobando...",
-          "rejecting": "Rechazando..."
-        },
-        "modals": {
-          "approve": {
-            "title": "Aprobar Torrent",
-            "message": "¿Estás seguro de que quieres aprobar este torrent?",
-            "confirm": "Aprobar",
-            "cancel": "Cancelar"
-          },
-          "reject": {
-            "title": "Rechazar Torrent",
-            "message": "¿Estás seguro de que quieres rechazar este torrent?",
-            "reason": "Razón del rechazo (opcional):",
-            "confirm": "Rechazar",
-            "cancel": "Cancelar"
-          },
-          "rejectionInfo": {
-            "title": "Información del Rechazo",
-            "reason": "Motivo del rechazo:",
-            "rejectedBy": "Rechazado por:",
-            "rejectedAt": "Fecha de rechazo:",
-            "noReason": "No se especificó motivo",
-            "unknown": "Desconocido",
-            "close": "Cerrar"
-          }
-        },
-        "notifications": {
-          "approved": "Torrent aprobado exitosamente",
-          "rejected": "Torrent rechazado exitosamente",
-          "error": "Error al procesar la acción"
-        },
-        "empty": {
-          "title": "No hay torrents pendientes",
-          "description": "Todos los torrents han sido procesados."
-        }
-      },
-      "torrentManagement": {
-        "title": "Gestión de Torrents",
-        "description": "Administrar torrents existentes, categorías y metadatos.",
-        "search": {
-          "placeholder": "Buscar torrents por nombre..."
-        },
-        "filters": {
-          "allCategories": "Todas las Categorías",
-          "clear": "Limpiar"
-        },
-        "edit": {
-          "name": "Nombre",
-          "description": "Descripción",
-          "category": "Categoría",
-          "save": "Guardar Cambios",
-          "cancel": "Cancelar"
-        },
-        "info": {
-          "size": "Tamaño",
-          "category": "Categoría",
-          "uploader": "Subidor",
-          "created": "Creado",
-          "updated": "Actualizado"
-        },
-        "actions": {
-          "edit": "Editar Torrent",
-          "delete": "Eliminar Torrent"
-        },
-        "delete": {
-          "confirmTitle": "Eliminar Torrent",
-          "confirmMessage": "¿Estás seguro de que quieres eliminar este torrent? Esta acción no se puede deshacer.",
-          "confirm": "Eliminar",
-          "cancel": "Cancelar"
-        },
-        "pagination": {
-          "previous": "Anterior",
-          "next": "Siguiente",
-          "page": "Página {current} de {total}"
-        },
-        "noResults": {
-          "title": "No se encontraron torrents",
-          "description": "Intenta ajustar tus criterios de búsqueda o filtros."
-        },
-        "notifications": {
-          "updated": "Torrent actualizado exitosamente",
-          "deleted": "Torrent eliminado exitosamente",
-          "deletedNoEmail": "Torrent eliminado exitosamente, pero no se pudo enviar el email de notificación",
-          "error": "Ocurrió un error al gestionar los torrents"
-        }
-      },
-      "rssManagement": {
-        "title": "Gestión de RSS",
-        "description": "Configurar y administrar feeds RSS y configuraciones.",
-        "search": {
-          "placeholder": "Buscar usuarios por nombre o email...",
-          "clear": "Limpiar"
-        },
-        "user": {
-          "email": "Email",
-          "created": "Creado",
-          "emailVerified": "Email Verificado",
-          "emailNotVerified": "Email No Verificado"
-        },
-        "rss": {
-          "enabled": "RSS Habilitado",
-          "disabled": "RSS Deshabilitado",
-          "token": "Token RSS",
-          "showToken": "Mostrar Token",
-          "hideToken": "Ocultar Token"
-        },
-        "actions": {
-          "enable": "Habilitar RSS",
-          "disable": "Deshabilitar RSS",
-          "resetToken": "Restablecer Token"
-        },
-        "pagination": {
-          "previous": "Anterior",
-          "next": "Siguiente"
-        },
-        "noResults": {
-          "title": "No se encontraron usuarios",
-          "description": "Intenta ajustar tus criterios de búsqueda."
-        },
-        "notifications": {
-          "rssEnabled": "Acceso RSS habilitado exitosamente",
-          "rssDisabled": "Acceso RSS deshabilitado exitosamente",
-          "tokenReset": "Token RSS restablecido exitosamente",
-          "tokenCopied": "Token RSS copiado al portapapeles",
-          "copyError": "Error al copiar token al portapapeles",
-          "error": "Ocurrió un error al gestionar la configuración RSS"
-        }
-      },
-      "announcements": {
-        "title": "Anuncios",
-        "description": "Administrar anuncios del sitio y notificaciones.",
-        "addNew": "Agregar Nuevo Anuncio",
-        "addAnnouncement": "Agregar Anuncio",
-        "editAnnouncement": "Editar Anuncio",
-        "list": "Lista de Anuncios",
-        "titleField": "Título",
-        "body": "Contenido",
-        "pinned": "Fijado",
-        "visible": "Visible",
-        "createdBy": "Creado Por",
-        "createdAt": "Fecha de Creación",
-        "updatedAt": "Fecha de Actualización",
-        "create": "Crear",
-        "update": "Actualizar",
-        "edit": "Editar",
-        "delete": "Eliminar",
-        "pin": "Fijar",
-        "unpin": "Desfijar",
-        "show": "Mostrar",
-        "hide": "Ocultar",
-        "cancel": "Cancelar",
-        "titleRequired": "El título es requerido",
-        "bodyRequired": "El contenido es requerido",
-        "confirmDelete": "¿Estás seguro de que quieres eliminar este anuncio?",
-        "noAnnouncements": "No se encontraron anuncios",
-        "created": "Anuncio creado exitosamente",
-        "updated": "Anuncio actualizado exitosamente",
-        "deleted": "Anuncio eliminado exitosamente",
-        "pinnedSuccess": "Anuncio fijado exitosamente",
-        "unpinnedSuccess": "Anuncio desfijado exitosamente",
-        "shownSuccess": "Anuncio mostrado exitosamente",
-        "hiddenSuccess": "Anuncio ocultado exitosamente",
-        "errorLoading": "Error cargando anuncios",
-        "errorCreating": "Error creando anuncio",
-        "errorUpdating": "Error actualizando anuncio",
-        "errorDeleting": "Error eliminando anuncio",
-        "errorPinning": "Error fijando anuncio",
-        "errorUnpinning": "Error desfijando anuncio",
-        "errorShowing": "Error mostrando anuncio",
-        "errorHiding": "Error ocultando anuncio",
-        "sendEmail": "Enviar por email"
-      },
-      "wiki": {
-        "title": "Gestión de Wiki",
-        "description": "Administrar páginas de wiki y documentación.",
-        "addNew": "Agregar Nueva Página Wiki",
-        "addWikiPage": "Agregar Página Wiki",
-        "editWikiPage": "Editar Página Wiki",
-        "list": "Lista de Páginas Wiki",
-        "slug": "Slug",
-        "titleField": "Título",
-        "content": "Contenido",
-        "parentPage": "Página Padre",
-        "noParent": "Sin Padre (Página Principal)",
-        "locked": "Bloqueada",
-        "visible": "Visible",
-        "createdBy": "Creado Por",
-        "updatedBy": "Actualizado Por",
-        "createdAt": "Fecha de Creación",
-        "updatedAt": "Fecha de Actualización",
-        "create": "Crear",
-        "update": "Actualizar",
-        "edit": "Editar",
-        "delete": "Eliminar",
-        "lock": "Bloquear",
-        "unlock": "Desbloquear",
-        "show": "Mostrar",
-        "hide": "Ocultar",
-        "cancel": "Cancelar",
-        "slugRequired": "El slug es requerido",
-        "titleRequired": "El título es requerido",
-        "contentRequired": "El contenido es requerido",
-        "confirmDelete": "¿Estás seguro de que quieres eliminar esta página wiki?",
-        "noWikiPages": "No se encontraron páginas wiki",
-        "created": "Página wiki creada exitosamente",
-        "updated": "Página wiki actualizada exitosamente",
-        "deleted": "Página wiki eliminada exitosamente",
-        "lockedSuccess": "Página wiki bloqueada exitosamente",
-        "unlockedSuccess": "Página wiki desbloqueada exitosamente",
-        "shownSuccess": "Página wiki mostrada exitosamente",
-        "hiddenSuccess": "Página wiki ocultada exitosamente",
-        "errorLoading": "Error cargando páginas wiki",
-        "errorCreating": "Error creando página wiki",
-        "errorUpdating": "Error actualizando página wiki",
-        "errorDeleting": "Error eliminando página wiki",
-        "errorLocking": "Error bloqueando página wiki",
-        "errorUnlocking": "Error desbloqueando página wiki",
-        "errorShowing": "Error mostrando página wiki",
-        "errorHiding": "Error ocultando página wiki"
-      },
-      "peerban": {
-        "title": "Bloqueos de Peers",
-        "description": "Administrar bloqueos de peers y restricciones de IP.",
-        "addNew": "Agregar Nuevo Bloqueo de Peer",
-        "addPeerBan": "Agregar Bloqueo de Peer",
-        "editPeerBan": "Editar Bloqueo de Peer",
-        "list": "Lista de Bloqueos de Peers",
-        "userId": "ID de Usuario",
-        "passkey": "Passkey",
-        "peerId": "ID de Peer",
-        "ip": "Dirección IP",
-        "reason": "Razón",
-        "expiresAt": "Expira En",
-        "noExpiration": "Sin Expiración",
-        "bannedBy": "Bloqueado Por",
-        "createdAt": "Fecha de Creación",
-        "status": "Estado",
-        "active": "Activo",
-        "expired": "Expirado",
-        "permanent": "Permanente",
-        "create": "Crear",
-        "update": "Actualizar",
-        "edit": "Editar",
-        "delete": "Eliminar",
-        "remove": "Remover Bloqueo",
-        "cancel": "Cancelar",
-        "reasonRequired": "La razón es requerida",
-        "banTypeRequired": "Al menos un tipo de bloqueo (ID de Usuario, Passkey, ID de Peer, o IP) es requerido",
-        "confirmDelete": "¿Estás seguro de que quieres remover este bloqueo de peer?",
-        "noPeerBans": "No se encontraron bloqueos de peers",
-        "created": "Bloqueo de peer creado exitosamente",
-        "removed": "Bloqueo de peer removido exitosamente",
-        "errorLoading": "Error cargando bloqueos de peers",
-        "errorCreating": "Error creando bloqueo de peer",
-        "errorRemoving": "Error removiendo bloqueo de peer",
-        "filterBy": "Filtrar por",
-        "allBans": "Todos los Bloqueos",
-        "activeBans": "Bloqueos Activos",
-        "expiredBans": "Bloqueos Expirados",
-        "searchBy": "Buscar por",
-        "searchPlaceholder": "Ingresa ID de Usuario, Passkey, ID de Peer, o IP...",
-        "banTypes": {
-          "userId": "ID de Usuario",
-          "passkey": "Passkey",
-          "peerId": "ID de Peer",
-          "ip": "Dirección IP"
-        }
-      },
-      "requests": {
-        "title": "Gestión de Peticiones",
-        "description": "Administrar peticiones de usuarios y estado de llenado.",
-        "list": "Lista de Peticiones",
-        "titleField": "Título",
-        "descriptionField": "Descripción",
-        "category": "Categoría",
-        "status": "Estado",
-        "createdBy": "Creado Por",
-        "filledBy": "Llenado Por",
-        "filledTorrent": "Torrent de Llenado",
-        "createdAt": "Fecha de Creación",
-        "updatedAt": "Fecha de Actualización",
-        "open": "Abierto",
-        "filled": "Llenado",
-        "closed": "Cerrado",
-        "rejected": "Rechazado",
-        "close": "Cerrar",
-        "reject": "Rechazar",
-        "view": "Ver",
-        "reason": "Razón",
-        "reasonOptional": "Razón (Opcional)",
-        "closeRequest": "Cerrar Petición",
-        "rejectRequest": "Rechazar Petición",
-        "viewRequest": "Ver Petición",
-        "cancel": "Cancelar",
-        "confirmClose": "¿Estás seguro de que quieres cerrar esta petición?",
-        "confirmReject": "¿Estás seguro de que quieres rechazar esta petición?",
-        "noRequests": "No se encontraron peticiones",
-        "closedSuccess": "Petición cerrada exitosamente",
-        "rejectedSuccess": "Petición rechazada exitosamente",
-        "errorLoading": "Error cargando peticiones",
-        "errorClosing": "Error cerrando petición",
-        "errorRejecting": "Error rechazando petición",
-        "filterBy": "Filtrar por",
-        "allRequests": "Todas las Peticiones",
-        "openRequests": "Peticiones Abiertas",
-        "filledRequests": "Peticiones Llenadas",
-        "closedRequests": "Peticiones Cerradas",
-        "rejectedRequests": "Peticiones Rechazadas",
-        "searchBy": "Buscar por",
-        "searchPlaceholder": "Buscar peticiones...",
-        "requestDetails": "Detalles de la Petición",
-        "backToList": "Volver a la Lista",
-        "requestNotFound": "Petición no encontrada",
-        "loadingRequest": "Cargando petición...",
-        "comments": "Comentarios",
-        "noComments": "Aún no hay comentarios",
-        "addComment": "Agregar Comentario",
-        "commentPlaceholder": "Escribe un comentario...",
-        "postComment": "Publicar Comentario",
-        "commentPosted": "Comentario publicado exitosamente",
-        "errorPostingComment": "Error publicando comentario"
-      },
-        "description": "Solicita contenido específico o ayuda a llenar peticiones de otros usuarios.",
-        "createRequest": "Crear Petición",
-        "myRequests": "Mis Peticiones",
-        "allRequests": "Todas las Peticiones",
-        "openRequests": "Peticiones Abiertas",
-        "filledRequests": "Peticiones Llenadas",
-        "closedRequests": "Peticiones Cerradas",
-        "rejectedRequests": "Peticiones Rechazadas",
-        "noRequests": "No se encontraron peticiones",
-        "searchPlaceholder": "Buscar peticiones...",
-        "filterBy": "Filtrar por",
-        "status": "Estado",
-        "category": "Categoría",
-        "createdBy": "Creado Por",
-        "filledBy": "Llenado Por",
-        "createdAt": "Fecha de Creación",
-        "viewRequest": "Ver Petición",
-        "fillRequest": "Llenar Petición",
-        "requestDetails": "Detalles de la Petición",
-        "backToList": "Volver a la Lista",
-        "requestNotFound": "Petición no encontrada",
-        "loadingRequest": "Cargando petición...",
-        "comments": "Comentarios",
-        "noComments": "Aún no hay comentarios",
-        "addComment": "Agregar Comentario",
-        "commentPlaceholder": "Escribe un comentario...",
-        "postComment": "Publicar Comentario",
-        "commentPosted": "Comentario publicado exitosamente",
-        "createNewRequest": "Crear Nueva Petición",
-        "requestTitle": "Título de la Petición",
-        "requestDescription": "Descripción de la Petición",
-        "selectCategory": "Seleccionar Categoría",
-        "submitRequest": "Enviar Petición",
-        "requestCreated": "Petición creada exitosamente",
-        "errorCreatingRequest": "Error creando petición",
-        "fillWithTorrent": "Llenar con Torrent",
-        "selectTorrent": "Seleccionar Torrent",
-        "searchTorrents": "Buscar torrents...",
-        "noTorrentsFound": "No se encontraron torrents",
-        "fillRequestSuccess": "Petición llenada exitosamente",
-        "errorFillingRequest": "Error llenando petición",
-        "requestAlreadyFilled": "Esta petición ya ha sido llenada",
-        "requestNotOpen": "Esta petición no está abierta",
-        "invalidTorrent": "Torrent inválido o no aprobado",
-        "titlePlaceholder": "Ingresa un título descriptivo para tu petición",
-        "descriptionPlaceholder": "Proporciona detalles adicionales sobre lo que estás buscando...",
-        "mustBeLoggedIn": "Debes estar conectado para realizar esta acción",
-        "failedToLoadRequests": "Error al cargar peticiones",
-        "failedToLoadRequest": "Error al cargar petición",
-        "failedToLoadComments": "Error al cargar comentarios",
-        "failedToLoadTorrents": "Error al cargar torrents",
-        "failedToPostComment": "Error al publicar comentario",
-        "failedToFillRequest": "Error al llenar petición",
-        "errorLoadingRequests": "Error cargando peticiones",
-        "errorLoadingRequest": "Error cargando petición",
-        "errorLoadingComments": "Error cargando comentarios",
-        "errorLoadingTorrents": "Error cargando torrents",
-        "noRequestsForFilter": "No se encontraron peticiones para este filtro",
-        "viewTorrent": "Ver Torrent",
-        "filledWith": "Llenado con:",
-        "postingComment": "Publicando...",
-        "creatingRequest": "Creando...",
-        "fileSizes": {
-          "bytes": "Bytes",
-          "kb": "KB",
-          "mb": "MB",
-          "gb": "GB",
-          "tb": "TB"
-        },
-        "titleRequired": "El título es requerido",
-        "categoryRequired": "La categoría es requerida",
-        "failedToCreateRequest": "Error al crear petición"
-      },
-      "settings": {
-      "title": "Configuración",
-      "description": "Administra la configuración global del tracker.",
-      "sections": {
-        "tracker": "Tracker",
-        "ratio": "Ratio y H&R",
-        "announce": "Announce",
-        "clients": "Clientes",
-        "invitations": "Invitaciones",
-        "rss": "RSS",
-        "storage": "Almacenamiento",
-        "smtp": "SMTP",
-        "antiCheat": "Anti-Cheat",
-        "branding": "Branding"
-      },
-      "ui": {
-        "sectionsTitle": "Secciones",
-        "save": "Guardar configuración",
-        "saving": "Guardando...",
-        "saved": "Configuración guardada",
-        "errorLoading": "Error al cargar la configuración",
-        "errorSaving": "Error al guardar la configuración",
-        "smtpTest": "Probar SMTP",
-        "smtpSuccess": "Correo de prueba enviado",
-        "smtpError": "No se pudo enviar el correo de prueba",
-        "on": "On",
-        "off": "Off",
-        "enabled": "Habilitado",
-        "disabled": "Deshabilitado"
-      },
-      "tracker": { "description": "Opciones generales del tracker y registro." },
-      "ratio": { "description": "Parámetros de ratio, bonus y Hit & Run." },
-      "ratioPresets": {
-        "title": "Preajustes de Ratio",
-        "easy": "Fácil",
-        "balanced": "Equilibrado",
-        "strict": "Estricto",
-        "custom": "Personalizada",
-        "active": "Activo",
-        "manualTitle": "Configuración Manual",
-        "customBadge": "Configuración Personalizada"
-      },
-      "announce": { "description": "Intervalos y ajustes del announce." },
-      "clients": { "description": "Listas blancas/negra y huellas permitidas." },
-      "invitations": { "description": "Configuración de invitaciones y límites." },
-      "rss": { "description": "Preferencias de RSS por defecto." },
-      "storage": { "description": "Tipo de almacenamiento y credenciales S3." },
-      "smtp": { "description": "Servidor de correo y remitente." },
-      "antiCheat": { "description": "Controles de integridad y anti-trampas." },
-      "branding": { "description": "Nombre e identidad del sitio." },
-      "fields": {
-        "registrationMode": "Modo de registro",
-        "requireTorrentApproval": "Requerir aprobación de torrents",
-        "requireTorrentApprovalHelp": "Los moderadores deben aprobar los torrents nuevos",
-        "minRatio": "Ratio mínimo",
-        "bonusPointsPerHour": "Puntos de bonus por hora",
-        "hitAndRunThreshold": "Umbral de Hit & Run",
-        "requiredSeedingMinutes": "Minutos de seeding requeridos",
-        "defaultAnnounceInterval": "Intervalo de announce por defecto (seg)",
-        "minAnnounceInterval": "Intervalo mínimo de announce (seg)",
-        "whitelistedClients": "Clientes en lista blanca (separados por comas)",
-        "blacklistedClients": "Clientes en lista negra (separados por comas)",
-        "allowedFingerprints": "Huellas permitidas (separadas por comas)",
-        "rssDefaultCount": "Cantidad por defecto en RSS",
-        "inviteExpiryHours": "Caducidad de invitaciones (horas)",
-        "maxInvitesPerUser": "Máximo de invitaciones por usuario",
-        "storageType": "Tipo de almacenamiento",
-        "s3Bucket": "S3 Bucket",
-        "s3Region": "S3 Región",
-        "s3AccessKeyId": "S3 Access Key ID",
-        "s3SecretAccessKey": "S3 Secret Access Key",
-        "smtpHost": "SMTP Host",
-        "smtpPort": "SMTP Port",
-        "smtpUser": "SMTP User",
-        "smtpPass": "SMTP Password",
-        "smtpFrom": "SMTP From",
-        "ghostLeechingCheck": "Ghost Leeching Check",
-        "cheatingClientCheck": "Cheating Client Check",
-        "ipAbuseCheck": "IP Abuse Check",
-        "announceRateCheck": "Announce Rate Check",
-        "invalidStatsCheck": "Invalid Stats Check",
-        "peerBanCheck": "Peer Ban Check",
-        "maxStatsJumpMultiplier": "Multiplicador máximo de salto de estadísticas",
-        "brandingName": "Nombre de marca"
-      }
-    }
-  },
-  "common": {
-    "loading": "Cargando...",
-    "submitting": "Enviando formulario...",
-    "formReady": "Formulario listo",
-    "users": "Usuarios",
-    "torrents": "Torrents",
-    "downloads": "Descargas",
-    "uploaded": "Subido",
-    "downloadStarted": "Descarga iniciada"
-  },
-  "language": {
-    "selector": {
-      "title": "Seleccionar idioma",
-      "spanish": "Español",
-      "english": "Inglés"
-    },
-    "notification": {
-      "changed": "Idioma cambiado a {{language}}",
-      "spanish": "Español",
-      "english": "Inglés"
-    }
-  },
-  "profile": {
-    "title": "Perfil",
-    "sections": {
-      "stats": "Estadísticas",
-      "invitations": "Invitaciones",
-      "preferences": "Preferencias",
-      "recent": "Actividad reciente"
-    },
-    "tabs": {
-      "overview": "Resumen",
-      "activity": "Actividad Reciente"
-    },
-    "activity": {
-      "comingSoon": "Actividad Reciente Próximamente",
-      "description": "Tus actividades recientes aparecerán aquí",
-      "items": "actividades",
-      "empty": "No hay actividades recientes",
-      "emptyDescription": "Tus actividades aparecerán aquí cuando realices acciones en el sitio",
-      "showing": "Mostrando",
-      "to": "a",
-      "of": "de",
-      "activities": "actividades",
-      "previous": "Anterior",
-      "next": "Siguiente"
-    },
-    "activities": {
-      "torrent_uploaded": {
-        "title": "Subiste \"{{torrentName}}\"",
-        "subtitle": "Categoría: Torrent"
-      },
-      "torrent_downloaded": {
-        "title": "Descargaste \"{{torrentName}}\"",
-        "subtitle": "Descarga completada"
-      },
-      "torrent_approved": {
-        "title": "Tu torrent \"{{torrentName}}\" ha sido aprobado",
-        "subtitle": "Aprobado por administrador"
-      },
-      "bookmark_added": {
-        "title": "Marcaste como favorito \"{{torrentName}}\"",
-        "subtitle": "Agregado a marcadores"
-      },
-      "bookmark_removed": {
-        "title": "Eliminaste \"{{torrentName}}\" de marcadores",
-        "subtitle": "Removido de marcadores"
-      },
-      "torrent_liked": {
-        "title": "Diste like a \"{{torrentName}}\"",
-        "subtitle": "👍 Like"
-      },
-      "torrent_disliked": {
-        "title": "Diste dislike a \"{{torrentName}}\"",
-        "subtitle": "👎 Dislike"
-      },
-      "request_created": {
-        "title": "Creaste la petición \"{{requestTitle}}\"",
-        "subtitle": "Nueva petición"
-      },
-      "request_filled": {
-        "title": "Tu petición \"{{requestTitle}}\" fue llenada",
-        "subtitle": "Por: {{filledBy}}"
-      },
-      "request_filled_by_you": {
-        "title": "Llenaste la petición \"{{requestTitle}}\"",
-        "subtitle": "Con: {{torrentName}}"
-      },
-      "comment_added": {
-        "title": "Comentaste en \"{{entityName}}\"",
-        "subtitle": "Nuevo comentario"
-      }
-    },
-    "fields": {
-      "username": "Usuario",
-      "email": "Correo",
-      "ratio": "Ratio",
-      "points": "Puntos",
-      "rank": "Rango",
-      "joinDate": "Fecha de registro",
-      "announceUrl": "URL de announce",
-      "uploaded": "Subido",
-      "downloaded": "Descargado"
-    },
-    "actions": {
-      "uploadAvatar": "Subir avatar",
-      "removeAvatar": "Quitar",
-      "copy": "Copiar",
-      "save": "Guardar"
-    },
-    "invitations": {
-      "available": "Invitaciones disponibles",
-      "create": "Crear invitación",
-      "generated": {
-        "title": "Enlace de invitación",
-        "copied": "Enlace copiado",
-        "copyError": "No se pudo copiar el enlace"
-      },
-      "active": {
-        "cancel": "Cancelar",
-        "cancelSuccess": "Invitación cancelada",
-        "cancelError": "No se pudo cancelar la invitación"
-      },
-      "none": "No hay invitaciones activas",
-      "expires": "Expira",
-      "status": "Estado",
-      "used": "Usada",
-      "expired": "Caducada",
-      "noExpiry": "Sin caducidad",
-      "disabledByMode": "Las invitaciones están deshabilitadas por el modo de registro. Puedes conservar tus invitaciones, pero no crear ni usarlas ahora."
-    },
-    "preferences": {
-      "language": "Idioma",
-      "emailNotifications": "Permitir notificaciones por email",
-      "placeholder": "Sección de preferencias (pendiente)"
-    },
-    "recent": {
-      "placeholder": "La actividad reciente aparecerá aquí."
-    },
-    "notification": {
-      "avatarUpdated": "Avatar actualizado",
-      "uploadError": "Error al subir el avatar",
-      "avatarRemoved": "Avatar eliminado",
-      "removalError": "Error al eliminar el avatar",
-      "noAnnounceUrl": "No hay URL de announce disponible",
-      "announceCopied": "URL de announce copiada",
-      "copyError": "No se pudo copiar"
-    }
-  },
-  "auth": {
-    "placeholders": {
-      "username": "Ingresa tu nombre de usuario",
-      "email": "Ingresa tu correo electrónico",
-      "password": "Ingresa tu contraseña",
-      "confirmPassword": "Confirma tu contraseña",
-      "login": "Ingresa tu correo electrónico o usuario"
-    },
-    "register": {
-      "title": "Registrarse",
-      "username": "Usuario",
-      "email": "Correo electrónico",
-      "password": "Contraseña",
-      "confirmPassword": "Confirmar Contraseña",
-      "submit": "Registrarse",
-      "loading": "Creando cuenta...",
-      "hasAccount": "¿Ya tienes una cuenta?",
-      "login": "Iniciar Sesión",
-      "errors": {
-        "username": "El usuario debe tener entre 3 y 20 caracteres",
-        "email": "Por favor ingresa un correo electrónico válido",
-        "passwordRequirements": "La contraseña debe tener al menos 6 caracteres",
-        "passwordMatch": "Las contraseñas no coinciden",
-        "invalidCredentials": "Correo electrónico/usuario o contraseña inválidos",
-        "userBanned": "Tu cuenta está permanentemente baneada",
-        "signInError": "Ocurrió un error durante el inicio de sesión"
-      },
-      "passwordStrength": {
-        "weak": "Débil",
-        "fair": "Regular",
-        "good": "Buena",
-        "strong": "Fuerte"
-      },
-      "securityRecommendations": "Recomendaciones para la seguridad",
-      "passwordRequirements": {
-        "minLength": "Al menos 8 caracteres",
-        "uppercase": "Al menos una mayúscula",
-        "lowercase": "Al menos una minúscula",
-        "number": "Al menos un número",
-        "special": "Al menos un carácter especial"
-      },
-      "success": {
-        "firstUser": "Usuario registrado exitosamente. Eres el administrador y tu correo ha sido verificado automáticamente.",
-        "withVerification": "Usuario registrado exitosamente. Por favor revisa tu correo para verificar tu cuenta."
-      },
-      "invite": {
-        "required": "Se requiere un código de invitación",
-        "invalid": "Código de invitación inválido",
-        "used": "Esta invitación ya ha sido utilizada",
-        "deactivated": "Esta invitación ha sido desactivada",
-        "expired": "Esta invitación ha expirado"
-      },
-      "registrationClosed": "El registro está cerrado actualmente",
-      "registrationClosedMessage": "En este momento no se aceptan nuevos registros en la plataforma.",
-      "registrationClosedDescription": "Si tienes un código de invitación válido o necesitas acceso especial, contacta a un administrador.",
-      "inviteOnly": {
-        "title": "Registro por invitación",
-        "message": "Necesitas un enlace de invitación válido para crear una cuenta."
-      },
-      "inviteBanner": {
-        "invitedBy": "Invitado por",
-        "code": "Código",
-        "expires": "Expira",
-        "invalid": "Invitación inválida o caducada."
-      },
-      "goToLogin": "Ir al Login",
-      "alreadyHaveAccount": "¿Ya tienes una cuenta?",
-      "signInHere": "Inicia sesión aquí"
-    },
-    "login": {
-      "title": "Iniciar Sesión",
-      "formAriaLabel": "Formulario de inicio de sesión",
-      "login": "Correo electrónico o Usuario",
-      "password": "Contraseña",
-      "submit": "Iniciar Sesión",
-      "loading": "Iniciando sesión...",
-      "forgotPassword": "¿Olvidaste tu contraseña?",
-      "noAccount": "¿No tienes una cuenta?",
-      "signUpLink": "Registrarse",
-      "logout": "Cerrar sesión",
-      "errors": {
-        "loginRequired": "El correo electrónico o usuario es requerido",
-        "loginMinLength": "El login debe tener al menos 3 caracteres",
-        "passwordRequired": "La contraseña es requerida",
-        "passwordMinLength": "La contraseña debe tener al menos 6 caracteres",
-        "invalidCredentials": "Credenciales inválidas"
-      },
-      "success": "Sesión iniciada exitosamente",
-      "error": "Error al iniciar sesión"
-    },
-    "notification": {
-      "successLogin": "¡Inicio de sesión exitoso!",
-      "successLogout": "Has cerrado sesión",
-      "successRegister": "¡Registro exitoso! Por favor inicia sesión.",
-      "error": "Ocurrió un error. Por favor intenta de nuevo."
-    },
-    "unverified": {
-      "title": "Verifica tu correo",
-      "message": "Tu cuenta ha sido creada pero tu correo aún no está verificado. Revisa tu bandeja de entrada y haz clic en el enlace de verificación.",
-      "resend": "Reenviar correo de verificación"
-    }
-  }
-  ,
-  "upload": {
-    "title": "Subir torrent",
-    "subtitle": "Comparte tu contenido con la comunidad.",
-    "form": {
-      "name": {
-        "label": "Nombre",
-        "placeholder": "Nombre del torrent",
-        "issues": {
-          "empty": "El nombre no puede estar vacío.",
-          "invalidChars": "Contiene caracteres no permitidos: \\ / : * ? \" < > | o de control.",
-          "emojis": "No se permiten emojis en el nombre.",
-          "trailing": "No puede terminar con espacios o puntos.",
-          "reserved": "No puede usar nombres reservados de Windows (CON, PRN, AUX, NUL, COM1-9, LPT1-9).",
-          "tooLong": "El nombre es demasiado largo (máximo 200 caracteres).",
-          "review": "Revisa el nombre:"
-        }
-      },
-      "category": {
-        "label": "Categoría",
-        "placeholder": "Selecciona una categoría"
-      },
-      "source": {
-        "label": "Source",
-        "placeholder": "Selecciona un source"
-      },
-      "description": {
-        "label": "Descripción",
-        "placeholder": "Describe tu torrent"
-      },
-      "tags": {
-        "label": "Etiquetas ({{count}})",
-        "suggested": "Etiquetas sugeridas",
-        "popular": "Etiquetas populares",
-        "customPlaceholder": "Añadir etiqueta personalizada"
-      }
-    },
-    "areas": {
-      "torrent": {
-        "title": "Archivo .torrent",
-        "subtitle": "Arrastra y suelta o selecciona el archivo",
-        "select": "Seleccionar .torrent"
-      },
-      "image": {
-        "title": "Imagen de póster (opcional)",
-        "subtitle": "JPG, PNG, GIF, WEBP",
-        "select": "Seleccionar imagen",
-        "remove": "Quitar imagen"
-      },
-      "nfo": {
-        "title": "Adjuntar NFO (opcional)",
-        "subtitle": "Solo archivos .nfo",
-        "select": "Seleccionar NFO",
-        "remove": "Quitar NFO"
-      }
-    },
-    "options": {
-      "anonymous": {
-        "label": "Subida anónima",
-        "desc": "Oculta tu nombre de usuario como uploader"
-      },
-      "freeleech": {
-        "label": "Freeleech",
-        "desc": "No cuenta tráfico de descarga"
-      }
-    },
-    "actions": {
-      "upload": "Subir",
-      "uploading": "Subiendo…",
-      "reset": "Restablecer",
-      "panelTitle": "Para habilitar el botón de subida, completa:",
-      "notePrivate": "Recuerda: el .torrent debe estar marcado como privado y contener tu passkey en la URL de announce.",
-      "reasons": {
-        "missingTorrent": "Selecciona un archivo .torrent.",
-        "missingName": "Introduce un nombre para el torrent.",
-        "missingDescription": "Añade una descripción (mínimo 10 caracteres).",
-        "missingCategory": "Selecciona una categoría.",
-        "missingSource": "Selecciona un source.",
-        "missingTags": "Añade al menos una etiqueta."
-      }
-    },
-    "toasts": {
-      "missingTorrent": "Selecciona un archivo .torrent",
-      "success": "Torrent subido correctamente",
-      "error": "Error al subir el torrent"
-    },
-    "tips": {
-      "title": "Consejos",
-      "items": [
-        "Asegúrate de que el archivo .torrent es válido y corresponde al contenido.",
-        "Proporciona una descripción clara y concisa.",
-        "Elige la categoría y el source más adecuados.",
-        "Usa etiquetas relevantes para mejorar el descubrimiento."
-      ]
-    }
-  }
-  ,
-  "torrentDetail": {
-    "header": {
-      "pendingApproval": "Pendiente de aprobación",
-      "notFound": "No encontrado",
-      "rejected": "Rechazado",
-      "viewRejectionReason": "Ver motivo del rechazo"
-    },
-    "fields": {
-      "commentsTitle": "Comentarios",
-      "size": "Tamaño",
-      "seeders": "Seeders",
-      "leechers": "Leechers",
-      "completed": "Completados",
-      "category": "Categoría",
-      "tags": "Tags",
-      "noTags": "Sin tags",
-      "noDescription": "Sin descripción"
-    },
-    "fileList": {
-      "title": "Archivos",
-      "search": "Buscar archivos...",
-      "noResults": "No se encontraron resultados",
-      "noFiles": "Sin archivos",
-      "summary": "Total: {{files}} archivos, {{totalSize}}"
-    },
-    "actions": {
-      "title": "Acciones",
-      "torrent": "Torrent",
-      "magnet": "Magnet",
-      "magnetGenerating": "Generando…",
-      "addBookmark": "Añadir a Marcadores",
-      "removeBookmark": "Quitar de Marcadores",
-      "like": "Me gusta",
-      "dislike": "No me gusta",
-      "copyLink": "Copiar enlace",
-      "copied": "Enlace copiado",
-      "copyError": "No se pudo copiar el enlace",
-      "bookmarkAdded": "Añadido a marcadores",
-      "bookmarkRemoved": "Eliminado de marcadores",
-      "bookmarkError": "Operación de marcador fallida",
-      "downloadError": "No se pudo descargar el torrent",
-      "loadError": "No se pudo cargar el torrent",
-      "disabled": "Las acciones están desactivadas hasta que el torrent sea aprobado."
-    },
-    "comments": {
-      "disabled": "Los comentarios están desactivados hasta que el torrent sea aprobado.",
-      "empty": "No hay comentarios",
-      "created": "Comentario agregado",
-      "createError": "No se pudo crear el comentario",
-      "replied": "Respuesta publicada",
-      "replyError": "No se pudo responder",
-      "loginRequired": "Inicia sesión para comentar",
-      "reply": "Responder",
-      "send": "Enviar",
-      "cancel": "Cancelar",
-      "newCommentTitle": "Nuevo comentario",
-      "placeholder": "Escribe tu comentario...",
-      "sending": "Enviando…",
-      "addComment": "Añadir comentario",
-      "page": "Página",
-      "of": "de"
-    },
-    "nfo": { "title": "Archivo NFO" },
-    "modals": {
-      "rejectionInfo": {
-        "title": "Información del Rechazo",
-        "reason": "Motivo del rechazo:",
-        "rejectedBy": "Rechazado por:",
-        "rejectedAt": "Fecha de rechazo:",
-        "noReason": "No se especificó motivo",
-        "unknown": "Desconocido",
-        "close": "Cerrar"
-      }
-    },
-    "uploader": {
-      "title": "Subido por",
-      "uploaded": "Subido",
-      "downloaded": "Descargado",
-      "ratio": "Ratio",
-      "anonymous": "Anónimo"
-    }
-  }
+	"home":{
+		"title":"Obsidian Tracker",
+		"subtitle":"El Rastreador de Torrents SobrePotenciado",
+		"description":"Un rastreador de torrents moderno",
+		"welcome":{
+			"title":"Bienvenido a Obsidian Tracker",
+			"description":"Por favor inicia sesión o regístrate para acceder al rastreador"
+		},
+		"footer":{
+			"description":"Un rastreador de torrents moderno construido con Next.js y Fastify",
+			"login":"Iniciar Sesión",
+			"register":"Registrarse",
+			"about":"Acerca de",
+			"stats":"Estadísticas",
+			"api":"API"
+		}
+	},
+	"sidebar":{
+		"nav":{
+			"home":"Inicio",
+			"categories":"Categorías",
+			"requests":"Peticiones",
+			"announcements":"Anuncios",
+			"wiki":"Wiki",
+			"rss":"RSS",
+			"bookmarks":"Marcadores"
+		}
+	},
+	"requests":{
+		"description":"Solicita contenido específico o ayuda a llenar peticiones de otros usuarios.",
+		"createRequest":"Crear Petición",
+		"myRequests":"Mis Peticiones",
+		"allRequests":"Todas las Peticiones",
+		"openRequests":"Peticiones Abiertas",
+		"filledRequests":"Peticiones Llenadas",
+		"closedRequests":"Peticiones Cerradas",
+		"rejectedRequests":"Peticiones Rechazadas",
+		"noRequests":"No se encontraron peticiones",
+		"searchPlaceholder":"Buscar peticiones...",
+		"filterBy":"Filtrar por",
+		"status":"Estado",
+		"category":"Categoría",
+		"createdBy":"Creado Por",
+		"filledBy":"Llenado Por",
+		"createdAt":"Fecha de Creación",
+		"viewRequest":"Ver Petición",
+		"fillRequest":"Llenar Petición",
+		"requestDetails":"Detalles de la Petición",
+		"backToList":"Volver a la Lista",
+		"requestNotFound":"Petición no encontrada",
+		"loadingRequest":"Cargando petición...",
+		"comments":"Comentarios",
+		"noComments":"Aún no hay comentarios",
+		"addComment":"Agregar Comentario",
+		"commentPlaceholder":"Escribe un comentario...",
+		"postComment":"Publicar Comentario",
+		"commentPosted":"Comentario publicado exitosamente",
+		"errorPostingComment":"Error publicando comentario",
+		"createNewRequest":"Crear Nueva Petición",
+		"requestTitle":"Título de la Petición",
+		"requestDescription":"Descripción de la Petición",
+		"selectCategory":"Seleccionar Categoría",
+		"submitRequest":"Enviar Petición",
+		"requestCreated":"Petición creada exitosamente",
+		"errorCreatingRequest":"Error creando petición",
+		"fillWithTorrent":"Llenar con Torrent",
+		"selectTorrent":"Seleccionar Torrent",
+		"searchTorrents":"Buscar torrents...",
+		"noTorrentsFound":"No se encontraron torrents",
+		"fillRequestSuccess":"Petición llenada exitosamente",
+		"errorFillingRequest":"Error llenando petición",
+		"requestAlreadyFilled":"Esta petición ya ha sido llenada",
+		"requestNotOpen":"Esta petición no está abierta",
+		"invalidTorrent":"Torrent inválido o no aprobado",
+		"titlePlaceholder":"Ingresa un título descriptivo para tu petición",
+		"descriptionPlaceholder":"Proporciona detalles adicionales sobre lo que estás buscando...",
+		"mustBeLoggedIn":"Debes estar conectado para realizar esta acción",
+		"failedToLoadRequests":"Error al cargar peticiones",
+		"failedToLoadRequest":"Error al cargar petición",
+		"failedToLoadComments":"Error al cargar comentarios",
+		"failedToLoadTorrents":"Error al cargar torrents",
+		"failedToPostComment":"Error al publicar comentario",
+		"failedToFillRequest":"Error al llenar petición",
+		"errorLoadingRequests":"Error cargando peticiones",
+		"errorLoadingRequest":"Error cargando petición",
+		"errorLoadingComments":"Error cargando comentarios",
+		"errorLoadingTorrents":"Error cargando torrents",
+		"noRequestsForFilter":"No se encontraron peticiones para este filtro",
+		"viewTorrent":"Ver Torrent",
+		"filledWith":"Llenado con:",
+		"postingComment":"Publicando...",
+		"creatingRequest":"Creando...",
+		"fileSizes":{
+			"bytes":"Bytes",
+			"kb":"KB",
+			"mb":"MB",
+			"gb":"GB",
+			"tb":"TB"
+		},
+		"titleRequired":"El título es requerido",
+		"categoryRequired":"La categoría es requerida",
+		"failedToCreateRequest":"Error al crear petición",
+		"notificationError":"Petición llenada pero no se pudo enviar la notificación"
+	},
+	"bookmarks":{
+		"description":"Gestiona tus torrents marcados como favoritos",
+		"mustBeLoggedIn":"Debes iniciar sesión para ver los marcadores",
+		"errorLoadingBookmarks":"Error al cargar marcadores",
+		"searchPlaceholder":"Buscar marcadores...",
+		"resultsCount":"marcadores encontrados",
+		"pageInfo":"Página",
+		"of":"de",
+		"noResults":"No se encontraron marcadores que coincidan con tu búsqueda",
+		"noBookmarks":"Aún no tienes marcadores",
+		"noBookmarksDescription":"Comienza a marcar torrents para verlos aquí",
+		"editNote":"Editar nota",
+		"removeBookmark":"Eliminar marcador",
+		"notePlaceholder":"Agregar una nota...",
+		"saving":"Guardando...",
+		"save":"Guardar",
+		"cancel":"Cancelar",
+		"viewTorrent":"Ver Torrent",
+		"previous":"Anterior",
+		"next":"Siguiente",
+		"confirmDelete":"¿Estás seguro de que quieres eliminar este marcador?",
+		"confirmDeleteTitle":"Eliminar Marcador",
+		"confirmDeleteMessage":"¿Estás seguro de que quieres eliminar este marcador? Esta acción no se puede deshacer.",
+		"delete":"Eliminar",
+		"bookmarkRemoved":"Marcador eliminado exitosamente",
+		"errorRemovingBookmark":"Error al eliminar marcador",
+		"noteUpdated":"Nota actualizada exitosamente",
+		"errorUpdatingNote":"Error al actualizar nota"
+	},
+	"rss":{
+		"description":"Gestiona tu feed RSS personalizado para torrents",
+		"mustBeLoggedIn":"Debes iniciar sesión para acceder al RSS",
+		"errorLoadingToken":"Error al cargar token RSS",
+		"tokenRegenerated":"Token RSS regenerado exitosamente",
+		"errorRegeneratingToken":"Error al regenerar token RSS",
+		"copiedToClipboard":"Copiado al portapapeles",
+		"errorCopying":"Error al copiar al portapapeles",
+		"disabled":"RSS está deshabilitado",
+		"disabledMessage":"El acceso RSS ha sido deshabilitado para tu cuenta. Por favor contacta a un administrador.",
+		"yourRssToken":"Tu Token RSS",
+		"token":"Token RSS",
+		"copyToken":"Copiar token",
+		"regenerateToken":"Regenerar token",
+		"tokenInfo":"Información del Token",
+		"tokenInfoMessage":"Mantén tu token RSS privado. Cualquiera con este token puede acceder a tu feed RSS.",
+		"feedUrls":"URLs del Feed RSS",
+		"allTorrents":"Todos los Torrents",
+		"bookmarkedTorrents":"Torrents Marcados",
+		"limitedCount":"Cantidad Limitada (10 torrents)",
+		"copyUrl":"Copiar URL",
+		"openFeed":"Abrir feed",
+		"howToUse":"Cómo Usar RSS",
+		"searchParameters":"Parámetros de Búsqueda",
+		"searchDescription":"Buscar torrents por nombre o descripción",
+		"categoryDescription":"Filtrar por ID de categoría",
+		"countDescription":"Limitar número de torrents (máx 20)",
+		"bookmarksDescription":"Mostrar solo tus torrents marcados",
+		"rssReaders":"Lectores RSS",
+		"rssReadersDescription":"Puedes usar cualquier lector RSS para suscribirte a estos feeds. Opciones populares incluyen:",
+		"reader1":"Thunderbird (Cliente de email con soporte RSS)",
+		"reader2":"Feedly (Lector RSS basado en web)",
+		"reader3":"RSS Guard (Lector RSS de escritorio)",
+		"reader4":"Aplicaciones móviles como Feedly, Inoreader, etc.",
+		"security":"Seguridad",
+		"securityDescription":"Tu token RSS es único para tu cuenta. Manténlo privado y regenéralo si sospechas que ha sido comprometido."
+	},
+	"wiki":{
+		"description":"Explora la documentación y guías de la comunidad",
+		"pageDescription":"Página de documentación de la wiki",
+		"searchPlaceholder":"Buscar páginas de wiki...",
+		"pagesFound":"páginas encontradas",
+		"pageInfo":"Página",
+		"of":"de",
+		"noResults":"No se encontraron resultados",
+		"noPages":"No hay páginas de wiki disponibles",
+		"noResultsDescription":"Intenta ajustar tus términos de búsqueda",
+		"noPagesDescription":"Las páginas de wiki aparecerán aquí cuando sean creadas",
+		"createdBy":"Creado por",
+		"updated":"Actualizado",
+		"parentPage":"Página padre",
+		"readMore":"Leer más",
+		"subPages":"Sub-páginas",
+		"expand":"Expandir",
+		"collapse":"Contraer",
+		"previous":"Anterior",
+		"next":"Siguiente",
+		"wiki":"Wiki",
+		"backToWiki":"Volver al Wiki"
+	},
+	"dashboard":{
+		"latestTorrents":"Últimos Torrents",
+		"pinnedAnnouncements":"Anuncios Fijados",
+		"viewAll":"Ver Todo",
+		"noTorrents":"No hay torrents disponibles",
+		"noAnnouncements":"No hay anuncios disponibles",
+		"size":"Tamaño",
+		"uploader":"Subidor",
+		"category":"Categoría",
+		"seeders":"Seeders",
+		"leechers":"Leechers",
+		"completed":"Completados",
+		"uploaded":"Subido",
+		"by":"por",
+		"previous":"Anterior",
+		"next":"Siguiente",
+		"page":"Página",
+		"of":"de",
+		"allAnnouncements":"Todos los Anuncios",
+		"createdBy":"Creado por",
+		"createdAt":"Fecha de creación",
+		"updatedAt":"Fecha de actualización",
+		"loading":"Cargando anuncios...",
+		"backToAnnouncements":"Volver a Anuncios",
+		"notFound":"Anuncio no encontrado",
+		"error":"Error cargando el anuncio",
+		"description":"Mantente informado con los últimos anuncios y notificaciones del sitio."
+	},
+	"categories":{
+		"title":"Categorías",
+		"description":"Explora las diferentes categorías de contenido disponibles.",
+		"popularTags":"Tags Populares",
+		"browseCategories":"Explorar Categorías",
+		"latestTorrents":"Últimos Torrents",
+		"viewAll":"Ver Todo",
+		"searchPlaceholder":"Buscar categorías...",
+		"noTorrents":"No hay torrents disponibles",
+		"seeders":"Seeders",
+		"leechers":"Leechers",
+		"completed":"Completados",
+		"uploaded":"Subido",
+		"by":"por",
+		"size":"Tamaño",
+		"loading":"Cargando categorías..."
+	},
+	"categoryTorrents":{
+		"title":"Torrents de Categoría",
+		"description":"Explora todos los torrents disponibles en esta categoría.",
+		"breadcrumbHome":"Inicio",
+		"breadcrumbCategories":"Categorías",
+		"noTorrents":"No hay torrents disponibles en esta categoría.",
+		"loading":"Cargando torrents...",
+		"filters":{
+			"allSources":"Todas las fuentes",
+			"sortBy":"Ordenar por",
+			"newest":"Más recientes",
+			"oldest":"Más antiguos",
+			"mostSeeded":"Más seeders",
+			"leastSeeded":"Menos seeders",
+			"largest":"Más grandes",
+			"smallest":"Más pequeños"
+		},
+		"torrent":{
+			"seeders":"Seeders",
+			"leechers":"Leechers",
+			"completed":"Completados",
+			"uploaded":"Subido",
+			"by":"por",
+			"size":"Tamaño",
+			"download":"Descargar"
+		},
+		"pagination":{
+			"previous":"Anterior",
+			"next":"Siguiente",
+			"page":"Página",
+			"of":"de"
+		}
+	},
+	"search":{
+		"title":"Búsqueda",
+		"description":"Busca torrents por nombre, tag o categoría.",
+		"noResults":"No se encontraron resultados.",
+		"loading":"Buscando...",
+		"filters":{
+			"sortBy":"Ordenar por",
+			"newest":"Más recientes",
+			"oldest":"Más antiguos",
+			"mostSeeded":"Más seeders",
+			"leastSeeded":"Menos seeders",
+			"largest":"Más grandes",
+			"smallest":"Más pequeños"
+		},
+		"torrent":{
+			"seeders":"Seeders",
+			"leechers":"Leechers",
+			"completed":"Completados",
+			"uploaded":"Subido",
+			"by":"por",
+			"size":"Tamaño",
+			"download":"Descargar"
+		},
+		"pagination":{
+			"previous":"Anterior",
+			"next":"Siguiente",
+			"page":"Página",
+			"of":"de"
+		}
+	},
+	"header":{
+		"search":{
+			"placeholder":"Buscar..."
+		},
+		"upload":"Subir",
+		"userMenu":{
+			"profile":"Perfil",
+			"adminPanel":"Panel Admin",
+			"moderatorPanel":"Panel Moderador",
+			"logout":"Cerrar sesión"
+		}
+	},
+	"admin":{
+		"nav":{
+			"dashboard":"Resumen",
+			"users":"Usuarios",
+			"torrentApprovals":"Aprobaciones de Torrents",
+			"torrentManagement":"Gestión de Torrents",
+			"categories":"Categorías",
+			"announcements":"Anuncios",
+			"wiki":"Wiki",
+			"peerban":"Bloqueos",
+			"rssManagement":"Gestión de RSS",
+			"settings":"Ajustes",
+			"configuration":"Configuración",
+			"requests":"Peticiones"
+		},
+		"backToSite":"Volver al sitio",
+		"title":"Panel de administración",
+		"categories":{
+			"title":"Gestión de Categorías",
+			"description":"Administra las categorías del tracker y su jerarquía.",
+			"addNew":"Agregar Categoría",
+			"addCategory":"Agregar Nueva Categoría",
+			"editCategory":"Editar Categoría",
+			"list":"Lista de Categorías",
+			"name":"Nombre",
+			"icon":"Icono",
+			"order":"Orden",
+			"parentCategory":"Categoría Padre",
+			"noParent":"Sin categoría padre",
+			"torrents":"torrents",
+			"requests":"peticiones",
+			"create":"Crear",
+			"update":"Actualizar",
+			"edit":"Editar",
+			"delete":"Eliminar",
+			"cancel":"Cancelar",
+			"nameRequired":"El nombre es requerido",
+			"confirmDelete":"¿Estás seguro de que quieres eliminar esta categoría?",
+			"noCategories":"No hay categorías disponibles",
+			"created":"Categoría creada exitosamente",
+			"updated":"Categoría actualizada exitosamente",
+			"deleted":"Categoría eliminada exitosamente",
+			"errorLoading":"Error al cargar las categorías",
+			"errorCreating":"Error al crear la categoría",
+			"errorUpdating":"Error al actualizar la categoría",
+			"errorDeleting":"Error al eliminar la categoría",
+			"dragToReorder":"Arrastra para reordenar",
+			"reorderSuccess":"Orden actualizado exitosamente",
+			"reorderError":"Error al actualizar el orden",
+			"moveToCategory":"Mover a categoría",
+			"moveToMain":"Mover a categoría principal",
+			"moveSuccess":"Categoría movida exitosamente",
+			"moveError":"Error al mover la categoría",
+			"dropZone":"Zona de destino",
+			"dropHereToMove":"Suelta aquí para mover",
+			"errorHasSubcategories":"No se puede mover una categoría con subcategorías. Mueve las subcategorías primero.",
+			"errorSubcategoryParent":"No se puede mover una categoría dentro de una subcategoría. Solo las categorías principales pueden tener subcategorías.",
+			"errorCircularReference":"No se puede mover la categoría: crearía una referencia circular.",
+			"errorSelfParent":"Una categoría no puede ser su propio padre."
+		},
+		"users":{
+			"title":"Gestión de Usuarios",
+			"description":"Administra usuarios del tracker, roles y permisos.",
+			"search":"Buscar",
+			"searching":"Buscando...",
+			"searchPlaceholder":"Buscar por nombre de usuario o email...",
+			"users":"Usuarios",
+			"noUsers":"No se encontraron usuarios",
+			"editUser":"Editar Usuario",
+			"userDetails":"Detalles del Usuario",
+			"username":"Nombre de Usuario",
+			"email":"Email",
+			"role":"Rol",
+			"status":"Estado",
+			"emailVerified":"Email Verificado",
+			"createdAt":"Creado El",
+			"actions":"Acciones",
+			"edit":"Editar",
+			"ban":"Banear",
+			"unban":"Desbanear",
+			"enable":"Habilitar",
+			"promote":"Promover",
+			"demote":"Degradar",
+			"close":"Cerrar",
+			"save":"Guardar",
+			"saving":"Guardando...",
+			"cancel":"Cancelar",
+			"confirmBan":"¿Estás seguro de que quieres banear a este usuario?",
+			"confirmUnban":"¿Estás seguro de que quieres desbanear a este usuario?",
+			"confirmPromote":"¿Estás seguro de que quieres promover a este usuario?",
+			"confirmDemote":"¿Estás seguro de que quieres degradar a este usuario?",
+			"userBanned":"Usuario baneado exitosamente",
+			"userUnbanned":"Usuario desbaneado exitosamente",
+			"userPromoted":"Usuario promovido exitosamente",
+			"userDemoted":"Usuario degradado exitosamente",
+			"userUpdated":"Usuario actualizado exitosamente",
+			"errorLoading":"Error al cargar usuarios",
+			"errorUpdating":"Error al actualizar usuario",
+			"errorBanning":"Error al banear usuario",
+			"errorUnbanning":"Error al desbanear usuario",
+			"errorPromoting":"Error al promover usuario",
+			"errorDemoting":"Error al degradar usuario",
+			"transferFounder":"Transferir Fundador",
+			"founderRoleWarning":"El rol de Fundador no puede ser cambiado. Use el botón de transferir para transferir el rol de fundador.",
+			"loading":"Cargando...",
+			"roles":{
+				"USER":"Usuario",
+				"MOD":"Moderador",
+				"ADMIN":"Administrador",
+				"OWNER":"Propietario",
+				"FOUNDER":"Fundador"
+			},
+			"statuses":{
+				"ACTIVE":"Activo",
+				"BANNED":"Baneado",
+				"DISABLED":"Deshabilitado"
+			}
+		},
+		"torrentApprovals":{
+			"title":"Aprobaciones de Torrents",
+			"description":"Revisar y aprobar torrents pendientes de subida.",
+			"stats":{
+				"total":"Total de Torrents",
+				"approved":"Aprobados",
+				"pending":"Pendientes"
+			},
+			"filters":{
+				"all":"Todos",
+				"approved":"Aprobados",
+				"pending":"Pendientes",
+				"rejected":"Rechazados",
+				"search":"Buscar torrents..."
+			},
+			"table":{
+				"name":"Nombre",
+				"uploader":"Subidor",
+				"category":"Categoría",
+				"size":"Tamaño",
+				"date":"Fecha",
+				"status":"Estado",
+				"actions":"Acciones"
+			},
+			"status":{
+				"approved":"Aprobado",
+				"pending":"Pendiente",
+				"rejected":"Rechazado"
+			},
+			"actions":{
+				"approve":"Aprobar",
+				"reject":"Rechazar",
+				"view":"Ver",
+				"viewRejectionReason":"Ver motivo del rechazo",
+				"approving":"Aprobando...",
+				"rejecting":"Rechazando..."
+			},
+			"modals":{
+				"approve":{
+					"title":"Aprobar Torrent",
+					"message":"¿Estás seguro de que quieres aprobar este torrent?",
+					"confirm":"Aprobar",
+					"cancel":"Cancelar"
+				},
+				"reject":{
+					"title":"Rechazar Torrent",
+					"message":"¿Estás seguro de que quieres rechazar este torrent?",
+					"reason":"Razón del rechazo (opcional):",
+					"confirm":"Rechazar",
+					"cancel":"Cancelar"
+				},
+				"rejectionInfo":{
+					"title":"Información del Rechazo",
+					"reason":"Motivo del rechazo:",
+					"rejectedBy":"Rechazado por:",
+					"rejectedAt":"Fecha de rechazo:",
+					"noReason":"No se especificó motivo",
+					"unknown":"Desconocido",
+					"close":"Cerrar"
+				}
+			},
+			"notifications":{
+				"approved":"Torrent aprobado exitosamente",
+				"rejected":"Torrent rechazado exitosamente",
+				"error":"Error al procesar la acción"
+			},
+			"empty":{
+				"title":"No hay torrents pendientes",
+				"description":"Todos los torrents han sido procesados."
+			}
+		},
+		"torrentManagement":{
+			"title":"Gestión de Torrents",
+			"description":"Administrar torrents existentes, categorías y metadatos.",
+			"search":{
+				"placeholder":"Buscar torrents por nombre..."
+			},
+			"filters":{
+				"allCategories":"Todas las Categorías",
+				"clear":"Limpiar"
+			},
+			"edit":{
+				"name":"Nombre",
+				"description":"Descripción",
+				"category":"Categoría",
+				"save":"Guardar Cambios",
+				"cancel":"Cancelar"
+			},
+			"info":{
+				"size":"Tamaño",
+				"category":"Categoría",
+				"uploader":"Subidor",
+				"created":"Creado",
+				"updated":"Actualizado"
+			},
+			"actions":{
+				"edit":"Editar Torrent",
+				"delete":"Eliminar Torrent"
+			},
+			"delete":{
+				"confirmTitle":"Eliminar Torrent",
+				"confirmMessage":"¿Estás seguro de que quieres eliminar este torrent? Esta acción no se puede deshacer.",
+				"confirm":"Eliminar",
+				"cancel":"Cancelar"
+			},
+			"pagination":{
+				"previous":"Anterior",
+				"next":"Siguiente",
+				"page":"Página {current} de {total}"
+			},
+			"noResults":{
+				"title":"No se encontraron torrents",
+				"description":"Intenta ajustar tus criterios de búsqueda o filtros."
+			},
+			"notifications":{
+				"updated":"Torrent actualizado exitosamente",
+				"deleted":"Torrent eliminado exitosamente",
+				"deletedNoEmail":"Torrent eliminado exitosamente, pero no se pudo enviar el email de notificación",
+				"error":"Ocurrió un error al gestionar los torrents"
+			}
+		},
+		"rssManagement":{
+			"title":"Gestión de RSS",
+			"description":"Configurar y administrar feeds RSS y configuraciones.",
+			"search":{
+				"placeholder":"Buscar usuarios por nombre o email...",
+				"clear":"Limpiar"
+			},
+			"user":{
+				"email":"Email",
+				"created":"Creado",
+				"emailVerified":"Email Verificado",
+				"emailNotVerified":"Email No Verificado"
+			},
+			"rss":{
+				"enabled":"RSS Habilitado",
+				"disabled":"RSS Deshabilitado",
+				"token":"Token RSS",
+				"showToken":"Mostrar Token",
+				"hideToken":"Ocultar Token"
+			},
+			"actions":{
+				"enable":"Habilitar RSS",
+				"disable":"Deshabilitar RSS",
+				"resetToken":"Restablecer Token"
+			},
+			"pagination":{
+				"previous":"Anterior",
+				"next":"Siguiente"
+			},
+			"noResults":{
+				"title":"No se encontraron usuarios",
+				"description":"Intenta ajustar tus criterios de búsqueda."
+			},
+			"notifications":{
+				"rssEnabled":"Acceso RSS habilitado exitosamente",
+				"rssDisabled":"Acceso RSS deshabilitado exitosamente",
+				"tokenReset":"Token RSS restablecido exitosamente",
+				"tokenCopied":"Token RSS copiado al portapapeles",
+				"copyError":"Error al copiar token al portapapeles",
+				"error":"Ocurrió un error al gestionar la configuración RSS"
+			}
+		},
+		"announcements":{
+			"title":"Anuncios",
+			"description":"Administrar anuncios del sitio y notificaciones.",
+			"addNew":"Agregar Nuevo Anuncio",
+			"addAnnouncement":"Agregar Anuncio",
+			"editAnnouncement":"Editar Anuncio",
+			"list":"Lista de Anuncios",
+			"titleField":"Título",
+			"body":"Contenido",
+			"pinned":"Fijado",
+			"visible":"Visible",
+			"createdBy":"Creado Por",
+			"createdAt":"Fecha de Creación",
+			"updatedAt":"Fecha de Actualización",
+			"create":"Crear",
+			"update":"Actualizar",
+			"edit":"Editar",
+			"delete":"Eliminar",
+			"pin":"Fijar",
+			"unpin":"Desfijar",
+			"show":"Mostrar",
+			"hide":"Ocultar",
+			"cancel":"Cancelar",
+			"titleRequired":"El título es requerido",
+			"bodyRequired":"El contenido es requerido",
+			"confirmDelete":"¿Estás seguro de que quieres eliminar este anuncio?",
+			"noAnnouncements":"No se encontraron anuncios",
+			"created":"Anuncio creado exitosamente",
+			"updated":"Anuncio actualizado exitosamente",
+			"deleted":"Anuncio eliminado exitosamente",
+			"pinnedSuccess":"Anuncio fijado exitosamente",
+			"unpinnedSuccess":"Anuncio desfijado exitosamente",
+			"shownSuccess":"Anuncio mostrado exitosamente",
+			"hiddenSuccess":"Anuncio ocultado exitosamente",
+			"errorLoading":"Error cargando anuncios",
+			"errorCreating":"Error creando anuncio",
+			"errorUpdating":"Error actualizando anuncio",
+			"errorDeleting":"Error eliminando anuncio",
+			"errorPinning":"Error fijando anuncio",
+			"errorUnpinning":"Error desfijando anuncio",
+			"errorShowing":"Error mostrando anuncio",
+			"errorHiding":"Error ocultando anuncio",
+			"sendEmail":"Enviar por email"
+		},
+		"wiki":{
+			"title":"Gestión de Wiki",
+			"description":"Administrar páginas de wiki y documentación.",
+			"addNew":"Agregar Nueva Página Wiki",
+			"addWikiPage":"Agregar Página Wiki",
+			"editWikiPage":"Editar Página Wiki",
+			"list":"Lista de Páginas Wiki",
+			"slug":"Slug",
+			"titleField":"Título",
+			"content":"Contenido",
+			"parentPage":"Página Padre",
+			"noParent":"Sin Padre (Página Principal)",
+			"locked":"Bloqueada",
+			"visible":"Visible",
+			"createdBy":"Creado Por",
+			"updatedBy":"Actualizado Por",
+			"createdAt":"Fecha de Creación",
+			"updatedAt":"Fecha de Actualización",
+			"create":"Crear",
+			"update":"Actualizar",
+			"edit":"Editar",
+			"delete":"Eliminar",
+			"lock":"Bloquear",
+			"unlock":"Desbloquear",
+			"show":"Mostrar",
+			"hide":"Ocultar",
+			"cancel":"Cancelar",
+			"slugRequired":"El slug es requerido",
+			"titleRequired":"El título es requerido",
+			"contentRequired":"El contenido es requerido",
+			"confirmDelete":"¿Estás seguro de que quieres eliminar esta página wiki?",
+			"noWikiPages":"No se encontraron páginas wiki",
+			"created":"Página wiki creada exitosamente",
+			"updated":"Página wiki actualizada exitosamente",
+			"deleted":"Página wiki eliminada exitosamente",
+			"lockedSuccess":"Página wiki bloqueada exitosamente",
+			"unlockedSuccess":"Página wiki desbloqueada exitosamente",
+			"shownSuccess":"Página wiki mostrada exitosamente",
+			"hiddenSuccess":"Página wiki ocultada exitosamente",
+			"errorLoading":"Error cargando páginas wiki",
+			"errorCreating":"Error creando página wiki",
+			"errorUpdating":"Error actualizando página wiki",
+			"errorDeleting":"Error eliminando página wiki",
+			"errorLocking":"Error bloqueando página wiki",
+			"errorUnlocking":"Error desbloqueando página wiki",
+			"errorShowing":"Error mostrando página wiki",
+			"errorHiding":"Error ocultando página wiki"
+		},
+		"peerban":{
+			"title":"Bloqueos de Peers",
+			"description":"Administrar bloqueos de peers y restricciones de IP.",
+			"addNew":"Agregar Nuevo Bloqueo de Peer",
+			"addPeerBan":"Agregar Bloqueo de Peer",
+			"editPeerBan":"Editar Bloqueo de Peer",
+			"list":"Lista de Bloqueos de Peers",
+			"userId":"ID de Usuario",
+			"passkey":"Passkey",
+			"peerId":"ID de Peer",
+			"ip":"Dirección IP",
+			"reason":"Razón",
+			"expiresAt":"Expira En",
+			"noExpiration":"Sin Expiración",
+			"bannedBy":"Bloqueado Por",
+			"createdAt":"Fecha de Creación",
+			"status":"Estado",
+			"active":"Activo",
+			"expired":"Expirado",
+			"permanent":"Permanente",
+			"create":"Crear",
+			"update":"Actualizar",
+			"edit":"Editar",
+			"delete":"Eliminar",
+			"remove":"Remover Bloqueo",
+			"cancel":"Cancelar",
+			"reasonRequired":"La razón es requerida",
+			"banTypeRequired":"Al menos un tipo de bloqueo (ID de Usuario, Passkey, ID de Peer, o IP) es requerido",
+			"confirmDelete":"¿Estás seguro de que quieres remover este bloqueo de peer?",
+			"noPeerBans":"No se encontraron bloqueos de peers",
+			"created":"Bloqueo de peer creado exitosamente",
+			"removed":"Bloqueo de peer removido exitosamente",
+			"errorLoading":"Error cargando bloqueos de peers",
+			"errorCreating":"Error creando bloqueo de peer",
+			"errorRemoving":"Error removiendo bloqueo de peer",
+			"filterBy":"Filtrar por",
+			"allBans":"Todos los Bloqueos",
+			"activeBans":"Bloqueos Activos",
+			"expiredBans":"Bloqueos Expirados",
+			"searchBy":"Buscar por",
+			"searchPlaceholder":"Ingresa ID de Usuario, Passkey, ID de Peer, o IP...",
+			"banTypes":{
+				"userId":"ID de Usuario",
+				"passkey":"Passkey",
+				"peerId":"ID de Peer",
+				"ip":"Dirección IP"
+			}
+		},
+		"requests":{
+			"title":"Gestión de Peticiones",
+			"description":"Administrar peticiones de usuarios y estado de llenado.",
+			"list":"Lista de Peticiones",
+			"titleField":"Título",
+			"descriptionField":"Descripción",
+			"category":"Categoría",
+			"status":"Estado",
+			"createdBy":"Creado Por",
+			"filledBy":"Llenado Por",
+			"filledTorrent":"Torrent de Llenado",
+			"createdAt":"Fecha de Creación",
+			"updatedAt":"Fecha de Actualización",
+			"open":"Abierto",
+			"filled":"Llenado",
+			"closed":"Cerrado",
+			"rejected":"Rechazado",
+			"close":"Cerrar",
+			"reject":"Rechazar",
+			"view":"Ver",
+			"reason":"Razón",
+			"reasonOptional":"Razón (Opcional)",
+			"closeRequest":"Cerrar Petición",
+			"rejectRequest":"Rechazar Petición",
+			"viewRequest":"Ver Petición",
+			"cancel":"Cancelar",
+			"confirmClose":"¿Estás seguro de que quieres cerrar esta petición?",
+			"confirmReject":"¿Estás seguro de que quieres rechazar esta petición?",
+			"noRequests":"No se encontraron peticiones",
+			"closedSuccess":"Petición cerrada exitosamente",
+			"rejectedSuccess":"Petición rechazada exitosamente",
+			"errorLoading":"Error cargando peticiones",
+			"errorClosing":"Error cerrando petición",
+			"errorRejecting":"Error rechazando petición",
+			"filterBy":"Filtrar por",
+			"allRequests":"Todas las Peticiones",
+			"openRequests":"Peticiones Abiertas",
+			"filledRequests":"Peticiones Llenadas",
+			"closedRequests":"Peticiones Cerradas",
+			"rejectedRequests":"Peticiones Rechazadas",
+			"searchBy":"Buscar por",
+			"searchPlaceholder":"Buscar peticiones...",
+			"requestDetails":"Detalles de la Petición",
+			"backToList":"Volver a la Lista",
+			"requestNotFound":"Petición no encontrada",
+			"loadingRequest":"Cargando petición...",
+			"comments":"Comentarios",
+			"noComments":"Aún no hay comentarios",
+			"addComment":"Agregar Comentario",
+			"commentPlaceholder":"Escribe un comentario...",
+			"postComment":"Publicar Comentario",
+			"commentPosted":"Comentario publicado exitosamente",
+			"errorPostingComment":"Error publicando comentario"
+		},
+		"description":"Solicita contenido específico o ayuda a llenar peticiones de otros usuarios.",
+		"createRequest":"Crear Petición",
+		"myRequests":"Mis Peticiones",
+		"allRequests":"Todas las Peticiones",
+		"openRequests":"Peticiones Abiertas",
+		"filledRequests":"Peticiones Llenadas",
+		"closedRequests":"Peticiones Cerradas",
+		"rejectedRequests":"Peticiones Rechazadas",
+		"noRequests":"No se encontraron peticiones",
+		"searchPlaceholder":"Buscar peticiones...",
+		"filterBy":"Filtrar por",
+		"status":"Estado",
+		"category":"Categoría",
+		"createdBy":"Creado Por",
+		"filledBy":"Llenado Por",
+		"createdAt":"Fecha de Creación",
+		"viewRequest":"Ver Petición",
+		"fillRequest":"Llenar Petición",
+		"requestDetails":"Detalles de la Petición",
+		"backToList":"Volver a la Lista",
+		"requestNotFound":"Petición no encontrada",
+		"loadingRequest":"Cargando petición...",
+		"comments":"Comentarios",
+		"noComments":"Aún no hay comentarios",
+		"addComment":"Agregar Comentario",
+		"commentPlaceholder":"Escribe un comentario...",
+		"postComment":"Publicar Comentario",
+		"commentPosted":"Comentario publicado exitosamente",
+		"createNewRequest":"Crear Nueva Petición",
+		"requestTitle":"Título de la Petición",
+		"requestDescription":"Descripción de la Petición",
+		"selectCategory":"Seleccionar Categoría",
+		"submitRequest":"Enviar Petición",
+		"requestCreated":"Petición creada exitosamente",
+		"errorCreatingRequest":"Error creando petición",
+		"fillWithTorrent":"Llenar con Torrent",
+		"selectTorrent":"Seleccionar Torrent",
+		"searchTorrents":"Buscar torrents...",
+		"noTorrentsFound":"No se encontraron torrents",
+		"fillRequestSuccess":"Petición llenada exitosamente",
+		"errorFillingRequest":"Error llenando petición",
+		"requestAlreadyFilled":"Esta petición ya ha sido llenada",
+		"requestNotOpen":"Esta petición no está abierta",
+		"invalidTorrent":"Torrent inválido o no aprobado",
+		"titlePlaceholder":"Ingresa un título descriptivo para tu petición",
+		"descriptionPlaceholder":"Proporciona detalles adicionales sobre lo que estás buscando...",
+		"mustBeLoggedIn":"Debes estar conectado para realizar esta acción",
+		"failedToLoadRequests":"Error al cargar peticiones",
+		"failedToLoadRequest":"Error al cargar petición",
+		"failedToLoadComments":"Error al cargar comentarios",
+		"failedToLoadTorrents":"Error al cargar torrents",
+		"failedToPostComment":"Error al publicar comentario",
+		"failedToFillRequest":"Error al llenar petición",
+		"errorLoadingRequests":"Error cargando peticiones",
+		"errorLoadingRequest":"Error cargando petición",
+		"errorLoadingComments":"Error cargando comentarios",
+		"errorLoadingTorrents":"Error cargando torrents",
+		"noRequestsForFilter":"No se encontraron peticiones para este filtro",
+		"viewTorrent":"Ver Torrent",
+		"filledWith":"Llenado con:",
+		"postingComment":"Publicando...",
+		"creatingRequest":"Creando...",
+		"fileSizes":{
+			"bytes":"Bytes",
+			"kb":"KB",
+			"mb":"MB",
+			"gb":"GB",
+			"tb":"TB"
+		},
+		"titleRequired":"El título es requerido",
+		"categoryRequired":"La categoría es requerida",
+		"failedToCreateRequest":"Error al crear petición"
+	},
+	"settings":{
+		"title":"Configuración",
+		"description":"Administra la configuración global del tracker.",
+		"sections":{
+			"tracker":"Tracker",
+			"ratio":"Ratio y H&R",
+			"announce":"Announce",
+			"clients":"Clientes",
+			"invitations":"Invitaciones",
+			"rss":"RSS",
+			"storage":"Almacenamiento",
+			"smtp":"SMTP",
+			"antiCheat":"Anti-Cheat",
+			"branding":"Branding"
+		},
+		"ui":{
+			"sectionsTitle":"Secciones",
+			"save":"Guardar configuración",
+			"saving":"Guardando...",
+			"saved":"Configuración guardada",
+			"errorLoading":"Error al cargar la configuración",
+			"errorSaving":"Error al guardar la configuración",
+			"smtpTest":"Probar SMTP",
+			"smtpSuccess":"Correo de prueba enviado",
+			"smtpError":"No se pudo enviar el correo de prueba",
+			"on":"On",
+			"off":"Off",
+			"enabled":"Habilitado",
+			"disabled":"Deshabilitado"
+		},
+		"tracker":{
+			"description":"Opciones generales del tracker y registro."
+		},
+		"ratio":{
+			"description":"Parámetros de ratio, bonus y Hit & Run."
+		},
+		"ratioPresets":{
+			"title":"Preajustes de Ratio",
+			"easy":"Fácil",
+			"balanced":"Equilibrado",
+			"strict":"Estricto",
+			"custom":"Personalizada",
+			"active":"Activo",
+			"manualTitle":"Configuración Manual",
+			"customBadge":"Configuración Personalizada"
+		},
+		"announce":{
+			"description":"Intervalos y ajustes del announce."
+		},
+		"clients":{
+			"description":"Listas blancas/negra y huellas permitidas."
+		},
+		"invitations":{
+			"description":"Configuración de invitaciones y límites."
+		},
+		"rss":{
+			"description":"Preferencias de RSS por defecto."
+		},
+		"storage":{
+			"description":"Tipo de almacenamiento y credenciales S3."
+		},
+		"smtp":{
+			"description":"Servidor de correo y remitente."
+		},
+		"antiCheat":{
+			"description":"Controles de integridad y anti-trampas."
+		},
+		"branding":{
+			"description":"Nombre e identidad del sitio."
+		},
+		"fields":{
+			"registrationMode":"Modo de registro",
+			"requireTorrentApproval":"Requerir aprobación de torrents",
+			"requireTorrentApprovalHelp":"Los moderadores deben aprobar los torrents nuevos",
+			"minRatio":"Ratio mínimo",
+			"bonusPointsPerHour":"Puntos de bonus por hora",
+			"hitAndRunThreshold":"Umbral de Hit & Run",
+			"requiredSeedingMinutes":"Minutos de seeding requeridos",
+			"defaultAnnounceInterval":"Intervalo de announce por defecto (seg)",
+			"minAnnounceInterval":"Intervalo mínimo de announce (seg)",
+			"whitelistedClients":"Clientes en lista blanca (separados por comas)",
+			"blacklistedClients":"Clientes en lista negra (separados por comas)",
+			"allowedFingerprints":"Huellas permitidas (separadas por comas)",
+			"rssDefaultCount":"Cantidad por defecto en RSS",
+			"inviteExpiryHours":"Caducidad de invitaciones (horas)",
+			"maxInvitesPerUser":"Máximo de invitaciones por usuario",
+			"storageType":"Tipo de almacenamiento",
+			"s3Bucket":"S3 Bucket",
+			"s3Region":"S3 Región",
+			"s3AccessKeyId":"S3 Access Key ID",
+			"s3SecretAccessKey":"S3 Secret Access Key",
+			"smtpHost":"SMTP Host",
+			"smtpPort":"SMTP Port",
+			"smtpUser":"SMTP User",
+			"smtpPass":"SMTP Password",
+			"smtpFrom":"SMTP From",
+			"ghostLeechingCheck":"Ghost Leeching Check",
+			"cheatingClientCheck":"Cheating Client Check",
+			"ipAbuseCheck":"IP Abuse Check",
+			"announceRateCheck":"Announce Rate Check",
+			"invalidStatsCheck":"Invalid Stats Check",
+			"peerBanCheck":"Peer Ban Check",
+			"maxStatsJumpMultiplier":"Multiplicador máximo de salto de estadísticas",
+			"brandingName":"Nombre de marca"
+		}
+	},
+	"language":{
+		"selector":{
+			"title":"Seleccionar idioma",
+			"spanish":"Español",
+			"english":"Inglés"
+		},
+		"notification":{
+			"changed":"Idioma cambiado a {{language}}",
+			"spanish":"Español",
+			"english":"Inglés"
+		}
+	},
+	"profile":{
+		"title":"Perfil",
+		"sections":{
+			"stats":"Estadísticas",
+			"invitations":"Invitaciones",
+			"preferences":"Preferencias",
+			"recent":"Actividad reciente"
+		},
+		"tabs":{
+			"overview":"Resumen",
+			"activity":"Actividad Reciente"
+		},
+		"activity":{
+			"comingSoon":"Actividad Reciente Próximamente",
+			"description":"Tus actividades recientes aparecerán aquí",
+			"items":"actividades",
+			"empty":"No hay actividades recientes",
+			"emptyDescription":"Tus actividades aparecerán aquí cuando realices acciones en el sitio",
+			"showing":"Mostrando",
+			"to":"a",
+			"of":"de",
+			"activities":"actividades",
+			"previous":"Anterior",
+			"next":"Siguiente"
+		},
+		"activities":{
+			"torrent_uploaded":{
+				"title":"Subiste \"{{torrentName}}\"",
+				"subtitle":"Categoría: Torrent"
+			},
+			"torrent_downloaded":{
+				"title":"Descargaste \"{{torrentName}}\"",
+				"subtitle":"Descarga completada"
+			},
+			"torrent_approved":{
+				"title":"Tu torrent \"{{torrentName}}\" ha sido aprobado",
+				"subtitle":"Aprobado por administrador"
+			},
+			"bookmark_added":{
+				"title":"Marcaste como favorito \"{{torrentName}}\"",
+				"subtitle":"Agregado a marcadores"
+			},
+			"bookmark_removed":{
+				"title":"Eliminaste \"{{torrentName}}\" de marcadores",
+				"subtitle":"Removido de marcadores"
+			},
+			"torrent_liked":{
+				"title":"Diste like a \"{{torrentName}}\"",
+				"subtitle":"👍 Like"
+			},
+			"torrent_disliked":{
+				"title":"Diste dislike a \"{{torrentName}}\"",
+				"subtitle":"👎 Dislike"
+			},
+			"request_created":{
+				"title":"Creaste la petición \"{{requestTitle}}\"",
+				"subtitle":"Nueva petición"
+			},
+			"request_filled":{
+				"title":"Tu petición \"{{requestTitle}}\" fue llenada",
+				"subtitle":"Por: {{filledBy}}"
+			},
+			"request_filled_by_you":{
+				"title":"Llenaste la petición \"{{requestTitle}}\"",
+				"subtitle":"Con: {{torrentName}}"
+			},
+			"comment_added":{
+				"title":"Comentaste en \"{{entityName}}\"",
+				"subtitle":"Nuevo comentario"
+			}
+		},
+		"fields":{
+			"username":"Usuario",
+			"email":"Correo",
+			"ratio":"Ratio",
+			"points":"Puntos",
+			"rank":"Rango",
+			"joinDate":"Fecha de registro",
+			"announceUrl":"URL de announce",
+			"uploaded":"Subido",
+			"downloaded":"Descargado"
+		},
+		"actions":{
+			"uploadAvatar":"Subir avatar",
+			"removeAvatar":"Quitar",
+			"copy":"Copiar",
+			"save":"Guardar"
+		},
+		"invitations":{
+			"available":"Invitaciones disponibles",
+			"create":"Crear invitación",
+			"generated":{
+				"title":"Enlace de invitación",
+				"copied":"Enlace copiado",
+				"copyError":"No se pudo copiar el enlace"
+			},
+			"active":{
+				"cancel":"Cancelar",
+				"cancelSuccess":"Invitación cancelada",
+				"cancelError":"No se pudo cancelar la invitación"
+			},
+			"none":"No hay invitaciones activas",
+			"expires":"Expira",
+			"status":"Estado",
+			"used":"Usada",
+			"expired":"Caducada",
+			"noExpiry":"Sin caducidad",
+			"disabledByMode":"Las invitaciones están deshabilitadas por el modo de registro. Puedes conservar tus invitaciones, pero no crear ni usarlas ahora."
+		},
+		"preferences":{
+			"language":"Idioma",
+			"emailNotifications":"Permitir notificaciones por email",
+			"placeholder":"Sección de preferencias (pendiente)"
+		},
+		"recent":{
+			"placeholder":"La actividad reciente aparecerá aquí."
+		},
+		"notification":{
+			"avatarUpdated":"Avatar actualizado",
+			"uploadError":"Error al subir el avatar",
+			"avatarRemoved":"Avatar eliminado",
+			"removalError":"Error al eliminar el avatar",
+			"noAnnounceUrl":"No hay URL de announce disponible",
+			"announceCopied":"URL de announce copiada",
+			"copyError":"No se pudo copiar"
+		}
+	},
+	"auth":{
+		"placeholders":{
+			"username":"Ingresa tu nombre de usuario",
+			"email":"Ingresa tu correo electrónico",
+			"password":"Ingresa tu contraseña",
+			"confirmPassword":"Confirma tu contraseña",
+			"login":"Ingresa tu correo electrónico o usuario"
+		},
+		"register":{
+			"title":"Registrarse",
+			"username":"Usuario",
+			"email":"Correo electrónico",
+			"password":"Contraseña",
+			"confirmPassword":"Confirmar Contraseña",
+			"submit":"Registrarse",
+			"loading":"Creando cuenta...",
+			"hasAccount":"¿Ya tienes una cuenta?",
+			"login":"Iniciar Sesión",
+			"errors":{
+				"username":"El usuario debe tener entre 3 y 20 caracteres",
+				"email":"Por favor ingresa un correo electrónico válido",
+				"passwordRequirements":"La contraseña debe tener al menos 6 caracteres",
+				"passwordMatch":"Las contraseñas no coinciden",
+				"invalidCredentials":"Correo electrónico/usuario o contraseña inválidos",
+				"userBanned":"Tu cuenta está permanentemente baneada",
+				"signInError":"Ocurrió un error durante el inicio de sesión"
+			},
+			"passwordStrength":{
+				"weak":"Débil",
+				"fair":"Regular",
+				"good":"Buena",
+				"strong":"Fuerte"
+			},
+			"securityRecommendations":"Recomendaciones para la seguridad",
+			"passwordRequirements":{
+				"minLength":"Al menos 8 caracteres",
+				"uppercase":"Al menos una mayúscula",
+				"lowercase":"Al menos una minúscula",
+				"number":"Al menos un número",
+				"special":"Al menos un carácter especial"
+			},
+			"success":{
+				"firstUser":"Usuario registrado exitosamente. Eres el administrador y tu correo ha sido verificado automáticamente.",
+				"withVerification":"Usuario registrado exitosamente. Por favor revisa tu correo para verificar tu cuenta."
+			},
+			"invite":{
+				"required":"Se requiere un código de invitación",
+				"invalid":"Código de invitación inválido",
+				"used":"Esta invitación ya ha sido utilizada",
+				"deactivated":"Esta invitación ha sido desactivada",
+				"expired":"Esta invitación ha expirado"
+			},
+			"registrationClosed":"El registro está cerrado actualmente",
+			"registrationClosedMessage":"En este momento no se aceptan nuevos registros en la plataforma.",
+			"registrationClosedDescription":"Si tienes un código de invitación válido o necesitas acceso especial, contacta a un administrador.",
+			"inviteOnly":{
+				"title":"Registro por invitación",
+				"message":"Necesitas un enlace de invitación válido para crear una cuenta."
+			},
+			"inviteBanner":{
+				"invitedBy":"Invitado por",
+				"code":"Código",
+				"expires":"Expira",
+				"invalid":"Invitación inválida o caducada."
+			},
+			"goToLogin":"Ir al Login",
+			"alreadyHaveAccount":"¿Ya tienes una cuenta?",
+			"signInHere":"Inicia sesión aquí"
+		},
+		"login":{
+			"title":"Iniciar Sesión",
+			"formAriaLabel":"Formulario de inicio de sesión",
+			"login":"Correo electrónico o Usuario",
+			"password":"Contraseña",
+			"submit":"Iniciar Sesión",
+			"loading":"Iniciando sesión...",
+			"forgotPassword":"¿Olvidaste tu contraseña?",
+			"noAccount":"¿No tienes una cuenta?",
+			"signUpLink":"Registrarse",
+			"logout":"Cerrar sesión",
+			"errors":{
+				"loginRequired":"El correo electrónico o usuario es requerido",
+				"loginMinLength":"El login debe tener al menos 3 caracteres",
+				"passwordRequired":"La contraseña es requerida",
+				"passwordMinLength":"La contraseña debe tener al menos 6 caracteres",
+				"invalidCredentials":"Credenciales inválidas"
+			},
+			"success":"Sesión iniciada exitosamente",
+			"error":"Error al iniciar sesión"
+		},
+		"notification":{
+			"successLogin":"¡Inicio de sesión exitoso!",
+			"successLogout":"Has cerrado sesión",
+			"successRegister":"¡Registro exitoso! Por favor inicia sesión.",
+			"error":"Ocurrió un error. Por favor intenta de nuevo."
+		},
+		"unverified":{
+			"title":"Verifica tu correo",
+			"message":"Tu cuenta ha sido creada pero tu correo aún no está verificado. Revisa tu bandeja de entrada y haz clic en el enlace de verificación.",
+			"resend":"Reenviar correo de verificación"
+		}
+	},
+	"upload":{
+		"title":"Subir torrent",
+		"subtitle":"Comparte tu contenido con la comunidad.",
+		"form":{
+			"name":{
+				"label":"Nombre",
+				"placeholder":"Nombre del torrent",
+				"issues":{
+					"empty":"El nombre no puede estar vacío.",
+					"invalidChars":"Contiene caracteres no permitidos: \\ / : * ? \" < > | o de control.",
+					"emojis":"No se permiten emojis en el nombre.",
+					"trailing":"No puede terminar con espacios o puntos.",
+					"reserved":"No puede usar nombres reservados de Windows (CON, PRN, AUX, NUL, COM1-9, LPT1-9).",
+					"tooLong":"El nombre es demasiado largo (máximo 200 caracteres).",
+					"review":"Revisa el nombre:"
+				}
+			},
+			"category":{
+				"label":"Categoría",
+				"placeholder":"Selecciona una categoría"
+			},
+			"source":{
+				"label":"Source",
+				"placeholder":"Selecciona un source"
+			},
+			"description":{
+				"label":"Descripción",
+				"placeholder":"Describe tu torrent"
+			},
+			"tags":{
+				"label":"Etiquetas ({{count}})",
+				"suggested":"Etiquetas sugeridas",
+				"popular":"Etiquetas populares",
+				"customPlaceholder":"Añadir etiqueta personalizada"
+			}
+		},
+		"areas":{
+			"torrent":{
+				"title":"Archivo .torrent",
+				"subtitle":"Arrastra y suelta o selecciona el archivo",
+				"select":"Seleccionar .torrent"
+			},
+			"image":{
+				"title":"Imagen de póster (opcional)",
+				"subtitle":"JPG, PNG, GIF, WEBP",
+				"select":"Seleccionar imagen",
+				"remove":"Quitar imagen"
+			},
+			"nfo":{
+				"title":"Adjuntar NFO (opcional)",
+				"subtitle":"Solo archivos .nfo",
+				"select":"Seleccionar NFO",
+				"remove":"Quitar NFO"
+			}
+		},
+		"options":{
+			"anonymous":{
+				"label":"Subida anónima",
+				"desc":"Oculta tu nombre de usuario como uploader"
+			},
+			"freeleech":{
+				"label":"Freeleech",
+				"desc":"No cuenta tráfico de descarga"
+			}
+		},
+		"actions":{
+			"upload":"Subir",
+			"uploading":"Subiendo…",
+			"reset":"Restablecer",
+			"panelTitle":"Para habilitar el botón de subida, completa:",
+			"notePrivate":"Recuerda: el .torrent debe estar marcado como privado y contener tu passkey en la URL de announce.",
+			"reasons":{
+				"missingTorrent":"Selecciona un archivo .torrent.",
+				"missingName":"Introduce un nombre para el torrent.",
+				"missingDescription":"Añade una descripción (mínimo 10 caracteres).",
+				"missingCategory":"Selecciona una categoría.",
+				"missingSource":"Selecciona un source.",
+				"missingTags":"Añade al menos una etiqueta."
+			}
+		},
+		"toasts":{
+			"missingTorrent":"Selecciona un archivo .torrent",
+			"success":"Torrent subido correctamente",
+			"error":"Error al subir el torrent"
+		},
+		"tips":{
+			"title":"Consejos",
+			"items":[
+				"Asegúrate de que el archivo .torrent es válido y corresponde al contenido.",
+				"Proporciona una descripción clara y concisa.",
+				"Elige la categoría y el source más adecuados.",
+				"Usa etiquetas relevantes para mejorar el descubrimiento."
+			]
+		}
+	},
+	"torrentDetail":{
+		"header":{
+			"pendingApproval":"Pendiente de aprobación",
+			"notFound":"No encontrado",
+			"rejected":"Rechazado",
+			"viewRejectionReason":"Ver motivo del rechazo"
+		},
+		"fields":{
+			"commentsTitle":"Comentarios",
+			"size":"Tamaño",
+			"seeders":"Seeders",
+			"leechers":"Leechers",
+			"completed":"Completados",
+			"category":"Categoría",
+			"tags":"Tags",
+			"noTags":"Sin tags",
+			"noDescription":"Sin descripción"
+		},
+		"fileList":{
+			"title":"Archivos",
+			"search":"Buscar archivos...",
+			"noResults":"No se encontraron resultados",
+			"noFiles":"Sin archivos",
+			"summary":"Total: {{files}} archivos, {{totalSize}}"
+		},
+		"actions":{
+			"title":"Acciones",
+			"torrent":"Torrent",
+			"magnet":"Magnet",
+			"magnetGenerating":"Generando…",
+			"addBookmark":"Añadir a Marcadores",
+			"removeBookmark":"Quitar de Marcadores",
+			"like":"Me gusta",
+			"dislike":"No me gusta",
+			"copyLink":"Copiar enlace",
+			"copied":"Enlace copiado",
+			"copyError":"No se pudo copiar el enlace",
+			"bookmarkAdded":"Añadido a marcadores",
+			"bookmarkRemoved":"Eliminado de marcadores",
+			"bookmarkError":"Operación de marcador fallida",
+			"downloadError":"No se pudo descargar el torrent",
+			"loadError":"No se pudo cargar el torrent",
+			"disabled":"Las acciones están desactivadas hasta que el torrent sea aprobado."
+		},
+		"comments":{
+			"disabled":"Los comentarios están desactivados hasta que el torrent sea aprobado.",
+			"empty":"No hay comentarios",
+			"created":"Comentario agregado",
+			"createError":"No se pudo crear el comentario",
+			"replied":"Respuesta publicada",
+			"replyError":"No se pudo responder",
+			"loginRequired":"Inicia sesión para comentar",
+			"reply":"Responder",
+			"send":"Enviar",
+			"cancel":"Cancelar",
+			"newCommentTitle":"Nuevo comentario",
+			"placeholder":"Escribe tu comentario...",
+			"sending":"Enviando…",
+			"addComment":"Añadir comentario",
+			"page":"Página",
+			"of":"de"
+		},
+		"nfo":{
+			"title":"Archivo NFO"
+		},
+		"modals":{
+			"rejectionInfo":{
+				"title":"Información del Rechazo",
+				"reason":"Motivo del rechazo:",
+				"rejectedBy":"Rechazado por:",
+				"rejectedAt":"Fecha de rechazo:",
+				"noReason":"No se especificó motivo",
+				"unknown":"Desconocido",
+				"close":"Cerrar"
+			}
+		},
+		"uploader":{
+			"title":"Subido por",
+			"uploaded":"Subido",
+			"downloaded":"Descargado",
+			"ratio":"Ratio",
+			"anonymous":"Anónimo"
+		}
+	},
+	"common":{
+		"loading":"Cargando...",
+		"submitting":"Enviando formulario...",
+		"formReady":"Formulario listo",
+		"users":"Usuarios",
+		"torrents":"Torrents",
+		"downloads":"Descargas",
+		"uploaded":"Subido",
+		"downloadStarted":"Descarga iniciada"
+	}
 }
