@@ -2,22 +2,32 @@ import { Suspense } from 'react';
 import { headers } from 'next/headers';
 import DashboardWrapper from '../dashboard/components/DashboardWrapper';
 import { serverT, getPreferredLanguage } from '../lib/server-i18n';
+import BookmarksClient from './components/BookmarksClient';
 
+// Loading skeleton component
 function BookmarksSkeleton() {
   return (
     <div className="space-y-6">
-      <div className="space-y-4">
+      {/* Header skeleton */}
+      <div className="animate-pulse">
+        <div className="h-8 bg-background rounded w-1/3 mb-2"></div>
+        <div className="h-4 bg-background rounded w-1/2"></div>
+      </div>
+      
+      {/* Filters skeleton */}
+      <div className="animate-pulse">
+        <div className="h-10 bg-background rounded w-full"></div>
+      </div>
+      
+      {/* Bookmarks grid skeleton */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[...Array(6)].map((_, i) => (
-          <div key={i} className="bg-surface rounded-lg border border-border p-6 animate-pulse">
-            <div className="flex items-start justify-between mb-4">
-              <div className="h-6 w-3/4 bg-text-secondary rounded"></div>
-              <div className="h-6 w-16 bg-text-secondary rounded"></div>
-            </div>
-            <div className="h-4 w-full bg-text-secondary rounded mb-2"></div>
-            <div className="h-4 w-2/3 bg-text-secondary rounded mb-4"></div>
-            <div className="flex items-center justify-between">
-              <div className="h-3 w-32 bg-text-secondary rounded"></div>
-              <div className="h-3 w-24 bg-text-secondary rounded"></div>
+          <div key={i} className="animate-pulse">
+            <div className="bg-background rounded-lg p-6">
+              <div className="h-6 bg-background rounded w-3/4 mb-3"></div>
+              <div className="h-4 bg-background rounded w-full mb-2"></div>
+              <div className="h-4 bg-background rounded w-2/3 mb-4"></div>
+              <div className="h-4 bg-background rounded w-1/2"></div>
             </div>
           </div>
         ))}
@@ -27,31 +37,24 @@ function BookmarksSkeleton() {
 }
 
 export default async function BookmarksPage() {
-  // Get headers for language detection
   const headersList = await headers();
   const language = await getPreferredLanguage(headersList);
 
-  // Server-side translations
   const translations = {
     title: serverT('sidebar.nav.bookmarks', language),
-    description: 'Gestiona tus marcadores y contenido guardado para acceso rápido.',
+    description: serverT('bookmarks.description', language),
   };
 
   return (
     <DashboardWrapper>
       <div className="max-w-7xl mx-auto px-4">
-        {/* Page Header */}
         <div className="mb-8 mt-6">
           <h1 className="text-3xl font-bold text-text">{translations.title}</h1>
           <p className="text-text-secondary mt-2">{translations.description}</p>
         </div>
 
         <Suspense fallback={<BookmarksSkeleton />}>
-          <div className="text-center py-8">
-            <div className="text-text-secondary">
-              Contenido de marcadores en desarrollo...
-            </div>
-          </div>
+          <BookmarksClient />
         </Suspense>
       </div>
     </DashboardWrapper>

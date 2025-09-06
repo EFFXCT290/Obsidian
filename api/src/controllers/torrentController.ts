@@ -1085,7 +1085,23 @@ export async function deleteTorrentHandler(request: FastifyRequest, reply: Fasti
   try {
     console.log('[deleteTorrentHandler] Attempting to delete torrent...');
     
-    // Delete torrent (this will cascade to related records)
+    // First, delete all related records to avoid foreign key constraint violations
+    console.log('[deleteTorrentHandler] Deleting related bookmarks...');
+    await prisma.bookmark.deleteMany({
+      where: { torrentId: id }
+    });
+    
+    console.log('[deleteTorrentHandler] Deleting related votes...');
+    await prisma.torrentVote.deleteMany({
+      where: { torrentId: id }
+    });
+    
+    console.log('[deleteTorrentHandler] Deleting related comments...');
+    await prisma.comment.deleteMany({
+      where: { torrentId: id }
+    });
+    
+    // Delete torrent (this will cascade to other related records)
     await prisma.torrent.delete({
       where: { id }
     });

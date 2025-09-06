@@ -13,7 +13,7 @@ export async function listBookmarksHandler(request: FastifyRequest, reply: Fasti
       skip,
       take: Number(limit),
       orderBy: { createdAt: 'desc' },
-      include: { torrent: { select: { id: true, name: true, description: true, size: true, createdAt: true } } }
+      include: { torrent: { select: { id: true, name: true, description: true, size: true, createdAt: true, posterUrl: true } } }
     }),
     prisma.bookmark.count({ where: { userId: user.id } })
   ]);
