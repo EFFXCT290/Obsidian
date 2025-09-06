@@ -104,6 +104,12 @@ export async function hideWikiPageHandler(request: FastifyRequest, reply: Fastif
 export async function listAllWikiPagesHandler(request: FastifyRequest, reply: FastifyReply) {
   const user = (request as any).user;
   if (!isAdminOrOwner(user)) return reply.status(403).send({ error: 'Forbidden' });
-  const pages = await prisma.wikiPage.findMany({ orderBy: { createdAt: 'desc' } });
+  const pages = await prisma.wikiPage.findMany({ 
+    orderBy: { createdAt: 'desc' },
+    include: { 
+      createdBy: { select: { id: true, username: true, role: true } },
+      updatedBy: { select: { id: true, username: true, role: true } }
+    }
+  });
   return reply.send(pages);
 } 
