@@ -12,6 +12,7 @@ import { uploadAvatarHandler, deleteAvatarHandler, disableSelfHandler } from '..
 import { getCommentThreadHandler } from '../controllers/commentController.js';
 import { listUserInvitesHandler, createInviteHandler, cancelInviteHandler, getInviteByCodePublicHandler } from '../controllers/user/inviteController.js';
 import { getPreferencesHandler, updatePreferencesHandler } from '../controllers/user/userPreferenceController.js';
+import { getPopularTagsHandler, searchTorrentsByTagHandler, searchTorrentsByTextHandler } from '../controllers/user/tagController.js';
 
 export async function registerUserRoutes(app: FastifyInstance) {
   app.get('/notifications', { preHandler: requireAuth }, getUserNotificationsHandler); //DONE
@@ -48,4 +49,7 @@ export async function registerUserRoutes(app: FastifyInstance) {
   app.get('/invite/:code', getInviteByCodePublicHandler);
   app.get('/user/preferences', { preHandler: requireAuth }, getPreferencesHandler);
   app.put('/user/preferences', { preHandler: requireAuth }, updatePreferencesHandler);
+  app.get('/tags/popular', getPopularTagsHandler); // Get popular tags with usage counts
+  app.get('/tags/:tag/torrents', searchTorrentsByTagHandler); // Search torrents by tag
+  app.get('/search', searchTorrentsByTextHandler); // Search torrents by text query
 } 

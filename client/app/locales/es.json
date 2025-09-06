@@ -55,6 +55,86 @@
     "error": "Error cargando el anuncio",
     "description": "Mantente informado con los últimos anuncios y notificaciones del sitio."
   },
+  "categories": {
+    "title": "Categorías",
+    "description": "Explora las diferentes categorías de contenido disponibles.",
+    "popularTags": "Tags Populares",
+    "browseCategories": "Explorar Categorías",
+    "latestTorrents": "Últimos Torrents",
+    "viewAll": "Ver Todo",
+    "searchPlaceholder": "Buscar categorías...",
+    "noTorrents": "No hay torrents disponibles",
+    "seeders": "Seeders",
+    "leechers": "Leechers",
+    "completed": "Completados",
+    "uploaded": "Subido",
+    "by": "por",
+    "size": "Tamaño",
+    "loading": "Cargando categorías..."
+  },
+  "categoryTorrents": {
+    "title": "Torrents de Categoría",
+    "description": "Explora todos los torrents disponibles en esta categoría.",
+    "breadcrumbHome": "Inicio",
+    "breadcrumbCategories": "Categorías",
+    "noTorrents": "No hay torrents disponibles en esta categoría.",
+    "loading": "Cargando torrents...",
+    "filters": {
+      "allSources": "Todas las fuentes",
+      "sortBy": "Ordenar por",
+      "newest": "Más recientes",
+      "oldest": "Más antiguos",
+      "mostSeeded": "Más seeders",
+      "leastSeeded": "Menos seeders",
+      "largest": "Más grandes",
+      "smallest": "Más pequeños"
+    },
+    "torrent": {
+      "seeders": "Seeders",
+      "leechers": "Leechers",
+      "completed": "Completados",
+      "uploaded": "Subido",
+      "by": "por",
+      "size": "Tamaño",
+      "download": "Descargar"
+    },
+    "pagination": {
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "page": "Página",
+      "of": "de"
+    }
+  },
+  "search": {
+    "title": "Búsqueda",
+    "description": "Busca torrents por nombre, tag o categoría.",
+    "noResults": "No se encontraron resultados.",
+    "loading": "Buscando...",
+    "filters": {
+      "sortBy": "Ordenar por",
+      "newest": "Más recientes",
+      "oldest": "Más antiguos",
+      "mostSeeded": "Más seeders",
+      "leastSeeded": "Menos seeders",
+      "largest": "Más grandes",
+      "smallest": "Más pequeños"
+    },
+    "torrent": {
+      "seeders": "Seeders",
+      "leechers": "Leechers",
+      "completed": "Completados",
+      "uploaded": "Subido",
+      "by": "por",
+      "size": "Tamaño",
+      "download": "Descargar"
+    },
+    "pagination": {
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "page": "Página",
+      "of": "de"
+    }
+  },
   "header": {
     "search": { "placeholder": "Buscar..." },
     "upload": "Subir",

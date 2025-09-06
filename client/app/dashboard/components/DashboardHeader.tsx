@@ -29,12 +29,12 @@ export default function DashboardHeader({ brandingName = 'Obsidian Tracker', lan
             <UserStatsBar />
           </Suspense>
 
-          <form className="hidden md:block">
+          <form className="hidden md:block" action="/search" method="GET">
             <input
               type="text"
+              name="q"
               placeholder={translations.searchPlaceholder}
               className="w-64 px-4 py-2 bg-background border border-border rounded-lg text-text placeholder-text-secondary focus:outline-none focus:border-primary transition-colors"
-              disabled
             />
           </form>
 

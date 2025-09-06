@@ -55,6 +55,86 @@
     "error": "Error loading announcement",
     "description": "Stay informed with the latest site announcements and notifications."
   },
+  "categories": {
+    "title": "Categories",
+    "description": "Explore the different content categories available.",
+    "popularTags": "Popular Tags",
+    "browseCategories": "Browse Categories",
+    "latestTorrents": "Latest Torrents",
+    "viewAll": "View All",
+    "searchPlaceholder": "Search categories...",
+    "noTorrents": "No torrents available",
+    "seeders": "Seeders",
+    "leechers": "Leechers",
+    "completed": "Completed",
+    "uploaded": "Uploaded",
+    "by": "by",
+    "size": "Size",
+    "loading": "Loading categories..."
+  },
+  "categoryTorrents": {
+    "title": "Category Torrents",
+    "description": "Explore all torrents available in this category.",
+    "breadcrumbHome": "Home",
+    "breadcrumbCategories": "Categories",
+    "noTorrents": "No torrents available in this category.",
+    "loading": "Loading torrents...",
+    "filters": {
+      "allSources": "All sources",
+      "sortBy": "Sort by",
+      "newest": "Newest",
+      "oldest": "Oldest",
+      "mostSeeded": "Most seeded",
+      "leastSeeded": "Least seeded",
+      "largest": "Largest",
+      "smallest": "Smallest"
+    },
+    "torrent": {
+      "seeders": "Seeders",
+      "leechers": "Leechers",
+      "completed": "Completed",
+      "uploaded": "Uploaded",
+      "by": "by",
+      "size": "Size",
+      "download": "Download"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page",
+      "of": "of"
+    }
+  },
+  "search": {
+    "title": "Search",
+    "description": "Search torrents by name, tag or category.",
+    "noResults": "No results found.",
+    "loading": "Searching...",
+    "filters": {
+      "sortBy": "Sort by",
+      "newest": "Newest",
+      "oldest": "Oldest",
+      "mostSeeded": "Most seeded",
+      "leastSeeded": "Least seeded",
+      "largest": "Largest",
+      "smallest": "Smallest"
+    },
+    "torrent": {
+      "seeders": "Seeders",
+      "leechers": "Leechers",
+      "completed": "Completed",
+      "uploaded": "Uploaded",
+      "by": "by",
+      "size": "Size",
+      "download": "Download"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page",
+      "of": "of"
+    }
+  },
   "header": {
     "search": { "placeholder": "Search..." },
     "upload": "Upload",
