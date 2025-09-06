@@ -17,8 +17,17 @@ import { fileURLToPath } from 'url';
 
 const app = Fastify({ 
   logger: {
-    level: 'error' // Only log errors, not all requests
+    level: 'info' // Log all requests to debug
   }
+});
+
+// Add global request logging
+app.addHook('onRequest', async (request, reply) => {
+  console.log(`[GLOBAL] ${request.method} ${request.url}`, {
+    headers: request.headers,
+    params: request.params,
+    query: request.query
+  });
 });
 
 // Register CORS with dynamic origin from .env, with sensible local defaults

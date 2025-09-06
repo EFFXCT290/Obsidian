@@ -551,25 +551,38 @@ export async function approveTorrentHandler(request: FastifyRequest, reply: Fast
   const { id } = request.params as any;
   const torrent = await prisma.torrent.findUnique({ where: { id } });
   if (!torrent) return reply.status(404).send({ error: 'Torrent not found' });
-  const updated = await prisma.torrent.update({ where: { id }, data: { isApproved: true } });
-  // Notify uploader
-  if (torrent.uploaderId) {
-    const uploader = await prisma.user.findUnique({ where: { id: torrent.uploaderId } });
-    if (uploader) {
-      const { text, html } = getTorrentApprovedEmail({ username: uploader.username, torrentName: torrent.name });
-      await createNotification({
-        userId: uploader.id,
-        type: 'torrent_approved',
-        message: `Your torrent "${torrent.name}" has been approved.`,
-        sendEmail: true,
-        email: uploader.email,
-        emailSubject: 'Your torrent has been approved',
-        emailText: text,
-        emailHtml: html
-      });
+  
+  try {
+    const updated = await prisma.torrent.update({ where: { id }, data: { isApproved: true } });
+    
+    // Notify uploader (don't fail the approval if notification fails)
+    if (torrent.uploaderId) {
+      try {
+        const uploader = await prisma.user.findUnique({ where: { id: torrent.uploaderId } });
+        if (uploader) {
+          const { text, html } = getTorrentApprovedEmail({ username: uploader.username, torrentName: torrent.name });
+          await createNotification({
+            userId: uploader.id,
+            type: 'torrent_approved',
+            message: `Your torrent "${torrent.name}" has been approved.`,
+            sendEmail: true,
+            email: uploader.email,
+            emailSubject: 'Your torrent has been approved',
+            emailText: text,
+            emailHtml: html
+          });
+        }
+      } catch (notificationError) {
+        console.error('[approveTorrentHandler] Error creating notification (non-fatal):', notificationError);
+        // Continue with the approval even if notification fails
+      }
     }
+    
+    return reply.send({ success: true, torrent: convertBigInts(updated) });
+  } catch (error) {
+    console.error('[approveTorrentHandler] Error:', error);
+    return reply.status(500).send({ error: 'Failed to approve torrent' });
   }
-  return reply.send({ success: true, torrent: convertBigInts(updated) });
 }
 
 export async function rejectTorrentHandler(request: FastifyRequest, reply: FastifyReply) {
@@ -620,23 +633,28 @@ export async function rejectTorrentHandler(request: FastifyRequest, reply: Fasti
     WHERE id = ${id}
   `;
   
-  // Notify uploader
+  // Notify uploader (don't fail the rejection if notification fails)
   if (torrent.uploader) {
-    const { text, html } = getTorrentRejectedEmail({ 
-      username: torrent.uploader.username, 
-      torrentName: torrent.name 
-    });
-    
-    await createNotification({
-      userId: torrent.uploader.id,
-      type: 'torrent_rejected',
-      message: `Your torrent "${torrent.name}" has been rejected.${reason ? ` Reason: ${reason}` : ''}`,
-      sendEmail: true,
-      email: torrent.uploader.email,
-      emailSubject: 'Your torrent has been rejected',
-      emailText: text,
-      emailHtml: html
-    });
+    try {
+      const { text, html } = getTorrentRejectedEmail({ 
+        username: torrent.uploader.username, 
+        torrentName: torrent.name 
+      });
+      
+      await createNotification({
+        userId: torrent.uploader.id,
+        type: 'torrent_rejected',
+        message: `Your torrent "${torrent.name}" has been rejected.${reason ? ` Reason: ${reason}` : ''}`,
+        sendEmail: true,
+        email: torrent.uploader.email,
+        emailSubject: 'Your torrent has been rejected',
+        emailText: text,
+        emailHtml: html
+      });
+    } catch (notificationError) {
+      console.error('[rejectTorrentHandler] Error creating notification (non-fatal):', notificationError);
+      // Continue with the rejection even if notification fails
+    }
   }
   
   return reply.send({ success: true });
@@ -1005,17 +1023,28 @@ export async function editTorrentHandler(request: FastifyRequest, reply: Fastify
 }
 
 export async function deleteTorrentHandler(request: FastifyRequest, reply: FastifyReply) {
+  console.log('[deleteTorrentHandler] Start - Request received:', {
+    params: request.params,
+    headers: request.headers,
+    user: (request as any).user
+  });
+  
   const user = (request as any).user;
-  if (!user) return reply.status(401).send({ error: 'Unauthorized' });
+  if (!user) {
+    console.log('[deleteTorrentHandler] Unauthorized - no user');
+    return reply.status(401).send({ error: 'Unauthorized' });
+  }
   
   // Check if user is admin
   if (!['ADMIN', 'OWNER', 'FOUNDER'].includes(user.role)) {
+    console.log('[deleteTorrentHandler] Forbidden - user role:', user.role);
     return reply.status(403).send({ error: 'Forbidden: Admin access required' });
   }
   
   const { id } = request.params as any;
+  console.log('[deleteTorrentHandler] Processing deletion for torrent ID:', id);
   
-  // Check if torrent exists and is approved
+  // Check if torrent exists
   const existingTorrent = await prisma.torrent.findUnique({
     where: { id },
     include: { 
@@ -1026,32 +1055,57 @@ export async function deleteTorrentHandler(request: FastifyRequest, reply: Fasti
     }
   });
   
+  console.log('[deleteTorrentHandler] Torrent lookup result:', existingTorrent ? {
+    id: existingTorrent.id,
+    name: existingTorrent.name,
+    isApproved: existingTorrent.isApproved,
+    isRejected: existingTorrent.isRejected
+  } : 'Not found');
+  
   if (!existingTorrent) {
+    console.log('[deleteTorrentHandler] Torrent not found - returning 404');
     return reply.status(404).send({ error: 'Torrent not found' });
   }
   
-  if (!existingTorrent.isApproved) {
-    return reply.status(400).send({ error: 'Can only delete approved torrents' });
-  }
-  
   try {
+    console.log('[deleteTorrentHandler] Attempting to delete torrent...');
+    
     // Delete torrent (this will cascade to related records)
     await prisma.torrent.delete({
       where: { id }
     });
     
-    // Create notification for uploader
-    await createNotification({
-      userId: existingTorrent.uploaderId,
-      type: 'TORRENT_DELETED',
-      message: `Your torrent "${existingTorrent.name}" has been deleted by an administrator.`,
-      adminId: user.id
-    });
+    console.log('[deleteTorrentHandler] Torrent deleted successfully');
     
-    return reply.send({
+    // Create notification for uploader (don't fail the deletion if notification fails)
+    let notificationSent = false;
+    let notificationError = null;
+    
+    try {
+      console.log('[deleteTorrentHandler] Creating notification...');
+      await createNotification({
+        userId: existingTorrent.uploaderId,
+        type: 'TORRENT_DELETED',
+        message: `Your torrent "${existingTorrent.name}" has been deleted by an administrator.`,
+        adminId: user.id
+      });
+      notificationSent = true;
+      console.log('[deleteTorrentHandler] Notification created successfully');
+    } catch (error) {
+      console.error('[deleteTorrentHandler] Error creating notification (non-fatal):', error);
+      notificationError = error instanceof Error ? error.message : 'Unknown notification error';
+      // Continue with the deletion even if notification fails
+    }
+    
+    const response = {
       success: true,
-      message: 'Torrent deleted successfully'
-    });
+      message: 'Torrent deleted successfully',
+      notificationSent,
+      ...(notificationError && { notificationError })
+    };
+    
+    console.log('[deleteTorrentHandler] Sending success response:', response);
+    return reply.send(response);
   } catch (error) {
     console.error('[deleteTorrentHandler] Error:', error);
     return reply.status(500).send({ error: 'Failed to delete torrent' });

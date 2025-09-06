@@ -380,6 +380,7 @@
         "notifications": {
           "updated": "Torrent updated successfully",
           "deleted": "Torrent deleted successfully",
+          "deletedNoEmail": "Torrent deleted successfully, but notification email could not be sent",
           "error": "An error occurred while managing torrents"
         }
       },

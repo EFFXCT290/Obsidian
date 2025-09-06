@@ -135,10 +135,15 @@ export default function TorrentManagementClient() {
   const handleDeleteTorrent = async (torrentId: string) => {
     try {
       const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
-      const headers: HeadersInit = { 'Content-Type': 'application/json' };
+      const headers: HeadersInit = {}; // No Content-Type for DELETE without body
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
-      const response = await fetch(`${API_BASE_URL}/admin/torrent/${torrentId}`, {
+      const url = `${API_BASE_URL}/admin/torrent/${torrentId}`;
+      console.log('[handleDeleteTorrent] Making request to:', url);
+      console.log('[handleDeleteTorrent] Headers:', headers);
+      console.log('[handleDeleteTorrent] Token exists:', !!token);
+
+      const response = await fetch(url, {
         method: 'DELETE',
         headers
       });
@@ -148,7 +153,19 @@ export default function TorrentManagementClient() {
         throw new Error(errorData.error || 'Failed to delete torrent');
       }
 
-      showNotification(t('admin.torrentManagement.notifications.deleted'), 'success');
+      const data = await response.json();
+      
+      // Show success notification
+      if (data.notificationSent) {
+        showNotification(t('admin.torrentManagement.notifications.deleted'), 'success');
+      } else {
+        // Show success with warning about notification
+        showNotification(
+          t('admin.torrentManagement.notifications.deletedNoEmail'), 
+          'warning'
+        );
+      }
+      
       setDeletingTorrent(null);
       fetchTorrents();
     } catch (error) {
