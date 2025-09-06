@@ -16,21 +16,27 @@ export async function createWikiPageHandler(request: FastifyRequest, reply: Fast
   const page = await prisma.wikiPage.create({
     data: { slug, title, content, parentId, visible: visible !== false, locked: !!locked, createdById: user.id, updatedById: user.id }
   });
-  // Notify all users (including admins and owner)
-  const users = await prisma.user.findMany({ where: { status: 'ACTIVE' }, select: { id: true, username: true, email: true } });
-  await Promise.all(users.map(u => {
-    const { text, html } = getWikiCreatedEmail({ username: u.username, title });
-    return createNotification({
-      userId: u.id,
-      type: 'wiki_created',
-      message: `New wiki page created: "${title}"`,
-      sendEmail: true,
-      email: u.email,
-      emailSubject: `New wiki page: ${title}`,
-      emailText: text,
-      emailHtml: html
-    });
-  }));
+  // Notify all users (including admins and owner) - non-blocking
+  try {
+    const users = await prisma.user.findMany({ where: { status: 'ACTIVE' }, select: { id: true, username: true, email: true } });
+    await Promise.all(users.map(u => {
+      const { text, html } = getWikiCreatedEmail({ username: u.username, title });
+      return createNotification({
+        userId: u.id,
+        type: 'wiki_created',
+        message: `New wiki page created: "${title}"`,
+        sendEmail: true,
+        email: u.email,
+        emailSubject: `New wiki page: ${title}`,
+        emailText: text,
+        emailHtml: html
+      });
+    }));
+  } catch (notificationError) {
+    console.error('Error sending wiki creation notifications:', notificationError);
+    // Don't fail the main operation if notifications fail
+  }
+  
   return reply.status(201).send(page);
 }
 
@@ -43,21 +49,27 @@ export async function updateWikiPageHandler(request: FastifyRequest, reply: Fast
     where: { id },
     data: { title, content, parentId, visible, locked, updatedById: user.id }
   });
-  // Notify all users (including admins and owner)
-  const users = await prisma.user.findMany({ where: { status: 'ACTIVE' }, select: { id: true, username: true, email: true } });
-  await Promise.all(users.map(u => {
-    const { text, html } = getWikiUpdatedEmail({ username: u.username, title });
-    return createNotification({
-      userId: u.id,
-      type: 'wiki_updated',
-      message: `Wiki page updated: "${title}"`,
-      sendEmail: true,
-      email: u.email,
-      emailSubject: `Wiki page updated: ${title}`,
-      emailText: text,
-      emailHtml: html
-    });
-  }));
+  // Notify all users (including admins and owner) - non-blocking
+  try {
+    const users = await prisma.user.findMany({ where: { status: 'ACTIVE' }, select: { id: true, username: true, email: true } });
+    await Promise.all(users.map(u => {
+      const { text, html } = getWikiUpdatedEmail({ username: u.username, title });
+      return createNotification({
+        userId: u.id,
+        type: 'wiki_updated',
+        message: `Wiki page updated: "${title}"`,
+        sendEmail: true,
+        email: u.email,
+        emailSubject: `Wiki page updated: ${title}`,
+        emailText: text,
+        emailHtml: html
+      });
+    }));
+  } catch (notificationError) {
+    console.error('Error sending wiki update notifications:', notificationError);
+    // Don't fail the main operation if notifications fail
+  }
+  
   return reply.send(updated);
 }
 
