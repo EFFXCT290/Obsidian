@@ -120,7 +120,7 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
   let torrentBuffer = null, torrentFileMeta = null;
   let nfoBuffer = null, nfoFileMeta = null;
   let posterBuffer = null, posterFileMeta = null;
-  let name, description, categoryId, posterUrlField;
+  let name, description, categoryId, posterUrlField, tagsField;
 
   for await (const part of parts) {
     console.log('[uploadTorrentHandler] Received part:', part.fieldname, part.type);
@@ -142,10 +142,11 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
       if (part.fieldname === 'description') description = part.value;
       if (part.fieldname === 'categoryId') categoryId = String(part.value);
       if (part.fieldname === 'posterUrl') posterUrlField = part.value;
-        // Ignore unsupported 'tags' field for now
+      if (part.fieldname === 'tags') tagsField = part.value;
     }
   }
   console.log('[uploadTorrentHandler] Finished reading all parts');
+  console.log('[uploadTorrentHandler] Form data:', { name, description, categoryId, tagsField });
 
   if (!torrentBuffer) {
     console.log('[uploadTorrentHandler] .torrent file is required');
@@ -263,7 +264,21 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
 
   // Create DB record
   const isApproved = !(await requireTorrentApproval()) ? true : false;
-  // Parse tags (currently not persisted to DB due to schema constraints)
+  
+  // Parse tags from form data
+  let tags: string[] = [];
+  if (tagsField) {
+    try {
+      const parsedTags = JSON.parse(String(tagsField));
+      if (Array.isArray(parsedTags)) {
+        tags = parsedTags.filter(tag => typeof tag === 'string' && tag.trim().length > 0);
+        console.log('[uploadTorrentHandler] Parsed tags:', tags);
+      }
+    } catch (error) {
+      console.log('[uploadTorrentHandler] Error parsing tags:', error);
+      // Continue with empty tags array if parsing fails
+    }
+  }
 
   const torrent = await prisma.torrent.create({
     data: {
@@ -278,7 +293,7 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
       categoryId: category.id,
       posterFileId: posterFileUploaded ? posterFileUploaded.id : undefined,
       posterUrl: posterUrl || null,
-      tags: []
+      tags: tags
     }
   });
   console.log('[uploadTorrentHandler] Torrent created:', torrent.id);
