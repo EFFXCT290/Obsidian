@@ -1063,6 +1063,69 @@
       "preferences": "Preferences",
       "recent": "Recent Activity"
     },
+    "tabs": {
+      "overview": "Overview",
+      "activity": "Recent Activity"
+    },
+    "activity": {
+      "comingSoon": "Recent Activity Coming Soon",
+      "description": "Your recent activities will appear here",
+      "items": "activities",
+      "empty": "No recent activities",
+      "emptyDescription": "Your activities will appear here when you perform actions on the site",
+      "showing": "Showing",
+      "to": "to",
+      "of": "of",
+      "activities": "activities",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "activities": {
+      "torrent_uploaded": {
+        "title": "You uploaded \"{{torrentName}}\"",
+        "subtitle": "Category: Torrent"
+      },
+      "torrent_downloaded": {
+        "title": "You downloaded \"{{torrentName}}\"",
+        "subtitle": "Download completed"
+      },
+      "torrent_approved": {
+        "title": "Your torrent \"{{torrentName}}\" has been approved",
+        "subtitle": "Approved by administrator"
+      },
+      "bookmark_added": {
+        "title": "You bookmarked \"{{torrentName}}\"",
+        "subtitle": "Added to bookmarks"
+      },
+      "bookmark_removed": {
+        "title": "You removed \"{{torrentName}}\" from bookmarks",
+        "subtitle": "Removed from bookmarks"
+      },
+      "torrent_liked": {
+        "title": "You liked \"{{torrentName}}\"",
+        "subtitle": "👍 Like"
+      },
+      "torrent_disliked": {
+        "title": "You disliked \"{{torrentName}}\"",
+        "subtitle": "👎 Dislike"
+      },
+      "request_created": {
+        "title": "You created the request \"{{requestTitle}}\"",
+        "subtitle": "New request"
+      },
+      "request_filled": {
+        "title": "Your request \"{{requestTitle}}\" was filled",
+        "subtitle": "By: {{filledBy}}"
+      },
+      "request_filled_by_you": {
+        "title": "You filled the request \"{{requestTitle}}\"",
+        "subtitle": "With: {{torrentName}}"
+      },
+      "comment_added": {
+        "title": "You commented on \"{{entityName}}\"",
+        "subtitle": "New comment"
+      }
+    },
     "fields": {
       "username": "Username",
       "email": "Email",

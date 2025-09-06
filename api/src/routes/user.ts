@@ -8,6 +8,7 @@ import { listWikiPagesHandler, getWikiPageHandler } from '../controllers/user/wi
 import { listBookmarksHandler, addBookmarkHandler, removeBookmarkHandler, updateBookmarkNoteHandler } from '../controllers/user/bookmarkController.js';
 import { getRssTokenHandler, regenerateRssTokenHandler } from '../controllers/user/rssController.js';
 import { getActiveTorrentsHandler } from '../controllers/user/userActiveTorrentController.js';
+import { getUserActivitiesHandler } from '../controllers/user/userActivityController.js';
 import { uploadAvatarHandler, deleteAvatarHandler, disableSelfHandler } from '../controllers/authController.js';
 import { getCommentThreadHandler } from '../controllers/commentController.js';
 import { listUserInvitesHandler, createInviteHandler, cancelInviteHandler, getInviteByCodePublicHandler } from '../controllers/user/inviteController.js';
@@ -40,6 +41,7 @@ export async function registerUserRoutes(app: FastifyInstance) {
   app.get('/user/rss-token', { preHandler: requireAuth }, getRssTokenHandler); //DONE
   app.post('/user/rss-token', { preHandler: requireAuth }, regenerateRssTokenHandler); //DONE
   app.get('/user/active-torrents', { preHandler: requireAuth }, getActiveTorrentsHandler);
+  app.get('/user/activities', { preHandler: requireAuth }, getUserActivitiesHandler);
   app.post('/user/avatar', { preHandler: requireAuth }, uploadAvatarHandler);
   app.delete('/user/avatar', { preHandler: requireAuth }, deleteAvatarHandler);
   app.post('/user/disable', { preHandler: requireAuth }, disableSelfHandler);

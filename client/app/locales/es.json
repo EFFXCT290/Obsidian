@@ -975,6 +975,69 @@
       "preferences": "Preferencias",
       "recent": "Actividad reciente"
     },
+    "tabs": {
+      "overview": "Resumen",
+      "activity": "Actividad Reciente"
+    },
+    "activity": {
+      "comingSoon": "Actividad Reciente Próximamente",
+      "description": "Tus actividades recientes aparecerán aquí",
+      "items": "actividades",
+      "empty": "No hay actividades recientes",
+      "emptyDescription": "Tus actividades aparecerán aquí cuando realices acciones en el sitio",
+      "showing": "Mostrando",
+      "to": "a",
+      "of": "de",
+      "activities": "actividades",
+      "previous": "Anterior",
+      "next": "Siguiente"
+    },
+    "activities": {
+      "torrent_uploaded": {
+        "title": "Subiste \"{{torrentName}}\"",
+        "subtitle": "Categoría: Torrent"
+      },
+      "torrent_downloaded": {
+        "title": "Descargaste \"{{torrentName}}\"",
+        "subtitle": "Descarga completada"
+      },
+      "torrent_approved": {
+        "title": "Tu torrent \"{{torrentName}}\" ha sido aprobado",
+        "subtitle": "Aprobado por administrador"
+      },
+      "bookmark_added": {
+        "title": "Marcaste como favorito \"{{torrentName}}\"",
+        "subtitle": "Agregado a marcadores"
+      },
+      "bookmark_removed": {
+        "title": "Eliminaste \"{{torrentName}}\" de marcadores",
+        "subtitle": "Removido de marcadores"
+      },
+      "torrent_liked": {
+        "title": "Diste like a \"{{torrentName}}\"",
+        "subtitle": "👍 Like"
+      },
+      "torrent_disliked": {
+        "title": "Diste dislike a \"{{torrentName}}\"",
+        "subtitle": "👎 Dislike"
+      },
+      "request_created": {
+        "title": "Creaste la petición \"{{requestTitle}}\"",
+        "subtitle": "Nueva petición"
+      },
+      "request_filled": {
+        "title": "Tu petición \"{{requestTitle}}\" fue llenada",
+        "subtitle": "Por: {{filledBy}}"
+      },
+      "request_filled_by_you": {
+        "title": "Llenaste la petición \"{{requestTitle}}\"",
+        "subtitle": "Con: {{torrentName}}"
+      },
+      "comment_added": {
+        "title": "Comentaste en \"{{entityName}}\"",
+        "subtitle": "Nuevo comentario"
+      }
+    },
     "fields": {
       "username": "Usuario",
       "email": "Correo",

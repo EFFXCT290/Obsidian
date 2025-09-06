@@ -11,6 +11,7 @@ import ProfileSidebar from './ProfileSidebar';
 import ProfileStats from './ProfileStats';
 import ProfileInvitations from './ProfileInvitations';
 import ProfilePreferences from './ProfilePreferences';
+import ProfileTabs from './ProfileTabs';
 import RecentActivity from './RecentActivity';
 
 export default function ProfileContent() {
@@ -178,20 +179,21 @@ export default function ProfileContent() {
             setPreviewUrl={setPreviewUrl}
             loading={!user}
           />
-          <div className="md:col-span-2 space-y-6">
-            <ProfileStats 
-              announceUrl={announceUrl} 
-              rssUrl={rssUrl}
-              scrapeUrl={scrapeUrl}
-              profile={profile} 
-              onCopyAnnounceUrl={handleCopyAnnounceUrl} 
-              onCopyRssUrl={handleCopyRssUrl}
-              onCopyScrapeUrl={handleCopyScrapeUrl}
-              loading={!user} 
-            />
-            <ProfileInvitations />
-            <ProfilePreferences />
-            <RecentActivity />
+          <div className="md:col-span-2">
+            <ProfileTabs>
+              <ProfileStats 
+                announceUrl={announceUrl} 
+                rssUrl={rssUrl}
+                scrapeUrl={scrapeUrl}
+                profile={profile} 
+                onCopyAnnounceUrl={handleCopyAnnounceUrl} 
+                onCopyRssUrl={handleCopyRssUrl}
+                onCopyScrapeUrl={handleCopyScrapeUrl}
+                loading={!user} 
+              />
+              <ProfileInvitations />
+              <ProfilePreferences />
+            </ProfileTabs>
           </div>
         </div>
       </div>

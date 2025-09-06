@@ -1,5 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { PrismaClient } from '@prisma/client';
+import { createSmartBookmarkAddedActivity, createSmartBookmarkRemovedActivity } from './userActivityController.js';
 const prisma = new PrismaClient();
 
 export async function listBookmarksHandler(request: FastifyRequest, reply: FastifyReply) {
@@ -56,12 +57,23 @@ export async function addBookmarkHandler(request: FastifyRequest, reply: Fastify
     const isUploader = torrent.uploaderId === user.id;
     if (!isStaff && !isUploader) return reply.status(403).send({ error: 'Forbidden' });
   }
+  // Check if bookmark already exists
+  const existingBookmark = await prisma.bookmark.findUnique({
+    where: { userId_torrentId: { userId: user.id, torrentId } }
+  });
+
   // Upsert bookmark
   const bookmark = await prisma.bookmark.upsert({
     where: { userId_torrentId: { userId: user.id, torrentId } },
     update: { note },
     create: { userId: user.id, torrentId, note }
   });
+
+  // Create smart activity (only for new bookmarks)
+  if (!existingBookmark) {
+    await createSmartBookmarkAddedActivity(user.id, torrentId, torrent.name);
+  }
+
   return reply.status(201).send(bookmark);
 }
 
@@ -69,7 +81,17 @@ export async function removeBookmarkHandler(request: FastifyRequest, reply: Fast
   const user = (request as any).user;
   if (!user) return reply.status(401).send({ error: 'Unauthorized' });
   const { torrentId } = request.params as any;
+  
+  // Get torrent info before deleting bookmark
+  const torrent = await prisma.torrent.findUnique({ where: { id: torrentId } });
+  
   await prisma.bookmark.deleteMany({ where: { userId: user.id, torrentId } });
+  
+  // Create smart activity
+  if (torrent) {
+    await createSmartBookmarkRemovedActivity(user.id, torrentId, torrent.name);
+  }
+  
   return reply.send({ success: true });
 }
 

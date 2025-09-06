@@ -11,6 +11,7 @@ import { getTorrentApprovedEmail, getTorrentRejectedEmail } from '../utils/email
 import path from 'path';
 import { getSeederLeecherCounts, getCompletedCount } from '../announce_features/peerList.js';
 import crypto from 'crypto';
+import { createTorrentUploadActivity, createTorrentApprovedActivity, createSmartTorrentLikedActivity, createSmartTorrentDislikedActivity } from '../controllers/user/userActivityController.js';
 
 // Torrent actions: vote and magnet
 export async function voteTorrentHandler(request: FastifyRequest, reply: FastifyReply) {
@@ -22,11 +23,32 @@ export async function voteTorrentHandler(request: FastifyRequest, reply: Fastify
   if (!torrent) return reply.status(404).send({ error: 'Torrent not found' });
   const value = type === 'up' ? 1 : type === 'down' ? -1 : 0;
   if (value === 0) return reply.status(400).send({ error: 'Invalid vote type' });
-  await (prisma as any).torrentVote.upsert({
+  
+  // Get existing vote to determine if it's a change
+  const existingVote = await prisma.torrentVote.findUnique({
+    where: { userId_torrentId: { userId: user.id, torrentId: id } }
+  });
+  
+  await prisma.torrentVote.upsert({
     where: { userId_torrentId: { userId: user.id, torrentId: id } },
     update: { value },
     create: { userId: user.id, torrentId: id, value },
   });
+  
+  // Create smart activity only if it's a new vote or a change in vote type
+  if (!existingVote || existingVote.value !== value) {
+    try {
+      if (value === 1) {
+        await createSmartTorrentLikedActivity(user.id, id, torrent.name);
+      } else if (value === -1) {
+        await createSmartTorrentDislikedActivity(user.id, id, torrent.name);
+      }
+    } catch (activityError) {
+      console.error('[voteTorrentHandler] Error creating activity (non-fatal):', activityError);
+      // Continue even if activity creation fails
+    }
+  }
+  
   return reply.send({ success: true });
 }
 
@@ -297,6 +319,9 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
     }
   });
   console.log('[uploadTorrentHandler] Torrent created:', torrent.id);
+
+  // Create activity for torrent upload
+  await createTorrentUploadActivity(user.id, torrent.id, torrent.name);
 
   console.log('[uploadTorrentHandler] End');
   return reply.status(201).send(convertBigInts({ id: torrent.id, infoHash: torrent.infoHash, name: torrent.name, posterUrl: torrent.posterUrl }));
@@ -590,6 +615,16 @@ export async function approveTorrentHandler(request: FastifyRequest, reply: Fast
       } catch (notificationError) {
         console.error('[approveTorrentHandler] Error creating notification (non-fatal):', notificationError);
         // Continue with the approval even if notification fails
+      }
+    }
+    
+    // Create activity for torrent approval (non-blocking)
+    if (torrent.uploaderId) {
+      try {
+        await createTorrentApprovedActivity(torrent.uploaderId, torrent.id, torrent.name);
+      } catch (activityError) {
+        console.error('[approveTorrentHandler] Error creating activity (non-fatal):', activityError);
+        // Continue even if activity creation fails
       }
     }
     

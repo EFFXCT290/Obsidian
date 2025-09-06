@@ -51,6 +51,7 @@ model User {
   avatarFile     UploadedFile? @relation("UserAvatarFile", fields: [avatarFileId], references: [id])
   avatarFileId   String? @unique
   avatarUrl      String?
+  activities     UserActivity[]
   comments       Comment[]
   commentVotes   CommentVote[]
   torrentVotes   TorrentVote[]
@@ -481,4 +482,21 @@ model CategorySource {
   @@index([categoryId])
   @@index([sourceId])
   @@index([categoryId, order])
+}
+
+model UserActivity {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        String   // 'torrent_uploaded', 'torrent_downloaded', 'bookmark_added', etc.
+  entityType  String?  // 'torrent', 'request', 'comment', etc.
+  entityId    String?  // ID of the related entity
+  title       String   // Main activity title
+  subtitle    String?  // Optional subtitle
+  metadata    Json?    // Additional data as JSON
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([userId, createdAt])
+  @@index([type])
 }
