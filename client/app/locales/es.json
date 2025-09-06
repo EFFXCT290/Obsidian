@@ -44,7 +44,16 @@
     "previous": "Anterior",
     "next": "Siguiente",
     "page": "Página",
-    "of": "de"
+    "of": "de",
+    "allAnnouncements": "Todos los Anuncios",
+    "createdBy": "Creado por",
+    "createdAt": "Fecha de creación",
+    "updatedAt": "Fecha de actualización",
+    "loading": "Cargando anuncios...",
+    "backToAnnouncements": "Volver a Anuncios",
+    "notFound": "Anuncio no encontrado",
+    "error": "Error cargando el anuncio",
+    "description": "Mantente informado con los últimos anuncios y notificaciones del sitio."
   },
   "header": {
     "search": { "placeholder": "Buscar..." },
@@ -481,7 +490,7 @@
         "description": "Administrar peticiones de usuarios y estado de llenado.",
         "list": "Lista de Peticiones",
         "titleField": "Título",
-        "description": "Descripción",
+        "descriptionField": "Descripción",
         "category": "Categoría",
         "status": "Estado",
         "createdBy": "Creado Por",

@@ -44,7 +44,16 @@
     "previous": "Previous",
     "next": "Next",
     "page": "Page",
-    "of": "of"
+    "of": "of",
+    "allAnnouncements": "All Announcements",
+    "createdBy": "Created by",
+    "createdAt": "Created at",
+    "updatedAt": "Updated at",
+    "loading": "Loading announcements...",
+    "backToAnnouncements": "Back to Announcements",
+    "notFound": "Announcement not found",
+    "error": "Error loading announcement",
+    "description": "Stay informed with the latest site announcements and notifications."
   },
   "header": {
     "search": { "placeholder": "Search..." },
@@ -481,7 +490,7 @@
         "description": "Manage user requests and fill status.",
         "list": "Requests List",
         "titleField": "Title",
-        "description": "Description",
+        "descriptionField": "Description",
         "category": "Category",
         "status": "Status",
         "createdBy": "Created By",
