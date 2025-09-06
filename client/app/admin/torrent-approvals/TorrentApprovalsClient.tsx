@@ -119,7 +119,7 @@ export default function TorrentApprovalsClient() {
     try {
       setProcessingTorrent(torrentId);
       const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
-      const headers: HeadersInit = { 'Content-Type': 'application/json' };
+      const headers: HeadersInit = {};
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
       const response = await fetch(`${API_BASE_URL}/admin/torrent/${torrentId}/approve`, {

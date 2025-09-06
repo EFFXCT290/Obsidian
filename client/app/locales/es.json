@@ -27,6 +27,25 @@
       "bookmarks": "Marcadores"
     }
   },
+  "dashboard": {
+    "latestTorrents": "Últimos Torrents",
+    "pinnedAnnouncements": "Anuncios Fijados",
+    "viewAll": "Ver Todo",
+    "noTorrents": "No hay torrents disponibles",
+    "noAnnouncements": "No hay anuncios disponibles",
+    "size": "Tamaño",
+    "uploader": "Subidor",
+    "category": "Categoría",
+    "seeders": "Seeders",
+    "leechers": "Leechers",
+    "completed": "Completados",
+    "uploaded": "Subido",
+    "by": "por",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Página",
+    "of": "de"
+  },
   "header": {
     "search": { "placeholder": "Buscar..." },
     "upload": "Subir",
