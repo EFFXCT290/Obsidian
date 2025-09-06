@@ -377,7 +377,8 @@
         "errorPinning": "Error fijando anuncio",
         "errorUnpinning": "Error desfijando anuncio",
         "errorShowing": "Error mostrando anuncio",
-        "errorHiding": "Error ocultando anuncio"
+        "errorHiding": "Error ocultando anuncio",
+        "sendEmail": "Enviar por email"
       },
       "wiki": {
         "title": "Gestión de Wiki",

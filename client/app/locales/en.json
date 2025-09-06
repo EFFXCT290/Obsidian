@@ -377,7 +377,8 @@
         "errorPinning": "Error pinning announcement",
         "errorUnpinning": "Error unpinning announcement",
         "errorShowing": "Error showing announcement",
-        "errorHiding": "Error hiding announcement"
+        "errorHiding": "Error hiding announcement",
+        "sendEmail": "Send by email"
       },
       "wiki": {
         "title": "Wiki Management",

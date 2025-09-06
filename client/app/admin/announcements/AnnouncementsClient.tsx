@@ -25,6 +25,7 @@ interface AnnouncementFormData {
   body: string;
   pinned: boolean;
   visible: boolean;
+  sendEmail: boolean;
 }
 
 interface AnnouncementsClientProps {
@@ -219,7 +220,8 @@ export default function AnnouncementsClient({ translations }: AnnouncementsClien
     title: '',
     body: '',
     pinned: false,
-    visible: true
+    visible: true,
+    sendEmail: true
   });
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deletingAnnouncement, setDeletingAnnouncement] = useState<Announcement | null>(null);
@@ -298,7 +300,8 @@ export default function AnnouncementsClient({ translations }: AnnouncementsClien
       title: announcement.title,
       body: announcement.body,
       pinned: announcement.pinned,
-      visible: announcement.visible
+      visible: announcement.visible,
+      sendEmail: false // Al editar, no enviar email por defecto
     });
     setShowForm(true);
   };
@@ -432,7 +435,8 @@ export default function AnnouncementsClient({ translations }: AnnouncementsClien
       title: '',
       body: '',
       pinned: false,
-      visible: true
+      visible: true,
+      sendEmail: true
     });
     setEditingAnnouncement(null);
     setShowForm(false);
@@ -505,6 +509,16 @@ export default function AnnouncementsClient({ translations }: AnnouncementsClien
                   className="rounded border-border text-primary focus:ring-primary"
                 />
                 <span className="text-sm text-text">{translations.visible}</span>
+              </label>
+              
+              <label className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={formData.sendEmail}
+                  onChange={(e) => setFormData({ ...formData, sendEmail: e.target.checked })}
+                  className="rounded border-border text-primary focus:ring-primary"
+                />
+                <span className="text-sm text-text">{translations.sendEmail || 'Enviar por email'}</span>
               </label>
             </div>
             

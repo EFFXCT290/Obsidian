@@ -11,12 +11,13 @@ function isAdminOrOwner(user: any) {
 export async function createAnnouncementHandler(request: FastifyRequest, reply: FastifyReply) {
   const user = (request as any).user;
   if (!isAdminOrOwner(user)) return reply.status(403).send({ error: 'Forbidden' });
-  const { title, body, pinned, visible } = request.body as any;
+  const { title, body, pinned, visible, sendEmail } = request.body as any;
   if (!title || !body) return reply.status(400).send({ error: 'Title and body are required' });
   const announcement = await prisma.announcement.create({
     data: { title, body, pinned: !!pinned, visible: visible !== false, createdById: user.id }
   });
-  // Notify all users (including admins and owner)
+  
+  // Notify all users (including admins and owner) - only send emails if sendEmail is true
   const users = await prisma.user.findMany({ where: { status: 'ACTIVE' }, select: { id: true, username: true, email: true } });
   await Promise.all(users.map(u => {
     const { text, html } = getAnnouncementEmail({ username: u.username, title, body });
@@ -24,7 +25,7 @@ export async function createAnnouncementHandler(request: FastifyRequest, reply: 
       userId: u.id,
       type: 'announcement',
       message: `New announcement: "${title}"`,
-      sendEmail: true,
+      sendEmail: !!sendEmail, // Only send email if sendEmail is explicitly true
       email: u.email,
       emailSubject: `New announcement: ${title}`,
       emailText: text,
