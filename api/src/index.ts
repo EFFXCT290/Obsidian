@@ -13,7 +13,6 @@ import { registerConfigRoutes } from './routes/config.js';
 import { registerFileRoutes } from './routes/files.js';
 import { checkHitAndRunGracePeriod } from './announce_features/hitAndRun.js';
 import path from 'path';
-import { fileURLToPath } from 'url';
 
 const app = Fastify({ 
   logger: {
@@ -22,7 +21,7 @@ const app = Fastify({
 });
 
 // Add global request logging
-app.addHook('onRequest', async (request, reply) => {
+app.addHook('onRequest', async (request, _reply) => {
   console.log(`[GLOBAL] ${request.method} ${request.url}`, {
     headers: request.headers,
     params: request.params,
@@ -40,7 +39,7 @@ await app.register(cors, {
   credentials: true
 });
 
-app.get('/health', async (request, reply) => {
+app.get('/health', async (_request, _reply) => {
   return { status: 'ok' };
 });
 

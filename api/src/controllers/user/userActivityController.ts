@@ -57,7 +57,7 @@ export async function createUserActivityHandler(
         entityId,
         title,
         subtitle,
-        metadata: metadata ? JSON.stringify(metadata) : null
+        metadata: metadata ? JSON.stringify(metadata) : undefined
       }
     });
     return activity;

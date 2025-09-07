@@ -323,14 +323,14 @@ export async function getCategorySourcesHandler(request: FastifyRequest, reply: 
     });
 
     // Compute inherited only if inheritSources is true and the category has a parent
-    let inherited: { id: string; name: string; isActive: boolean; order: number }[] = [];
+    const inherited: { id: string; name: string; isActive: boolean; order: number }[] = [];
     if (category.inheritSources && category.parentId) {
       const ownIds = new Set(ownLinks.map((l) => l.sourceId));
       // Traverse ancestor chain
       let currentParentId: string | null = category.parentId;
       const seen = new Set<string>();
       while (currentParentId) {
-        const parent = await prisma.category.findUnique({ where: { id: currentParentId } });
+        const parent: any = await prisma.category.findUnique({ where: { id: currentParentId } });
         if (!parent) break;
         // Parent own sources in order
         const parentLinks = await prisma.categorySource.findMany({
@@ -388,7 +388,7 @@ export async function addCategorySourceHandler(request: FastifyRequest, reply: F
     if (category.inheritSources && category.parentId) {
       let currentParentId: string | null = category.parentId;
       while (currentParentId) {
-        const parent = await prisma.category.findUnique({ where: { id: currentParentId } });
+        const parent: any = await prisma.category.findUnique({ where: { id: currentParentId } });
         if (!parent) break;
         const parentLink = await prisma.categorySource.findFirst({
           where: { categoryId: currentParentId, source: { name: sourceName } },

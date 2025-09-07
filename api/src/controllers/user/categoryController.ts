@@ -106,7 +106,7 @@ export async function getCategorySourcesPublicHandler(request: FastifyRequest, r
       let currentParentId: string | null = category.parentId;
       const seen = new Set<string>();
       while (currentParentId) {
-        const parent = await prisma.category.findUnique({ where: { id: currentParentId } });
+        const parent: any = await prisma.category.findUnique({ where: { id: currentParentId } });
         if (!parent) break;
         const parentLinks = await prisma.categorySource.findMany({
           where: { categoryId: currentParentId },
