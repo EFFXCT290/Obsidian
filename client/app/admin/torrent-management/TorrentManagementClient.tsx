@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { showNotification } from '@/app/utils/notifications';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { Show, Edit, Trash, Search, Filter, InfoCircle } from '@styled-icons/boxicons-regular';
+import { Edit, Trash, Search } from '@styled-icons/boxicons-regular';
 import { API_BASE_URL } from '@/lib/api';
 import { useI18n } from '@/app/hooks/useI18n';
 

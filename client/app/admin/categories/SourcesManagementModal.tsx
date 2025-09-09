@@ -86,7 +86,7 @@ export default function SourcesManagementModal({ categoryId, categoryName, open,
       try { sortableRef.current?.destroy(); } catch {}
       sortableRef.current = null;
     };
-  }, [open, ownSources]);
+  }, [open, ownSources, categoryId, headers]);
 
   const addSource = async () => {
     if (!newSourceName.trim()) return;

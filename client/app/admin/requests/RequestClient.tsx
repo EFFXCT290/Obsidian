@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Show, X, Check, Search, Filter, LeftArrow, Message, XCircle } from '@styled-icons/boxicons-regular';
+import { Show, X, Search, LeftArrow, XCircle } from '@styled-icons/boxicons-regular';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '@/lib/api';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Pin, Calendar, User } from '@styled-icons/boxicons-regular';
 import { API_BASE_URL } from '@/lib/api';

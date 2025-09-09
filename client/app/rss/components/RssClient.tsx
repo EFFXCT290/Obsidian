@@ -6,7 +6,7 @@ import { toast } from 'react-hot-toast';
 import { Copy, Refresh, LinkExternal, InfoSquare, Rss, Bookmark, Search, Tag } from '@styled-icons/boxicons-regular';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-const FRONTEND_URL = process.env.NEXT_PUBLIC_FRONTEND_URL || 'http://localhost:3000';
+// const FRONTEND_URL = process.env.NEXT_PUBLIC_FRONTEND_URL || 'http://localhost:3000';
 
 interface RssTokenResponse {
   rssToken: string;

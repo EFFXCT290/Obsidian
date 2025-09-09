@@ -3,6 +3,7 @@
 
 import { useI18n } from '@/app/hooks/useI18n';
 import { API_BASE_URL } from '@/lib/api';
+import Image from 'next/image';
 
 
 interface ProfileSidebarProps {
@@ -38,7 +39,7 @@ export default function ProfileSidebar({ user, profile, previewUrl, fileInputRef
             {loading ? (
               <div className="w-full h-full bg-text-secondary/10 animate-pulse"></div>
             ) : (previewUrl || user?.avatarUrl) ? (
-              <img src={previewUrl || `${API_BASE_URL}${user?.avatarUrl}` || ''} alt="Profile avatar" className="w-full h-full object-cover" />
+              <Image src={previewUrl || `${API_BASE_URL}${user?.avatarUrl}` || ''} alt="Profile avatar" fill className="object-cover" />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-text-secondary">
                 <svg className="w-20 h-20" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" /></svg>

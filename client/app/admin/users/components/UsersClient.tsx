@@ -140,7 +140,7 @@ function UserItem({
   
 
   
-  const canPromoteToFounder = currentUserRole === 'FOUNDER';
+  // const canPromoteToFounder = currentUserRole === 'FOUNDER';
   const canPromoteToOwner = currentUserRole === 'FOUNDER';
   const canPromoteToAdmin = currentUserRole === 'OWNER' || currentUserRole === 'FOUNDER';
   const canPromoteToMod = currentUserRole === 'OWNER' || currentUserRole === 'ADMIN' || currentUserRole === 'FOUNDER';
@@ -489,11 +489,6 @@ export default function UsersClient({ translations }: UsersClientProps) {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  // Load users on initial mount and when debounced search query changes
-  useEffect(() => {
-    loadUsers();
-  }, [debouncedSearchQuery]);
-
   const loadUsers = useCallback(async (isSearch = false) => {
     try {
       if (isSearch) {
@@ -529,6 +524,11 @@ export default function UsersClient({ translations }: UsersClientProps) {
       }
     }
   }, [debouncedSearchQuery, translations.errorLoading]);
+
+  // Load users on initial mount and when debounced search query changes
+  useEffect(() => {
+    loadUsers();
+  }, [debouncedSearchQuery, loadUsers]);
 
   const loadCurrentUserRole = useCallback(async () => {
     try {

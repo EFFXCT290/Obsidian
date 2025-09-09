@@ -68,14 +68,14 @@ export default function CategoriesClient({ translations }: CategoriesClientProps
   const [searchQuery, setSearchQuery] = useState('');
 
   // Format bytes to human readable format
-  const formatBytes = (bytes: string): string => {
-    const numBytes = parseInt(bytes);
-    if (numBytes === 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
-    const i = Math.floor(Math.log(numBytes) / Math.log(k));
-    return parseFloat((numBytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
-  };
+  // const formatBytes = (bytes: string): string => {
+  //   const numBytes = parseInt(bytes);
+  //   if (numBytes === 0) return '0 B';
+  //   const k = 1024;
+  //   const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+  //   const i = Math.floor(Math.log(numBytes) / Math.log(k));
+  //   return parseFloat((numBytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  // };
 
   // Format date to relative time
   const formatRelativeTime = (dateString: string): string => {

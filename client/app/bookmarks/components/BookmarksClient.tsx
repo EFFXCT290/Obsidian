@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useI18n } from '../../hooks/useI18n';
 import { toast } from 'react-hot-toast';
 import Image from 'next/image';
-import { Search, Filter, Edit, Trash, Show, Calendar, Tag, User } from '@styled-icons/boxicons-regular';
+import { Search, Edit, Trash, Show, Calendar, Tag } from '@styled-icons/boxicons-regular';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 

@@ -8,6 +8,7 @@ import { ArrowBack } from '@styled-icons/boxicons-regular/ArrowBack';
 import { User as UserIcon } from '@styled-icons/boxicons-regular/User';
 import { LogOutCircle } from '@styled-icons/boxicons-regular/LogOutCircle';
 import { API_BASE_URL } from '@/lib/api';
+import Image from 'next/image';
 
 interface AdminUserMenuProps {
   translations: {
@@ -98,7 +99,7 @@ export default function AdminUserMenu({ translations }: AdminUserMenuProps) {
       <button onClick={() => setOpen(!open)} className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-surface-light transition-colors">
         {user?.avatarUrl ? (
           <div className="relative w-8 h-8 rounded-full overflow-hidden">
-            <img src={`${API_BASE_URL}${user.avatarUrl}`} alt="User avatar" className="w-full h-full object-cover" />
+            <Image src={`${API_BASE_URL}${user.avatarUrl}`} alt="User avatar" fill className="object-cover" />
           </div>
         ) : (
           <span className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-background text-sm font-medium">

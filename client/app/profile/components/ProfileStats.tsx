@@ -23,7 +23,7 @@ interface ProfileStatsProps {
   loading?: boolean;
 }
 
-export default function ProfileStats({ announceUrl, rssUrl, scrapeUrl, profile, onCopyAnnounceUrl, onCopyRssUrl, onCopyScrapeUrl, loading = false }: ProfileStatsProps) {
+export default function ProfileStats({ announceUrl, rssUrl, scrapeUrl, profile, onCopyAnnounceUrl, onCopyRssUrl, onCopyScrapeUrl, loading: _loading = false }: ProfileStatsProps) {
   const { t } = useI18n();
 
   // Function to mask sensitive parts of URLs

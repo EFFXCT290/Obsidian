@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import { X, Tag } from '@styled-icons/boxicons-regular';
+// import { useRouter } from 'next/navigation';
+import { X } from '@styled-icons/boxicons-regular';
 import { useI18n } from '@/app/hooks/useI18n';
 import { API_BASE_URL } from '@/lib/api';
 import toast from 'react-hot-toast';
@@ -21,7 +21,7 @@ interface RequestFormClientProps {
 
 export default function RequestFormClient({ onClose, onSuccess }: RequestFormClientProps) {
   const { t } = useI18n();
-  const router = useRouter();
+  // const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [formData, setFormData] = useState({

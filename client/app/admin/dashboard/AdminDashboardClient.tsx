@@ -14,7 +14,7 @@ interface OverviewStats {
   leeching?: number;
 }
 
-export default function AdminDashboardClient({ language }: { language?: string }) {
+export default function AdminDashboardClient({ }: { language?: string }) {
   const [role, setRole] = useState<string | null>(null);
   const [stats, setStats] = useState<OverviewStats | null>(null);
   const [loading, setLoading] = useState(true);

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Plus, Edit, Trash, Search, Filter } from '@styled-icons/boxicons-regular';
+import { Plus, Trash, Search } from '@styled-icons/boxicons-regular';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '@/lib/api';
 

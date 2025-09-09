@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { ArrowToLeft, Pin, Calendar, User } from '@styled-icons/boxicons-regular';
 import { API_BASE_URL } from '@/lib/api';
@@ -40,18 +40,18 @@ export default function AnnouncementDetailClient({ announcementId, translations 
   const [error, setError] = useState<string | null>(null);
 
   // Format date to relative time
-  const formatRelativeTime = (dateString: string): string => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-    
-    if (diffInSeconds < 60) return 'Just now';
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
-    if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}d ago`;
-    
-    return date.toLocaleDateString();
-  };
+  // const formatRelativeTime = (dateString: string): string => {
+  //   const date = new Date(dateString);
+  //   const now = new Date();
+  //   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  //   
+  //   if (diffInSeconds < 60) return 'Just now';
+  //   if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+  //   if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+  //   if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}d ago`;
+  //   
+  //   return date.toLocaleDateString();
+  // };
 
   // Format date to full format
   const formatFullDate = (dateString: string): string => {
@@ -66,7 +66,7 @@ export default function AnnouncementDetailClient({ announcementId, translations 
   };
 
   // Fetch announcement details
-  const fetchAnnouncement = async () => {
+  const fetchAnnouncement = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -90,11 +90,11 @@ export default function AnnouncementDetailClient({ announcementId, translations 
     } finally {
       setLoading(false);
     }
-  };
+  }, [announcementId, translations.notFound, translations.error]);
 
   useEffect(() => {
     fetchAnnouncement();
-  }, [announcementId]);
+  }, [announcementId, fetchAnnouncement]);
 
   if (loading) {
     return (

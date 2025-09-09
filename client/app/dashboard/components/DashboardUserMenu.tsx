@@ -9,6 +9,7 @@ import { Lock } from '@styled-icons/boxicons-regular/Lock';
 import { LogOutCircle } from '@styled-icons/boxicons-regular/LogOutCircle';
 
 import { API_BASE_URL } from '@/lib/api';
+import Image from 'next/image';
 
 interface DashboardUserMenuProps {
   translations: {
@@ -103,7 +104,7 @@ export default function DashboardUserMenu({ translations }: DashboardUserMenuPro
       >
         {user?.avatarUrl ? (
           <div className="relative w-8 h-8 rounded-full overflow-hidden">
-            <img src={`${API_BASE_URL}${user.avatarUrl}`} alt="User avatar" className="w-full h-full object-cover" />
+            <Image src={`${API_BASE_URL}${user.avatarUrl}`} alt="User avatar" fill className="object-cover" />
           </div>
         ) : (
           <span className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-background text-sm font-medium">

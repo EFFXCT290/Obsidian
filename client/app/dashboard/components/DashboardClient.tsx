@@ -79,7 +79,7 @@ export default function DashboardClient({ translations }: DashboardClientProps) 
   const [torrents, setTorrents] = useState<Torrent[]>([]);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [torrentsPage, setTorrentsPage] = useState(1);
-  const [announcementsPage, setAnnouncementsPage] = useState(1);
+  const [announcementsPage, _setAnnouncementsPage] = useState(1);
   const [torrentsTotal, setTorrentsTotal] = useState(0);
   const [announcementsTotal, setAnnouncementsTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -151,7 +151,7 @@ export default function DashboardClient({ translations }: DashboardClientProps) 
   }, [torrentsPage, announcementsPage]);
 
   const torrentsTotalPages = Math.ceil(torrentsTotal / torrentsLimit);
-  const announcementsTotalPages = Math.ceil(announcementsTotal / announcementsLimit);
+  // const announcementsTotalPages = Math.ceil(announcementsTotal / announcementsLimit);
 
   if (loading) {
     return (

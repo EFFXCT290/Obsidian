@@ -64,13 +64,13 @@ export default function ProfileContent() {
       try { localStorage.setItem('user', JSON.stringify({ id: currentUser.id, email: currentUser.email, username: currentUser.username })); } catch {}
       const uploaded = Number(currentUser.upload || 0);
       const downloaded = Number(currentUser.download || 0);
-      const formatBytes = (bytes: number) => {
-        if (!bytes) return '0 B';
-        const k = 1024;
-        const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
-      };
+      // const formatBytes = (bytes: number) => {
+      //   if (!bytes) return '0 B';
+      //   const k = 1024;
+      //   const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+      //   const i = Math.floor(Math.log(bytes) / Math.log(k));
+      //   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
+      // };
       setProfile({
         id: currentUser.id,
         username: currentUser.username,

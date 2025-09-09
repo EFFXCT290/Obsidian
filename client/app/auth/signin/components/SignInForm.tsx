@@ -23,7 +23,7 @@ interface SignInFormProps {
 interface FormData { login: string; password: string; }
 interface FormErrors { login?: string; password?: string; general?: string; }
 
-export default function SignInForm({ registrationMode, language = 'es', serverTranslations }: SignInFormProps) {
+export default function SignInForm({ registrationMode, language: _language = 'es', serverTranslations }: SignInFormProps) {
   const { t } = useI18n();
   const router = useRouter();
 

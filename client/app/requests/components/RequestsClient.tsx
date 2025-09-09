@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useI18n } from '@/app/hooks/useI18n';
+// import { useI18n } from '@/app/hooks/useI18n';
 import RequestListClient from './RequestListClient';
 import RequestFormClient from './RequestFormClient';
 import RequestDetailClient from './RequestDetailClient';
@@ -32,7 +32,7 @@ interface Request {
 }
 
 export default function RequestsClient() {
-  const { t } = useI18n();
+  // const { t } = useI18n();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<Request | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
