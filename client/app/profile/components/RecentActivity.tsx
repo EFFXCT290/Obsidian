@@ -12,7 +12,7 @@ interface ActivityItem {
   entityId?: string;
   title: string;
   subtitle?: string;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
   createdAt: string;
 }
 
@@ -114,7 +114,7 @@ export default function RecentActivity() {
     }
   };
 
-  const translateActivityText = (text: string, metadata?: any) => {
+  const translateActivityText = (text: string, metadata?: Record<string, unknown>) => {
     // If the text is a translation key (starts with 'activities.')
     if (text.startsWith('activities.')) {
       let translatedText = t(text, text); // Fallback to original text if translation not found
@@ -236,7 +236,7 @@ export default function RecentActivity() {
         if (typeof metadata === 'string') {
           try {
             parsedMetadata = JSON.parse(metadata);
-          } catch (e) {
+          } catch {
             parsedMetadata = {};
           }
         }
@@ -256,7 +256,7 @@ export default function RecentActivity() {
     return text;
   };
 
-  const renderActivityTextWithLinks = (text: string, metadata?: any) => {
+  const renderActivityTextWithLinks = (text: string, metadata?: Record<string, unknown>) => {
     const translatedText = translateActivityText(text, metadata);
     
     // Parse metadata if it's a string
@@ -264,7 +264,7 @@ export default function RecentActivity() {
     if (metadata && typeof metadata === 'string') {
       try {
         parsedMetadata = JSON.parse(metadata);
-      } catch (e) {
+      } catch {
         parsedMetadata = {};
       }
     }
