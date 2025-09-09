@@ -77,6 +77,7 @@ export default async function AdminUsersPage() {
       MOD: serverT('admin.users.roles.MOD', language),
       ADMIN: serverT('admin.users.roles.ADMIN', language),
       OWNER: serverT('admin.users.roles.OWNER', language),
+      FOUNDER: serverT('admin.users.roles.FOUNDER', language),
     },
     statuses: {
       ACTIVE: serverT('admin.users.statuses.ACTIVE', language),
