@@ -83,6 +83,8 @@ export default async function AdminUsersPage() {
       BANNED: serverT('admin.users.statuses.BANNED', language),
       DISABLED: serverT('admin.users.statuses.DISABLED', language),
     },
+    transferFounder: serverT('admin.users.transferFounder', language),
+    founderRoleWarning: serverT('admin.users.founderRoleWarning', language),
   };
 
   return (
