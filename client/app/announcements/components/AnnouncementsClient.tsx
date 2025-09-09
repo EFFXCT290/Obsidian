@@ -226,7 +226,7 @@ export default function AnnouncementsClient({ translations }: AnnouncementsClien
             {totalPages > 1 && (
               <div className="flex items-center justify-between mt-6 pt-4 border-t border-border">
                 <div className="text-sm text-text-secondary">
-                  {translations.page} {currentPage} {translations.of} {totalPages}
+                  {translations.page} {currentPage} {translations.of} {totalPages} ({total} announcements)
                 </div>
                 <div className="flex items-center space-x-2">
                   <button

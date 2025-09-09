@@ -211,8 +211,7 @@ export default function ProfileContent() {
                 profile={profile} 
                 onCopyAnnounceUrl={handleCopyAnnounceUrl} 
                 onCopyRssUrl={handleCopyRssUrl}
-                onCopyScrapeUrl={handleCopyScrapeUrl}
-                loading={!user} 
+                onCopyScrapeUrl={handleCopyScrapeUrl} 
               />
               <ProfileInvitations />
               <ProfilePreferences />

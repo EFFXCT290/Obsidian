@@ -79,9 +79,7 @@ export default function DashboardClient({ translations }: DashboardClientProps) 
   const [torrents, setTorrents] = useState<Torrent[]>([]);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [torrentsPage, setTorrentsPage] = useState(1);
-  const [announcementsPage, _setAnnouncementsPage] = useState(1);
   const [torrentsTotal, setTorrentsTotal] = useState(0);
-  const [announcementsTotal, setAnnouncementsTotal] = useState(0);
   const [loading, setLoading] = useState(true);
 
   const torrentsLimit = 2; // Show 2 torrents per page for dashboard
@@ -124,13 +122,12 @@ export default function DashboardClient({ translations }: DashboardClientProps) 
   };
 
   // Fetch pinned announcements
-  const fetchAnnouncements = async (page: number) => {
+  const fetchAnnouncements = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/announcements?page=${page}&limit=${announcementsLimit}&pinned=true&visible=true`);
+      const response = await fetch(`${API_BASE_URL}/announcements?page=1&limit=${announcementsLimit}&pinned=true&visible=true`);
       if (response.ok) {
         const data: AnnouncementsResponse = await response.json();
         setAnnouncements(data.announcements);
-        setAnnouncementsTotal(data.total);
       }
     } catch (error) {
       console.error('Failed to fetch announcements:', error);
@@ -143,15 +140,14 @@ export default function DashboardClient({ translations }: DashboardClientProps) 
       setLoading(true);
       await Promise.all([
         fetchTorrents(torrentsPage),
-        fetchAnnouncements(announcementsPage)
+        fetchAnnouncements()
       ]);
       setLoading(false);
     };
     loadData();
-  }, [torrentsPage, announcementsPage]);
+  }, [torrentsPage]);
 
   const torrentsTotalPages = Math.ceil(torrentsTotal / torrentsLimit);
-  // const announcementsTotalPages = Math.ceil(announcementsTotal / announcementsLimit);
 
   if (loading) {
     return (
