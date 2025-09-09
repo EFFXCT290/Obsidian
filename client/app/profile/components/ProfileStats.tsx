@@ -6,7 +6,17 @@ interface ProfileStatsProps {
   announceUrl: string;
   rssUrl: string;
   scrapeUrl: string;
-  profile: any;
+  profile: {
+    id: string;
+    username?: string;
+    email: string;
+    avatarUrl?: string;
+    joinDate: string;
+    uploaded: number;
+    downloaded: number;
+    ratio: number;
+    bonusPoints: number;
+  };
   onCopyAnnounceUrl: () => void;
   onCopyRssUrl: () => void;
   onCopyScrapeUrl: () => void;
