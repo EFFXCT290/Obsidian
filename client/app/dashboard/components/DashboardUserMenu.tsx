@@ -38,7 +38,7 @@ export default function DashboardUserMenu({ translations }: DashboardUserMenuPro
     let cancelled = false;
     (async () => {
       try {
-        let headers: Record<string, string> = {};
+        const headers: Record<string, string> = {};
         try {
           const token = localStorage.getItem('authToken');
           if (token) headers['Authorization'] = `Bearer ${token}`;
