@@ -47,7 +47,20 @@ export default function ActionsPanel({ torrentId, isBookmarked, onBookmark, onDo
       const magnetData = await magnetRes.json();
       if (!magnetRes.ok || !magnetData?.magnetLink) throw new Error(t('torrentDetail.actions.magnetError','No se pudo generar magnet'));
       
-      window.location.href = magnetData.magnetLink;
+      // Log magnet link for debugging
+      console.log('Generated magnet link:', magnetData.magnetLink);
+      
+      // Try magnet link first, with fallback to torrent file
+      try {
+        window.location.href = magnetData.magnetLink;
+      } catch (magnetError) {
+        console.warn('Magnet link failed, trying torrent file fallback:', magnetError);
+        if (magnetData.torrentFileUrl) {
+          window.location.href = magnetData.torrentFileUrl;
+        } else {
+          throw magnetError;
+        }
+      }
     } catch {
       showNotification(t('torrentDetail.actions.magnetError','No se pudo generar el enlace magnet'), 'error');
     } finally {

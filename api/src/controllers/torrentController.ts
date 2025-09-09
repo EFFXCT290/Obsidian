@@ -1058,9 +1058,65 @@ export async function generateMagnetWithTokenHandler(request: FastifyRequest, re
   const baseUrl = process.env.API_BASE_URL || 'http://localhost:3001';
   const tracker = `${baseUrl}/announce?passkey=${magnetToken.user.passkey}`;
   const nameParam = encodeURIComponent(magnetToken.torrent.name || 'torrent');
-  const magnetLink = `magnet:?xt=urn:btih:${magnetToken.torrent.infoHash}&dn=${nameParam}&tr=${encodeURIComponent(tracker)}`;
   
-  return reply.send({ magnetLink });
+  // Try to get additional metadata from the original torrent file
+  let additionalParams = '';
+  try {
+    const config = normalizeS3Config(await getConfig());
+    const file = await prisma.uploadedFile.findUnique({ where: { id: magnetToken.torrent.filePath } });
+    if (file) {
+      const torrentBuffer = await getFile({ file, config });
+      const parsed = await parseTorrent(torrentBuffer);
+      
+      // Add file length if available
+      const parsedAny = parsed as any;
+      if (parsedAny.length) {
+        additionalParams += `&xl=${parsedAny.length}`;
+      }
+      
+      // Add additional trackers if available
+      if (parsedAny.announceList && Array.isArray(parsedAny.announceList)) {
+        const additionalTrackers = parsedAny.announceList
+          .flat()
+          .filter((url: string) => url && url !== tracker)
+          .slice(0, 5); // Limit to 5 additional trackers
+        
+        additionalTrackers.forEach((url: string) => {
+          additionalParams += `&tr=${encodeURIComponent(url)}`;
+        });
+      }
+    }
+  } catch (error) {
+    console.error('[generateMagnetWithTokenHandler] Error getting additional metadata:', error);
+    // Continue with basic magnet link if we can't get additional metadata
+  }
+  
+  // Build magnet link with proper formatting
+  // Include both v1 and v2 info hashes if available
+  let xtParam = `xt=urn:btih:${magnetToken.torrent.infoHash}`;
+  
+  // Add additional magnet link parameters for better compatibility
+  const magnetLink = `magnet:?${xtParam}&dn=${nameParam}&tr=${encodeURIComponent(tracker)}${additionalParams}`;
+  
+  // Log magnet link for debugging
+  console.log('[generateMagnetWithTokenHandler] Generated magnet link:', {
+    torrentId: magnetToken.torrent.id,
+    infoHash: magnetToken.torrent.infoHash,
+    name: magnetToken.torrent.name,
+    tracker,
+    additionalParams,
+    fullMagnetLink: magnetLink
+  });
+  
+  // Also provide a fallback torrent file URL in case magnet doesn't work
+  const torrentFileUrl = `${baseUrl}/torrent/${magnetToken.torrent.id}/download-secure?token=${token}`;
+  
+  return reply.send({ 
+    magnetLink,
+    torrentFileUrl, // Fallback option
+    infoHash: magnetToken.torrent.infoHash,
+    name: magnetToken.torrent.name
+  });
 }
 
 // Torrent management endpoints for admins

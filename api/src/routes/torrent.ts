@@ -1,5 +1,6 @@
 import { FastifyInstance } from 'fastify';
 import { requireAuth } from '../middleware/authMiddleware.js';
+import { PrismaClient } from '@prisma/client';
 import { 
   uploadTorrentHandler, 
   listTorrentsHandler, 
@@ -27,12 +28,34 @@ import {
   voteCommentHandler
 } from '../controllers/commentController.js';
 
+const prisma = new PrismaClient();
+
 export async function registerTorrentRoutes(app: FastifyInstance) {
   app.post('/torrent/upload', { preHandler: requireAuth }, uploadTorrentHandler); //DONE
   app.post('/torrent/:id/download-token', { preHandler: requireAuth }, createDownloadTokenHandler);
   app.get('/torrent/:id/download-secure', downloadTorrentWithTokenHandler);
   app.post('/torrent/:id/magnet-token', { preHandler: requireAuth }, createMagnetTokenHandler);
   app.get('/torrent/:id/magnet-secure', generateMagnetWithTokenHandler);
+  // Debug endpoint to test magnet generation (remove in production)
+  app.get('/torrent/:id/magnet-debug', { preHandler: requireAuth }, async (request, reply) => {
+    const { id } = request.params as any;
+    const user = (request as any).user;
+    const torrent = await prisma.torrent.findUnique({ where: { id } });
+    if (!torrent) return reply.status(404).send({ error: 'Torrent not found' });
+    
+    const baseUrl = process.env.API_BASE_URL || 'http://localhost:3001';
+    const tracker = `${baseUrl}/announce?passkey=${user.passkey}`;
+    const nameParam = encodeURIComponent(torrent.name || 'torrent');
+    const magnetLink = `magnet:?xt=urn:btih:${torrent.infoHash}&dn=${nameParam}&tr=${encodeURIComponent(tracker)}`;
+    
+    return reply.send({ 
+      magnetLink,
+      infoHash: torrent.infoHash,
+      name: torrent.name,
+      tracker,
+      userPasskey: user.passkey
+    });
+  });
   app.get('/torrent/list', { preHandler: requireAuthIfNotOpen }, listTorrentsHandler); //DONE
   app.get('/torrent/:id', { preHandler: requireAuthIfNotOpen }, getTorrentHandler); //DONE
   app.get('/torrent/:id/nfo', { preHandler: requireAuthIfNotOpen }, getNfoHandler); //DONE
