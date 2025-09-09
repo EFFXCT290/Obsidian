@@ -36,10 +36,18 @@ export default function ActionsPanel({ torrentId, isBookmarked, onBookmark, onDo
       setGenerating(true);
       const headers: Record<string, string> = {};
       try { const token = localStorage.getItem('authToken'); if (token) headers['Authorization'] = `Bearer ${token}`; } catch {}
-      const res = await fetch(`${API_BASE_URL}/torrent/${torrentId}/magnet`, { method: 'POST', headers });
-      const data = await res.json();
-      if (!res.ok || !data?.magnetLink) throw new Error(t('torrentDetail.actions.magnetError','No se pudo generar magnet'));
-      window.location.href = data.magnetLink;
+      
+      // 1) Create magnet token
+      const tokenRes = await fetch(`${API_BASE_URL}/torrent/${torrentId}/magnet-token`, { method: 'POST', headers });
+      const tokenData = await tokenRes.json();
+      if (!tokenRes.ok || !tokenData?.magnetUrl) throw new Error(tokenData?.error || t('torrentDetail.actions.magnetError','No se pudo generar magnet'));
+      
+      // 2) Get magnet link using the token
+      const magnetRes = await fetch(tokenData.magnetUrl, { headers });
+      const magnetData = await magnetRes.json();
+      if (!magnetRes.ok || !magnetData?.magnetLink) throw new Error(t('torrentDetail.actions.magnetError','No se pudo generar magnet'));
+      
+      window.location.href = magnetData.magnetLink;
     } catch {
       showNotification(t('torrentDetail.actions.magnetError','No se pudo generar el enlace magnet'), 'error');
     } finally {
