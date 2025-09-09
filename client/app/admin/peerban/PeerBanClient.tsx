@@ -250,7 +250,13 @@ export default function PeerBanClient({ translations }: PeerBanClientProps) {
       const headers: HeadersInit = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
       
-      const requestBody: any = {
+      const requestBody: {
+        reason: string;
+        userId?: string;
+        passkey?: string;
+        peerId?: string;
+        ip?: string;
+      } = {
         reason: formData.reason
       };
 
