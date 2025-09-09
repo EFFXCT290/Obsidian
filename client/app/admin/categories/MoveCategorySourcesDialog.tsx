@@ -43,8 +43,9 @@ export default function MoveCategorySourcesDialog({ open, categoryId, categoryNa
       toast.success('Categoría movida');
       onMoved();
       onClose();
-    } catch (e: any) {
-      toast.error(e.message || 'Error moviendo categoría');
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : 'Error moviendo categoría';
+      toast.error(errorMessage);
     }
   };
 
@@ -52,7 +53,7 @@ export default function MoveCategorySourcesDialog({ open, categoryId, categoryNa
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <div className="relative bg-surface border border-border text-text rounded-lg shadow-xl w-full max-w-lg p-5">
-        <h3 className="text-base font-semibold text-text">Mover "{categoryName}"</h3>
+        <h3 className="text-base font-semibold text-text">Mover &quot;{categoryName}&quot;</h3>
         <div className="mt-3 space-y-3">
           <div className="text-sm text-text-secondary">Gestión de sources al mover:</div>
           <label className="flex items-center gap-2 text-sm text-text">
