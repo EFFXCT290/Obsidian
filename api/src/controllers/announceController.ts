@@ -45,7 +45,7 @@ export async function announceHandler(request: FastifyRequest, reply: FastifyRep
     if (info_hash.length === 40 && /^[0-9a-fA-F]+$/.test(info_hash)) {
       infoHashHex = info_hash.toLowerCase();
     } else if (info_hash.includes('%')) {
-      // Handle malformed URL-encoded info hash
+      // Handle URL-encoded info hash
       try {
         // First try proper URL decoding
         const decoded = decodeURIComponent(info_hash);
@@ -68,6 +68,10 @@ export async function announceHandler(request: FastifyRequest, reply: FastifyRep
         infoHashHex = Buffer.from(decoded, 'binary').toString('hex');
         console.log('[announceHandler] Manual decode result:', infoHashHex);
       }
+    } else if (info_hash.length === 20) {
+      // Handle raw binary info hash (20 bytes)
+      infoHashHex = Buffer.from(info_hash, 'binary').toString('hex');
+      console.log('[announceHandler] Binary info_hash converted to hex:', infoHashHex);
     } else {
       // Otherwise treat as binary and convert to hex
       infoHashHex = Buffer.from(info_hash, 'binary').toString('hex');
@@ -82,7 +86,30 @@ export async function announceHandler(request: FastifyRequest, reply: FastifyRep
   const allTorrents = await prisma.torrent.findMany({ where: { isApproved: true }, select: { infoHash: true, name: true } });
   console.log('[announceHandler] Available torrents in DB:', allTorrents.map(t => ({ infoHash: t.infoHash, name: t.name })));
   
-  const torrent = await prisma.torrent.findFirst({ where: { infoHash: infoHashHex, isApproved: true } });
+  // Check if our specific torrent exists and is approved
+  const specificTorrent = await prisma.torrent.findFirst({ 
+    where: { 
+      OR: [
+        { infoHash: infoHashHex },
+        { infoHash: infoHashHex.toLowerCase() },
+        { infoHash: infoHashHex.toUpperCase() }
+      ],
+      isApproved: true 
+    },
+    select: { infoHash: true, name: true, isApproved: true }
+  });
+  console.log('[announceHandler] Found torrent with any case:', specificTorrent);
+  
+  const torrent = await prisma.torrent.findFirst({ 
+    where: { 
+      OR: [
+        { infoHash: infoHashHex },
+        { infoHash: infoHashHex.toLowerCase() },
+        { infoHash: infoHashHex.toUpperCase() }
+      ],
+      isApproved: true 
+    }
+  });
   if (!torrent) {
     reply.header('Content-Type', 'text/plain');
     return reply.send(bencode.encode({ 'failure reason': 'Torrent not found or not approved' }));
