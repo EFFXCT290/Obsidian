@@ -12,12 +12,28 @@ import ProfileStats from './ProfileStats';
 import ProfileInvitations from './ProfileInvitations';
 import ProfilePreferences from './ProfilePreferences';
 import ProfileTabs from './ProfileTabs';
-import RecentActivity from './RecentActivity';
+// import RecentActivity from './RecentActivity';
 
 export default function ProfileContent() {
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<any>(null);
-  const [profile, setProfile] = useState<any>(null);
+  const [user, setUser] = useState<{
+    id: string;
+    email: string;
+    username?: string;
+    avatarUrl?: string;
+    upload?: number;
+    download?: number;
+    ratio?: number;
+    bonusPoints?: number;
+  } | null>(null);
+  const [profile, setProfile] = useState<{
+    stats: {
+      ratio: number;
+      uploadedFormatted: string;
+      downloadedFormatted: string;
+      points: number;
+    };
+  } | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [rssToken, setRssToken] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -42,8 +58,8 @@ export default function ProfileContent() {
     setUser(currentUser);
     if (currentUser) {
       try { localStorage.setItem('user', JSON.stringify({ id: currentUser.id, email: currentUser.email, username: currentUser.username })); } catch {}
-      const uploaded = Number((currentUser as any).upload || 0);
-      const downloaded = Number((currentUser as any).download || 0);
+      const uploaded = Number(currentUser.upload || 0);
+      const downloaded = Number(currentUser.download || 0);
       const formatBytes = (bytes: number) => {
         if (!bytes) return '0 B';
         const k = 1024;
@@ -53,10 +69,10 @@ export default function ProfileContent() {
       };
       setProfile({
         stats: {
-          ratio: (currentUser as any).ratio ?? (downloaded ? uploaded / downloaded : 0),
+          ratio: currentUser.ratio ?? (downloaded ? uploaded / downloaded : 0),
           uploadedFormatted: formatBytes(uploaded),
           downloadedFormatted: formatBytes(downloaded),
-          points: (currentUser as any).bonusPoints ?? 0,
+          points: currentUser.bonusPoints ?? 0,
         }
       });
     }
