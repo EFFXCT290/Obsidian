@@ -57,8 +57,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const hdrs = headers();
-  const serverLanguage = await getPreferredLanguage(hdrs as unknown as Headers);
+  const hdrs = await headers();
+  const serverLanguage = await getPreferredLanguage(hdrs);
   return (
     <html lang={serverLanguage} className="dark" suppressHydrationWarning>
       <body
