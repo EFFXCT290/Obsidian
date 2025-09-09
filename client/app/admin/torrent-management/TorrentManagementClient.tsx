@@ -162,7 +162,7 @@ export default function TorrentManagementClient() {
         // Show success with warning about notification
         showNotification(
           t('admin.torrentManagement.notifications.deletedNoEmail'), 
-          'warning'
+          'error'
         );
       }
       
