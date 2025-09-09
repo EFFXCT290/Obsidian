@@ -58,10 +58,15 @@ export async function generateMagnetHandler(request: FastifyRequest, reply: Fast
   const { id } = request.params as any;
   const torrent = await prisma.torrent.findUnique({ where: { id } });
   if (!torrent) return reply.status(404).send({ error: 'Torrent not found' });
+  
   const baseUrl = process.env.API_BASE_URL || 'http://localhost:3001';
   const tracker = `${baseUrl}/announce?passkey=${user.passkey}`;
   const nameParam = encodeURIComponent(torrent.name || 'torrent');
-  const magnetLink = `magnet:?xt=urn:btih:${torrent.infoHash}&dn=${nameParam}&tr=${encodeURIComponent(tracker)}`;
+  
+  // Create magnet link with both tracker and torrent file URL
+  const torrentUrl = `${baseUrl}/torrent/${torrent.id}/file`;
+  const magnetLink = `magnet:?xt=urn:btih:${torrent.infoHash}&dn=${nameParam}&tr=${encodeURIComponent(tracker)}&xs=${encodeURIComponent(torrentUrl)}`;
+  
   return reply.send({ magnetLink });
 }
 
@@ -933,6 +938,51 @@ export async function createDownloadTokenHandler(request: FastifyRequest, reply:
     expiresAt,
     token: token // Include token for debugging (remove in production)
   });
+}
+
+// Public torrent download endpoint (for magnet links)
+export async function downloadTorrentHandler(request: FastifyRequest, reply: FastifyReply) {
+  const { id } = request.params as any;
+  const torrent = await prisma.torrent.findUnique({ where: { id } });
+  
+  if (!torrent || !torrent.isApproved) {
+    return reply.status(404).send({ error: 'Torrent not found' });
+  }
+  
+  // Get torrent file
+  const config = normalizeS3Config(await getConfig());
+  const file = await prisma.uploadedFile.findUnique({ where: { id: torrent.filePath } });
+  if (!file) return reply.status(404).send({ error: 'Torrent file not found' });
+  
+  try {
+    const fileBuffer = await getFile({ file, config });
+    
+    // For public downloads, we need to modify the torrent to use a generic announce URL
+    // that will work for any user (they'll need to authenticate when they announce)
+    const baseUrl = process.env.API_BASE_URL || 'http://localhost:3001';
+    const genericAnnounce = `${baseUrl}/announce`;
+    
+    // Parse and modify the torrent
+    const parsed = await parseTorrent(fileBuffer);
+    const modifiedTorrent = {
+      ...parsed,
+      announce: genericAnnounce,
+      'announce-list': [[genericAnnounce]]
+    };
+    
+    // Re-encode the torrent
+    const modifiedBuffer = bencode.encode(modifiedTorrent);
+    
+    // Sanitize filename for HTTP header
+    const sanitizedFilename = windowsSafeFilename(torrent.name || 'download');
+    
+    reply.header('Content-Type', file.mimeType || 'application/x-bittorrent');
+    reply.header('Content-Disposition', `attachment; filename="${sanitizedFilename}.torrent"`);
+    return reply.send(modifiedBuffer);
+  } catch (err) {
+    console.error('[downloadTorrentHandler] Error:', err);
+    return reply.status(500).send({ error: 'Could not read torrent file' });
+  }
 }
 
 export async function downloadTorrentWithTokenHandler(request: FastifyRequest, reply: FastifyReply) {

@@ -7,6 +7,7 @@ import { awardBonusPoints } from '../announce_features/bonusPoints.js';
 import { updateHitAndRun } from '../announce_features/hitAndRun.js';
 import { getConfig } from '../services/configService.js';
 import { checkClientWhitelistBlacklist, checkClientFingerprint, checkGhostLeeching, checkCheatingClient, checkIpAbuse, checkAnnounceRate, checkAnnounceRateLimit, checkInvalidStats, isPeerBanned } from '../announce_features/antiCheat.js';
+import { extractRealClientIP, isCloudflareRequest, getCloudflareCountry } from '../utils/ipExtraction.js';
 
 const prisma = new PrismaClient();
 
@@ -23,9 +24,17 @@ export async function announceHandler(request: FastifyRequest, reply: FastifyRep
     console.log('[announceHandler] info_hash value:', info_hash);
   }
   
-  if (!passkey || !info_hash || !peer_id || !port) {
+  if (!info_hash || !peer_id || !port) {
     reply.header('Content-Type', 'text/plain');
     return reply.send(bencode.encode({ 'failure reason': 'Missing required parameters' }));
+  }
+  
+  // Handle case where no passkey is provided (from public torrent downloads)
+  if (!passkey) {
+    reply.header('Content-Type', 'text/plain');
+    return reply.send(bencode.encode({ 
+      'failure reason': 'Authentication required. Please download the torrent file from the website to get your personal passkey.' 
+    }));
   }
   
   // Validate user
@@ -166,12 +175,14 @@ export async function announceHandler(request: FastifyRequest, reply: FastifyRep
     return reply.send(bencode.encode({ 'failure reason': ghostLeechMsg }));
   }
   
-  // Normalize IP address (convert IPv6-mapped IPv4 to IPv4)
-  let normalizedIp = request.ip;
-  if (normalizedIp.startsWith('::ffff:')) {
-    normalizedIp = normalizedIp.substring(7); // Remove ::ffff: prefix
+  // Extract real client IP using our utility
+  const normalizedIp = extractRealClientIP(request);
+  
+  // Log additional Cloudflare info if available
+  if (isCloudflareRequest(request)) {
+    const country = getCloudflareCountry(request);
+    console.log('[announceHandler] Cloudflare request detected, country:', country);
   }
-  console.log('[announceHandler] Original IP:', request.ip, 'Normalized IP:', normalizedIp);
   
   // Update announce stats (upsert to avoid duplicate records)
   await prisma.announce.upsert({
