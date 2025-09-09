@@ -244,7 +244,7 @@ export default function RecentActivity() {
         Object.keys(parsedMetadata).forEach(key => {
           const placeholder = `{{${key}}}`;
           if (translatedText.includes(placeholder)) {
-            translatedText = translatedText.replace(new RegExp(placeholder, 'g'), parsedMetadata[key] || '');
+            translatedText = translatedText.replace(new RegExp(placeholder, 'g'), String(parsedMetadata[key] || ''));
           }
         });
       }
@@ -275,7 +275,7 @@ export default function RecentActivity() {
     
     if (torrentId && torrentName) {
       // Replace the torrent name with a link, keeping quotes outside
-      const linkPattern = new RegExp(`"${torrentName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"`, 'g');
+      const linkPattern = new RegExp(`"${String(torrentName).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"`, 'g');
       const parts = translatedText.split(linkPattern);
       
       if (parts.length > 1) {
@@ -291,7 +291,7 @@ export default function RecentActivity() {
                       href={`/torrent/${torrentId}`}
                       className="text-primary hover:text-primary/80 underline transition-colors"
                     >
-                      {torrentName}
+                      {String(torrentName)}
                     </Link>
                     &quot;
                   </>

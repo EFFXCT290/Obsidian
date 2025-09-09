@@ -25,14 +25,18 @@ export default function ProfileContent() {
     download?: number;
     ratio?: number;
     bonusPoints?: number;
+    passkey?: string;
   } | null>(null);
   const [profile, setProfile] = useState<{
-    stats: {
-      ratio: number;
-      uploadedFormatted: string;
-      downloadedFormatted: string;
-      points: number;
-    };
+    id: string;
+    username?: string;
+    email: string;
+    avatarUrl?: string;
+    joinDate: string;
+    uploaded: number;
+    downloaded: number;
+    ratio: number;
+    bonusPoints: number;
   } | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [rssToken, setRssToken] = useState<string | null>(null);
@@ -68,12 +72,15 @@ export default function ProfileContent() {
         return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
       };
       setProfile({
-        stats: {
-          ratio: currentUser.ratio ?? (downloaded ? uploaded / downloaded : 0),
-          uploadedFormatted: formatBytes(uploaded),
-          downloadedFormatted: formatBytes(downloaded),
-          points: currentUser.bonusPoints ?? 0,
-        }
+        id: currentUser.id,
+        username: currentUser.username,
+        email: currentUser.email,
+        avatarUrl: currentUser.avatarUrl,
+        joinDate: new Date().toISOString(), // This should come from the API
+        uploaded: uploaded,
+        downloaded: downloaded,
+        ratio: currentUser.ratio ?? (downloaded ? uploaded / downloaded : 0),
+        bonusPoints: currentUser.bonusPoints ?? 0,
       });
     }
     setLoading(false);

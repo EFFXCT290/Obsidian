@@ -60,7 +60,7 @@ export default function WikiPageClient({ page }: WikiPageClientProps) {
       .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-primary hover:text-primary-dark underline" target="_blank" rel="noopener noreferrer">$1</a>')
       // Lists
       .replace(/^\* (.*$)/gim, '<li class="ml-4">$1</li>')
-      .replace(/(<li class="ml-4">.*<\/li>)/s, '<ul class="list-disc list-inside my-4 space-y-1">$1</ul>')
+      .replace(/(<li class="ml-4">.*<\/li>)/g, '<ul class="list-disc list-inside my-4 space-y-1">$1</ul>')
       // Line breaks
       .replace(/\n\n/g, '</p><p class="my-4">')
       .replace(/\n/g, '<br>');

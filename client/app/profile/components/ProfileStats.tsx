@@ -16,7 +16,7 @@ interface ProfileStatsProps {
     downloaded: number;
     ratio: number;
     bonusPoints: number;
-  };
+  } | null;
   onCopyAnnounceUrl: () => void;
   onCopyRssUrl: () => void;
   onCopyScrapeUrl: () => void;
@@ -131,11 +131,11 @@ export default function ProfileStats({ announceUrl, rssUrl, scrapeUrl, profile, 
         <div className="grid grid-cols-2 gap-4">
           <div>
             <div className="text-sm text-text-secondary mb-1">{t('profile.fields.uploaded', 'Uploaded')}</div>
-            <div className="text-xl font-semibold">{profile?.stats?.uploadedFormatted ?? '0 B'}</div>
+            <div className="text-xl font-semibold">{profile?.uploaded ? `${(profile.uploaded / 1024 / 1024 / 1024).toFixed(2)} GB` : '0 B'}</div>
           </div>
           <div>
             <div className="text-sm text-text-secondary mb-1">{t('profile.fields.downloaded', 'Downloaded')}</div>
-            <div className="text-xl font-semibold">{profile?.stats?.downloadedFormatted ?? '0 B'}</div>
+            <div className="text-xl font-semibold">{profile?.downloaded ? `${(profile.downloaded / 1024 / 1024 / 1024).toFixed(2)} GB` : '0 B'}</div>
           </div>
         </div>
       </div>

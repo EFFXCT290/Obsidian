@@ -30,6 +30,7 @@ export default function SWRProvider({ children }: PropsWithChildren) {
   return (
     <SWRConfig
       value={{
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         provider: localStorageProvider as any,
         revalidateOnFocus: false,
         revalidateOnReconnect: true,

@@ -6,7 +6,7 @@ import { API_BASE_URL } from '@/lib/api';
 
 
 interface ProfileSidebarProps {
-  user?: { id: string; email: string; username?: string | null; avatarUrl?: string };
+  user?: { id: string; email: string; username?: string | null; avatarUrl?: string } | null;
   profile: {
     id: string;
     username?: string;
@@ -17,7 +17,7 @@ interface ProfileSidebarProps {
     downloaded: number;
     ratio: number;
     bonusPoints: number;
-  };
+  } | null;
   previewUrl: string | null;
   fileInputRef: React.RefObject<HTMLInputElement | null>;
   formattedJoinDate: string;
@@ -73,9 +73,9 @@ export default function ProfileSidebar({ user, profile, previewUrl, fileInputRef
               <>
                 <div className="flex justify-between"><span className="text-text-secondary">{t('profile.fields.username', 'Username')}</span><span className="font-medium">{user?.username || ''}</span></div>
                 <div className="flex justify-between"><span className="text-text-secondary">{t('profile.fields.email', 'Email')}</span><span className="font-medium">{user?.email || ''}</span></div>
-                <div className="flex justify-between"><span className="text-text-secondary">{t('profile.fields.ratio', 'Ratio')}</span><span className="font-medium">{profile?.stats?.ratio?.toFixed(2) ?? '0.00'}</span></div>
-                <div className="flex justify-between"><span className="text-text-secondary">{t('profile.fields.points', 'Points')}</span><span className="font-medium">{profile?.stats?.points ?? 0}</span></div>
-                <div className="flex justify-between"><span className="text-text-secondary">{t('profile.fields.rank', 'Rank')}</span><span className="font-medium">{profile?.stats?.rank ?? ''}</span></div>
+                <div className="flex justify-between"><span className="text-text-secondary">{t('profile.fields.ratio', 'Ratio')}</span><span className="font-medium">{profile?.ratio?.toFixed(2) ?? '0.00'}</span></div>
+                <div className="flex justify-between"><span className="text-text-secondary">{t('profile.fields.points', 'Points')}</span><span className="font-medium">{profile?.bonusPoints ?? 0}</span></div>
+                <div className="flex justify-between"><span className="text-text-secondary">{t('profile.fields.rank', 'Rank')}</span><span className="font-medium">{''}</span></div>
                 <div className="flex justify-between"><span className="text-text-secondary">{t('profile.fields.joinDate', 'Join date')}</span><span className="font-medium">{formattedJoinDate}</span></div>
               </>
             )}
