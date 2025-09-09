@@ -76,8 +76,9 @@ export default function SourcesManagementModal({ categoryId, categoryName, open,
           });
           if (!res.ok) throw new Error('No se pudo reordenar');
           toast.success('Reordenado');
-        } catch (e: any) {
-          toast.error(e.message || 'Error reordenando');
+        } catch (e: unknown) {
+          const errorMessage = e instanceof Error ? e.message : 'Error reordenando';
+          toast.error(errorMessage);
         }
       }
     });
@@ -106,8 +107,9 @@ export default function SourcesManagementModal({ categoryId, categoryName, open,
       const data = await reload.json();
       setOwnSources(data.own || []);
       setInheritedSources(data.inherited || []);
-    } catch (e: any) {
-      toast.error(e.message || 'Error agregando source');
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : 'Error agregando source';
+      toast.error(errorMessage);
     }
   };
 
@@ -123,8 +125,9 @@ export default function SourcesManagementModal({ categoryId, categoryName, open,
       const data = await reload.json();
       setOwnSources(data.own || []);
       setInheritedSources(data.inherited || []);
-    } catch (e: any) {
-      toast.error(e.message || 'Error eliminando');
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : 'Error eliminando';
+      toast.error(errorMessage);
     }
   };
 
