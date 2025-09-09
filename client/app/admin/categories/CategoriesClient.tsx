@@ -344,16 +344,16 @@ export default function CategoriesClient({ translations }: CategoriesClientProps
                       const resParent = await fetch(`${API_BASE_URL}/admin/category/${newParentId}/sources`, { headers, cache: 'no-store' });
                       if (resParent.ok) {
                         const data = await resParent.json();
-                        const names = [...(data.own || []), ...(data.inherited || [])].map((s: any) => s.name);
+                        const names = [...(data.own || []), ...(data.inherited || [])].map((s: { name: string }) => s.name);
                         inheritedPreview = Array.from(new Set(names)).slice(0, 10);
                       }
                     }
                     const resCat = await fetch(`${API_BASE_URL}/admin/category/${itemId}/sources`, { headers, cache: 'no-store' });
                     if (resCat.ok) {
                       const data = await resCat.json();
-                      ownPreview = (data.own || []).map((s: any) => s.name).slice(0, 10);
+                      ownPreview = (data.own || []).map((s: { name: string }) => s.name).slice(0, 10);
                     }
-                  } catch (e) {
+                  } catch {
                     // ignore preview errors
                   }
 
