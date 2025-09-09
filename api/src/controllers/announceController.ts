@@ -24,17 +24,9 @@ export async function announceHandler(request: FastifyRequest, reply: FastifyRep
     console.log('[announceHandler] info_hash value:', info_hash);
   }
   
-  if (!info_hash || !peer_id || !port) {
+  if (!passkey || !info_hash || !peer_id || !port) {
     reply.header('Content-Type', 'text/plain');
     return reply.send(bencode.encode({ 'failure reason': 'Missing required parameters' }));
-  }
-  
-  // Handle case where no passkey is provided (from public torrent downloads)
-  if (!passkey) {
-    reply.header('Content-Type', 'text/plain');
-    return reply.send(bencode.encode({ 
-      'failure reason': 'Authentication required. Please download the torrent file from the website to get your personal passkey.' 
-    }));
   }
   
   // Validate user

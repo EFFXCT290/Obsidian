@@ -12,7 +12,6 @@ import {
   recalculateUserStatsHandler,
   createDownloadTokenHandler,
   downloadTorrentWithTokenHandler,
-  downloadTorrentHandler,
   voteTorrentHandler,
   generateMagnetHandler,
   editTorrentHandler,
@@ -31,7 +30,6 @@ export async function registerTorrentRoutes(app: FastifyInstance) {
   app.post('/torrent/upload', { preHandler: requireAuth }, uploadTorrentHandler); //DONE
   app.post('/torrent/:id/download-token', { preHandler: requireAuth }, createDownloadTokenHandler);
   app.get('/torrent/:id/download-secure', downloadTorrentWithTokenHandler);
-  app.get('/torrent/:id/file', downloadTorrentHandler); // Public torrent file download for magnet links
   app.get('/torrent/list', { preHandler: requireAuthIfNotOpen }, listTorrentsHandler); //DONE
   app.get('/torrent/:id', { preHandler: requireAuthIfNotOpen }, getTorrentHandler); //DONE
   app.get('/torrent/:id/nfo', { preHandler: requireAuthIfNotOpen }, getNfoHandler); //DONE
