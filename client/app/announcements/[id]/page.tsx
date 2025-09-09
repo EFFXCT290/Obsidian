@@ -1,14 +1,14 @@
 import { Suspense } from 'react';
 import { headers } from 'next/headers';
-import { notFound } from 'next/navigation';
+// import { notFound } from 'next/navigation';
 import DashboardWrapper from '../../dashboard/components/DashboardWrapper';
 import AnnouncementDetailClient from './components/AnnouncementDetailClient';
 import { serverT, getPreferredLanguage } from '../../lib/server-i18n';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 function AnnouncementDetailSkeleton() {
@@ -43,6 +43,9 @@ function AnnouncementDetailSkeleton() {
 }
 
 export default async function AnnouncementDetailPage({ params }: PageProps) {
+  // Await params in Next.js 15
+  const { id } = await params;
+  
   // Get headers for language detection
   const headersList = await headers();
   const language = await getPreferredLanguage(headersList);
@@ -69,7 +72,7 @@ export default async function AnnouncementDetailPage({ params }: PageProps) {
 
         <Suspense fallback={<AnnouncementDetailSkeleton />}>
           <AnnouncementDetailClient 
-            announcementId={params.id} 
+            announcementId={id} 
             translations={translations} 
           />
         </Suspense>
