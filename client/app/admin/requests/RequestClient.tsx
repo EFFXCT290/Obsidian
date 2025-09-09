@@ -30,8 +30,17 @@ interface Request {
   };
 }
 
+interface Comment {
+  id: string;
+  content: string;
+  createdAt: string;
+  user?: {
+    username: string;
+  };
+}
+
 interface RequestDetails extends Request {
-  comments?: any[];
+  comments?: Comment[];
 }
 
 interface RequestClientProps {
@@ -528,7 +537,7 @@ export default function RequestClient({ translations }: RequestClientProps) {
           {/* Comments List */}
           {selectedRequest.comments && selectedRequest.comments.length > 0 ? (
             <div className="space-y-4">
-              {selectedRequest.comments.map((comment: any) => (
+              {selectedRequest.comments.map((comment: Comment) => (
                 <div key={comment.id} className="border-b border-border pb-4 last:border-b-0">
                   <div className="flex items-center space-x-2 mb-2">
                     <span className="font-medium text-text">{comment.user?.username || 'Unknown'}</span>
@@ -572,7 +581,7 @@ export default function RequestClient({ translations }: RequestClientProps) {
             </label>
             <select
               value={filter}
-              onChange={(e) => setFilter(e.target.value as any)}
+              onChange={(e) => setFilter(e.target.value as 'all' | 'OPEN' | 'FILLED' | 'CLOSED' | 'REJECTED')}
               className="w-full px-3 py-2 border border-border rounded-md bg-surface text-text focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="all">{translations.allRequests}</option>
@@ -731,7 +740,7 @@ function getStatusColor(status: string) {
   }
 }
 
-function getStatusText(status: string, translations: any) {
+function getStatusText(status: string, translations: { open: string; filled: string; closed: string; rejected: string }) {
   switch (status) {
     case 'OPEN': return translations.open;
     case 'FILLED': return translations.filled;
