@@ -1,6 +1,6 @@
 "use client";
 
-import { PropsWithChildren, useEffect } from 'react';
+import { PropsWithChildren } from 'react';
 import { SWRConfig } from 'swr';
 
 /**
@@ -11,7 +11,7 @@ import { SWRConfig } from 'swr';
 export default function SWRProvider({ children }: PropsWithChildren) {
   // Proveedor de caché basado en localStorage (patrón oficial SWR)
   const localStorageProvider = () => {
-    const map = new Map<string, any>(
+    const map = new Map<string, unknown>(
       JSON.parse(typeof window !== 'undefined' ? localStorage.getItem('app-swr-cache') || '[]' : '[]')
     );
     if (typeof window !== 'undefined') {
@@ -30,7 +30,7 @@ export default function SWRProvider({ children }: PropsWithChildren) {
   return (
     <SWRConfig
       value={{
-        provider: localStorageProvider as any,
+        provider: localStorageProvider,
         revalidateOnFocus: false,
         revalidateOnReconnect: true,
         dedupingInterval: 2 * 60 * 1000,
