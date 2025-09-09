@@ -21,7 +21,7 @@ export interface AdminNavItem { href: string; label: string; icon: keyof typeof 
 
 export default function AdminSidebarClient({ items }: { items: AdminNavItem[] }) {
   const pathname = usePathname();
-  const { t } = useI18n();
+  // const { t } = useI18n();
 
   return (
     <nav className="p-4">

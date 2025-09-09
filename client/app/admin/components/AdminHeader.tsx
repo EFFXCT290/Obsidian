@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+// import { Suspense } from 'react';
 import { serverT } from '@/app/lib/server-i18n';
 import Image from 'next/image';
 import AdminUserMenu from './AdminUserMenu.client';
