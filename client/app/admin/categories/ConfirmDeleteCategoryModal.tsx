@@ -53,8 +53,9 @@ export default function ConfirmDeleteCategoryModal({ open, category, onClose, on
       toast.success('Categoría eliminada');
       onDeleted();
       onClose();
-    } catch (e: any) {
-      toast.error(e.message || 'Error eliminando la categoría');
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : 'Error eliminando la categoría';
+      toast.error(errorMessage);
     } finally {
       setSubmitting(false);
     }
@@ -64,7 +65,7 @@ export default function ConfirmDeleteCategoryModal({ open, category, onClose, on
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <div className="relative bg-surface border border-border text-text rounded-lg shadow-xl w-full max-w-lg p-5">
-        <h3 className="text-base font-semibold">Eliminar "{category.name}"</h3>
+        <h3 className="text-base font-semibold">Eliminar &quot;{category.name}&quot;</h3>
         <div className="mt-3 space-y-3">
           {hasChildren ? (
             <p className="text-sm text-text-secondary">
