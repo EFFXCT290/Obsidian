@@ -34,7 +34,7 @@ export default function ActionsPanel({ torrentId, isBookmarked, onBookmark, onDo
   const handleMagnet = async () => {
     try {
       setGenerating(true);
-      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      const headers: Record<string, string> = {};
       try { const token = localStorage.getItem('authToken'); if (token) headers['Authorization'] = `Bearer ${token}`; } catch {}
       const res = await fetch(`${API_BASE_URL}/torrent/${torrentId}/magnet`, { method: 'POST', headers });
       const data = await res.json();

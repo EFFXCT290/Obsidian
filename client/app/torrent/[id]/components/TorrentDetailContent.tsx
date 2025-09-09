@@ -101,7 +101,7 @@ export default function TorrentDetailContent({ torrentId }: { torrentId: string 
 
   const handleDownload = async () => {
     try {
-      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      const headers: Record<string, string> = {};
       try {
         const token = localStorage.getItem('authToken');
         if (token) headers['Authorization'] = `Bearer ${token}`;
