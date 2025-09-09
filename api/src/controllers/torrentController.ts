@@ -52,19 +52,39 @@ export async function voteTorrentHandler(request: FastifyRequest, reply: Fastify
   return reply.send({ success: true });
 }
 
-export async function generateMagnetHandler(request: FastifyRequest, reply: FastifyReply) {
+export async function createMagnetTokenHandler(request: FastifyRequest, reply: FastifyReply) {
   const user = (request as any).user;
   if (!user) return reply.status(401).send({ error: 'Unauthorized' });
+  
   const { id } = request.params as any;
   const torrent = await prisma.torrent.findUnique({ where: { id } });
-  if (!torrent) return reply.status(404).send({ error: 'Torrent not found' });
+  if (!torrent || !torrent.isApproved) {
+    return reply.status(404).send({ error: 'Torrent not found' });
+  }
   
+  // Generate temporary magnet token (5 minutes expiry)
+  const token = crypto.randomUUID();
+  const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+  
+  // Store token in database
+  const _magnetToken = await prisma.downloadToken.create({
+    data: {
+      token,
+      userId: user.id,
+      torrentId: torrent.id,
+      expiresAt
+    }
+  });
+  
+  // Return temporary magnet URL
   const baseUrl = process.env.API_BASE_URL || 'http://localhost:3001';
-  const tracker = `${baseUrl}/announce?passkey=${user.passkey}`;
-  const nameParam = encodeURIComponent(torrent.name || 'torrent');
-  const magnetLink = `magnet:?xt=urn:btih:${torrent.infoHash}&dn=${nameParam}&tr=${encodeURIComponent(tracker)}`;
+  const magnetUrl = `${baseUrl}/torrent/${torrent.id}/magnet-secure?token=${token}`;
   
-  return reply.send({ magnetLink });
+  return reply.send({
+    magnetUrl,
+    expiresAt,
+    token: token // Include token for debugging (remove in production)
+  });
 }
 
 const prisma = new PrismaClient();
@@ -995,6 +1015,52 @@ export async function downloadTorrentWithTokenHandler(request: FastifyRequest, r
     console.error('[downloadTorrentWithTokenHandler] Error:', err);
     return reply.status(500).send({ error: 'Could not read torrent file' });
   }
+}
+
+// Secure magnet link generation with token
+export async function generateMagnetWithTokenHandler(request: FastifyRequest, reply: FastifyReply) {
+  const { id } = request.params as any;
+  const { token } = request.query as any;
+  
+  if (!token) {
+    return reply.status(400).send({ error: 'Magnet token required' });
+  }
+  
+  // Find and validate magnet token
+  const magnetToken = await prisma.downloadToken.findUnique({
+    where: { token },
+    include: { user: true, torrent: true }
+  });
+  
+  if (!magnetToken) {
+    return reply.status(401).send({ error: 'Invalid magnet token' });
+  }
+  
+  if (magnetToken.used) {
+    return reply.status(401).send({ error: 'Magnet token already used' });
+  }
+  
+  if (magnetToken.expiresAt < new Date()) {
+    return reply.status(401).send({ error: 'Magnet token expired' });
+  }
+  
+  if (magnetToken.torrentId !== id) {
+    return reply.status(400).send({ error: 'Token does not match torrent' });
+  }
+  
+  // Mark token as used
+  await prisma.downloadToken.update({
+    where: { id: magnetToken.id },
+    data: { used: true }
+  });
+  
+  // Generate magnet link with user's passkey
+  const baseUrl = process.env.API_BASE_URL || 'http://localhost:3001';
+  const tracker = `${baseUrl}/announce?passkey=${magnetToken.user.passkey}`;
+  const nameParam = encodeURIComponent(magnetToken.torrent.name || 'torrent');
+  const magnetLink = `magnet:?xt=urn:btih:${magnetToken.torrent.infoHash}&dn=${nameParam}&tr=${encodeURIComponent(tracker)}`;
+  
+  return reply.send({ magnetLink });
 }
 
 // Torrent management endpoints for admins
