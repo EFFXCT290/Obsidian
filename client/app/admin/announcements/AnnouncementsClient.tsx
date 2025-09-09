@@ -518,7 +518,7 @@ export default function AnnouncementsClient({ translations }: AnnouncementsClien
                   onChange={(e) => setFormData({ ...formData, sendEmail: e.target.checked })}
                   className="rounded border-border text-primary focus:ring-primary"
                 />
-                <span className="text-sm text-text">{translations.sendEmail || 'Enviar por email'}</span>
+                <span className="text-sm text-text">Enviar por email</span>
               </label>
             </div>
             
