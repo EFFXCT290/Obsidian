@@ -7,7 +7,17 @@ import { API_BASE_URL } from '@/lib/api';
 
 interface ProfileSidebarProps {
   user?: { id: string; email: string; username?: string | null; avatarUrl?: string };
-  profile: any;
+  profile: {
+    id: string;
+    username?: string;
+    email: string;
+    avatarUrl?: string;
+    joinDate: string;
+    uploaded: number;
+    downloaded: number;
+    ratio: number;
+    bonusPoints: number;
+  };
   previewUrl: string | null;
   fileInputRef: React.RefObject<HTMLInputElement | null>;
   formattedJoinDate: string;
