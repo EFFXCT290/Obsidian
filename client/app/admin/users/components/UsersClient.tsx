@@ -407,7 +407,7 @@ function EditUserModal({
             <select
               id="role"
               value={formData.role}
-              onChange={(e) => setFormData({ ...formData, role: e.target.value as any })}
+              onChange={(e) => setFormData({ ...formData, role: e.target.value as 'USER' | 'MOD' | 'ADMIN' | 'OWNER' })}
               className="w-full px-3 py-2 border border-border rounded-md bg-surface text-text focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               disabled={user.role === 'FOUNDER'}
             >
@@ -425,7 +425,7 @@ function EditUserModal({
             <select
               id="status"
               value={formData.status}
-              onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
+              onChange={(e) => setFormData({ ...formData, status: e.target.value as 'ACTIVE' | 'BANNED' | 'DISABLED' })}
               className="w-full px-3 py-2 border border-border rounded-md bg-surface text-text focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="ACTIVE">{translations.statuses.ACTIVE}</option>
@@ -567,7 +567,12 @@ export default function UsersClient({ translations }: UsersClientProps) {
       const emailChanged = userData.email !== editingUser.email;
 
       // Build payloads
-      const detailsPayload: any = {};
+      const detailsPayload: {
+        username?: string;
+        role?: string;
+        status?: string;
+        emailVerified?: boolean;
+      } = {};
       if (userData.username !== editingUser.username) detailsPayload.username = userData.username;
       if (userData.role !== editingUser.role) detailsPayload.role = userData.role;
       if (userData.status !== editingUser.status) detailsPayload.status = userData.status;
