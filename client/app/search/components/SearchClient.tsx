@@ -320,7 +320,7 @@ export default function SearchClient({ searchParams, translations }: SearchClien
             {searchQuery.trim() && !selectedTag && (
               <div className="flex items-center space-x-2">
                 <SearchIcon size={16} className="text-primary" />
-                <span className="text-sm font-medium text-text">Búsqueda: "{searchQuery}"</span>
+                <span className="text-sm font-medium text-text">Búsqueda: &quot;{searchQuery}&quot;</span>
               </div>
             )}
             <div className="flex items-center space-x-2">

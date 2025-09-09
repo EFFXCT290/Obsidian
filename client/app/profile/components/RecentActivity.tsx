@@ -286,14 +286,14 @@ export default function RecentActivity() {
                 {part}
                 {index < parts.length - 1 && (
                   <>
-                    "
+                    &quot;
                     <Link 
                       href={`/torrent/${torrentId}`}
                       className="text-primary hover:text-primary/80 underline transition-colors"
                     >
                       {torrentName}
                     </Link>
-                    "
+                    &quot;
                   </>
                 )}
               </span>
