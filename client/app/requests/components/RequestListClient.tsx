@@ -161,7 +161,7 @@ export default function RequestListClient({ onCreateRequest, onViewRequest }: Re
           <Filter size={20} className="text-text-secondary" />
           <select
             value={filter}
-            onChange={(e) => setFilter(e.target.value as any)}
+            onChange={(e) => setFilter(e.target.value as 'all' | 'OPEN' | 'FILLED' | 'CLOSED' | 'REJECTED')}
             className="px-3 py-2 bg-background border border-border rounded-lg text-text focus:outline-none focus:border-primary transition-colors"
           >
             <option value="all">{t('requests.allRequests', 'All Requests')}</option>
