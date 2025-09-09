@@ -30,7 +30,7 @@ export default function SWRProvider({ children }: PropsWithChildren) {
   return (
     <SWRConfig
       value={{
-        provider: localStorageProvider,
+        provider: localStorageProvider as any,
         revalidateOnFocus: false,
         revalidateOnReconnect: true,
         dedupingInterval: 2 * 60 * 1000,
