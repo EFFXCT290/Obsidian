@@ -170,8 +170,12 @@ export default function RssClient() {
               />
               <button
                 onClick={() => copyToClipboard(rssToken)}
-                className="px-3 py-2 bg-background border border-border text-text rounded-lg hover:bg-background transition-colors"
-                title={t('rss.copyToken', 'Copy token')}
+                className={`px-3 py-2 border rounded-lg transition-colors ${
+                  copied 
+                    ? 'bg-green-500/10 border-green-500 text-green-500' 
+                    : 'bg-background border-border text-text hover:bg-background'
+                }`}
+                title={copied ? t('rss.copied', 'Copied!') : t('rss.copyToken', 'Copy token')}
               >
                 <Copy size={16} />
               </button>
@@ -219,8 +223,12 @@ export default function RssClient() {
               />
               <button
                 onClick={() => copyToClipboard(buildRssUrl())}
-                className="px-3 py-2 bg-background border border-border text-text rounded-lg hover:bg-background transition-colors"
-                title={t('rss.copyUrl', 'Copy URL')}
+                className={`px-3 py-2 border rounded-lg transition-colors ${
+                  copied 
+                    ? 'bg-green-500/10 border-green-500 text-green-500' 
+                    : 'bg-background border-border text-text hover:bg-background'
+                }`}
+                title={copied ? t('rss.copied', 'Copied!') : t('rss.copyUrl', 'Copy URL')}
               >
                 <Copy size={16} />
               </button>
@@ -250,8 +258,12 @@ export default function RssClient() {
               />
               <button
                 onClick={() => copyToClipboard(buildRssUrl({ bookmarks: true }))}
-                className="px-3 py-2 bg-background border border-border text-text rounded-lg hover:bg-background transition-colors"
-                title={t('rss.copyUrl', 'Copy URL')}
+                className={`px-3 py-2 border rounded-lg transition-colors ${
+                  copied 
+                    ? 'bg-green-500/10 border-green-500 text-green-500' 
+                    : 'bg-background border-border text-text hover:bg-background'
+                }`}
+                title={copied ? t('rss.copied', 'Copied!') : t('rss.copyUrl', 'Copy URL')}
               >
                 <Copy size={16} />
               </button>
@@ -281,8 +293,12 @@ export default function RssClient() {
               />
               <button
                 onClick={() => copyToClipboard(buildRssUrl({ count: 10 }))}
-                className="px-3 py-2 bg-background border border-border text-text rounded-lg hover:bg-background transition-colors"
-                title={t('rss.copyUrl', 'Copy URL')}
+                className={`px-3 py-2 border rounded-lg transition-colors ${
+                  copied 
+                    ? 'bg-green-500/10 border-green-500 text-green-500' 
+                    : 'bg-background border-border text-text hover:bg-background'
+                }`}
+                title={copied ? t('rss.copied', 'Copied!') : t('rss.copyUrl', 'Copy URL')}
               >
                 <Copy size={16} />
               </button>
