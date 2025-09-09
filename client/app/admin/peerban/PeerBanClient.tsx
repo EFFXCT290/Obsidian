@@ -256,6 +256,7 @@ export default function PeerBanClient({ translations }: PeerBanClientProps) {
         passkey?: string;
         peerId?: string;
         ip?: string;
+        expiresAt?: string;
       } = {
         reason: formData.reason
       };
