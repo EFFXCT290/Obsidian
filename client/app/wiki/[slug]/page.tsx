@@ -73,11 +73,14 @@ async function getWikiPage(slug: string): Promise<WikiPage | null> {
   }
 }
 
-export default async function WikiPage({ params }: { params: { slug: string } }) {
+export default async function WikiPage({ params }: { params: Promise<{ slug: string }> }) {
+  // Await params in Next.js 15
+  const { slug } = await params;
+  
   const headersList = await headers();
   const language = await getPreferredLanguage(headersList);
   
-  const page = await getWikiPage(params.slug);
+  const page = await getWikiPage(slug);
   
   if (!page) {
     notFound();
