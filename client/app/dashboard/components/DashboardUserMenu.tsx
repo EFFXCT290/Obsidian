@@ -104,7 +104,7 @@ export default function DashboardUserMenu({ translations }: DashboardUserMenuPro
       >
         {user?.avatarUrl ? (
           <div className="relative w-8 h-8 rounded-full overflow-hidden">
-            <Image src={`${API_BASE_URL}${user.avatarUrl}`} alt="User avatar" fill className="object-cover" />
+            <Image src={`${API_BASE_URL}${user.avatarUrl}`} alt="User avatar" fill className="object-cover" sizes="32px" />
           </div>
         ) : (
           <span className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-background text-sm font-medium">

@@ -7,7 +7,7 @@ interface PageProps { params: Promise<{ id: string }> }
 
 export default async function TorrentPage({ params }: PageProps) {
   const { id } = await params;
-  const hdrs = headers();
+  const hdrs = await headers();
   const language = await getPreferredLanguage(hdrs as unknown as Headers);
   const resources = getTranslations(language);
   return (

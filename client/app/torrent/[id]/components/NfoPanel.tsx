@@ -15,11 +15,25 @@ export default function NfoPanel({ torrentId }: { torrentId: string }) {
         if (token) headers['Authorization'] = `Bearer ${token}`;
       } catch {}
       const res = await fetch(key, { headers });
-      if (!res.ok) return '';
+      if (!res.ok) {
+        if (res.status === 404) {
+          // NFO not found, return empty string to indicate no NFO available
+          return '';
+        }
+        throw new Error(`HTTP ${res.status}`);
+      }
       const text = await res.text();
       return text;
+    },
+    {
+      // Don't retry on 404 errors
+      errorRetryCount: 0,
+      // Don't show error for 404s
+      shouldRetryOnError: false
     }
   );
+  
+  // Don't render anything if loading or no data
   if (isLoading || !data) return null;
   return (
     <div className="bg-surface border border-border rounded p-4">

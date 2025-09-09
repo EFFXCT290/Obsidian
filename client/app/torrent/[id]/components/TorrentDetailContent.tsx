@@ -215,6 +215,8 @@ export default function TorrentDetailContent({ torrentId }: { torrentId: string 
                   height={400}
                   unoptimized
                   className="max-h-[400px] max-w-full rounded object-contain"
+                  style={{ width: 'auto', height: 'auto' }}
+                  priority
                   onError={() => setPosterVisible(false)}
                 />
               </div>
