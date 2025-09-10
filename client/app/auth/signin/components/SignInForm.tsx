@@ -20,7 +20,7 @@ interface SignInFormProps {
 }
 
 interface FormData { login: string; password: string; }
-interface FormErrors { login?: string; password?: string; general?: string; }
+interface FormErrors { login?: string; password?: string; }
 
 export default function SignInForm({ registrationMode, serverTranslations }: SignInFormProps) {
   const { t } = useI18n();
@@ -57,8 +57,8 @@ export default function SignInForm({ registrationMode, serverTranslations }: Sig
   }, [errors, validateField]);
 
   const isFormValid = useCallback(() => {
-    return formData.login.trim() && formData.password && formData.login.length >= 3 && formData.password.length >= 6 && !Object.values(errors).some(Boolean);
-  }, [formData, errors]);
+    return formData.login.trim() && formData.password && formData.login.length >= 3 && formData.password.length >= 6;
+  }, [formData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,7 +102,7 @@ export default function SignInForm({ registrationMode, serverTranslations }: Sig
       router.push('/dashboard');
     } catch (err) {
       const msg = err instanceof Error ? err.message : getServerTranslation('errorNotification', 'auth.notification.error');
-      setErrors({ general: msg });
+      showNotification(msg, 'error');
     } finally {
       setLoading(false); setIsSubmitting(false);
     }
@@ -111,11 +111,6 @@ export default function SignInForm({ registrationMode, serverTranslations }: Sig
   return (
     <>
       <form onSubmit={handleSubmit} className="space-y-4" noValidate aria-label={getServerTranslation('formAriaLabel', 'auth.login.formAriaLabel')}>
-        {errors.general && (
-          <div className="rounded-md bg-red-50 border border-red-200 p-3" role="alert" aria-live="polite">
-            <p className="text-sm text-red-600">{errors.general}</p>
-          </div>
-        )}
 
         <AuthInput
           label={getServerTranslation('loginLabel', 'auth.login')}
