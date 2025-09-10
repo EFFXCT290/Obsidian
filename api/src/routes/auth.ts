@@ -11,15 +11,50 @@ import {
   rotatePasskeyHandler
 } from '../controllers/authController.js';
 import { requireAuth } from '../middleware/authMiddleware.js';
+import { registerAuthRateLimit } from '../middleware/rateLimitMiddleware.js';
 
 export async function registerAuthRoutes(app: FastifyInstance) {
-  app.post('/auth/register', registerHandler); //DONE
-  app.post('/auth/login', loginHandler); //DONE
-  app.post('/auth/request-email-verification', { preHandler: requireAuth }, requestEmailVerificationHandler); //DONE
-  app.post('/auth/verify-email', verifyEmailHandler); //DONE
-  app.post('/auth/request-password-reset', requestPasswordResetHandler); //DONE
-  app.post('/auth/reset-password', resetPasswordHandler); //DONE
-  app.post('/auth/rotate-passkey', { preHandler: requireAuth }, rotatePasskeyHandler); //DONE
-  app.get('/auth/profile', { preHandler: requireAuth }, getProfileHandler); //DONE
-  app.patch('/auth/profile', { preHandler: requireAuth }, updateProfileHandler); //DONE
+  // Register rate limiting for authentication routes
+  await registerAuthRateLimit(app);
+
+  // Authentication routes with rate limiting applied
+  app.post('/auth/register', {
+    config: { rateLimit: 'auth-general' }
+  }, registerHandler);
+
+  app.post('/auth/login', {
+    config: { rateLimit: 'auth-general' }
+  }, loginHandler);
+
+  app.post('/auth/request-email-verification', {
+    preHandler: requireAuth,
+    config: { rateLimit: 'auth-email' }
+  }, requestEmailVerificationHandler);
+
+  app.post('/auth/verify-email', {
+    config: { rateLimit: 'auth-email' }
+  }, verifyEmailHandler);
+
+  app.post('/auth/request-password-reset', {
+    config: { rateLimit: 'auth-password' }
+  }, requestPasswordResetHandler);
+
+  app.post('/auth/reset-password', {
+    config: { rateLimit: 'auth-password' }
+  }, resetPasswordHandler);
+
+  app.post('/auth/rotate-passkey', {
+    preHandler: requireAuth,
+    config: { rateLimit: 'auth-general' }
+  }, rotatePasskeyHandler);
+
+  app.get('/auth/profile', {
+    preHandler: requireAuth,
+    config: { rateLimit: 'auth-profile' }
+  }, getProfileHandler);
+
+  app.patch('/auth/profile', {
+    preHandler: requireAuth,
+    config: { rateLimit: 'auth-profile' }
+  }, updateProfileHandler);
 } 
