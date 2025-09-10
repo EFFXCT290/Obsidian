@@ -1095,21 +1095,48 @@ export async function generateMagnetWithTokenHandler(request: FastifyRequest, re
   // Include both v1 and v2 info hashes if available
   let xtParam = `xt=urn:btih:${magnetToken.torrent.infoHash}`;
   
+  // For private torrents, we need to ensure the magnet link has the exact same announce URL
+  // as the original torrent file to ensure proper metadata retrieval
+  let announceUrl = tracker;
+  
+  // Try to get the original announce URL from the torrent file
+  try {
+    const config = normalizeS3Config(await getConfig());
+    const file = await prisma.uploadedFile.findUnique({ where: { id: magnetToken.torrent.filePath } });
+    if (file) {
+      const torrentBuffer = await getFile({ file, config });
+      const parsed = await parseTorrent(torrentBuffer);
+      const parsedAny = parsed as any;
+      
+      // Use the original announce URL if available
+      if (parsedAny.announce) {
+        announceUrl = parsedAny.announce;
+        console.log('[generateMagnetWithTokenHandler] Using original announce URL:', announceUrl);
+      }
+    }
+  } catch (error) {
+    console.log('[generateMagnetWithTokenHandler] Could not get original announce URL, using tracker URL:', error);
+  }
+  
+  // For private torrents, add the torrent file as a web seed to help with metadata retrieval
+  const torrentFileUrl = `${baseUrl}/torrent/${magnetToken.torrent.id}/download-secure?token=${token}`;
+  const webSeedParam = `&ws=${encodeURIComponent(torrentFileUrl)}`;
+  
   // Add additional magnet link parameters for better compatibility
-  const magnetLink = `magnet:?${xtParam}&dn=${nameParam}&tr=${encodeURIComponent(tracker)}${additionalParams}`;
+  // For private torrents, we need to be very specific about the format
+  const magnetLink = `magnet:?${xtParam}&dn=${nameParam}&tr=${encodeURIComponent(announceUrl)}${additionalParams}${webSeedParam}`;
   
   // Log magnet link for debugging
   console.log('[generateMagnetWithTokenHandler] Generated magnet link:', {
     torrentId: magnetToken.torrent.id,
     infoHash: magnetToken.torrent.infoHash,
     name: magnetToken.torrent.name,
-    tracker,
+    originalTracker: tracker,
+    announceUrl: announceUrl,
     additionalParams,
+    webSeedParam,
     fullMagnetLink: magnetLink
   });
-  
-  // Also provide a fallback torrent file URL in case magnet doesn't work
-  const torrentFileUrl = `${baseUrl}/torrent/${magnetToken.torrent.id}/download-secure?token=${token}`;
   
   return reply.send({ 
     magnetLink,
