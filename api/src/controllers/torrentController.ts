@@ -1108,10 +1108,19 @@ export async function generateMagnetWithTokenHandler(request: FastifyRequest, re
       const parsed = await parseTorrent(torrentBuffer);
       const parsedAny = parsed as any;
       
-      // Use the original announce URL if available
+      // Use the original announce URL if available, but ensure it's a string and use our public URL
       if (parsedAny.announce) {
-        announceUrl = parsedAny.announce;
-        console.log('[generateMagnetWithTokenHandler] Using original announce URL:', announceUrl);
+        // If announce is an array, take the first element
+        const originalAnnounce = Array.isArray(parsedAny.announce) ? parsedAny.announce[0] : parsedAny.announce;
+        
+        // Replace local IP with our public API URL for magnet links
+        if (originalAnnounce.includes('192.168.1.59:3000')) {
+          announceUrl = originalAnnounce.replace('192.168.1.59:3000', baseUrl.replace('https://', '').replace('http://', ''));
+        } else {
+          announceUrl = originalAnnounce;
+        }
+        
+        console.log('[generateMagnetWithTokenHandler] Using original announce URL:', originalAnnounce, '-> converted to:', announceUrl);
       }
     }
   } catch (error) {
@@ -1122,9 +1131,12 @@ export async function generateMagnetWithTokenHandler(request: FastifyRequest, re
   const torrentFileUrl = `${baseUrl}/torrent/${magnetToken.torrent.id}/download-secure?token=${token}`;
   const webSeedParam = `&ws=${encodeURIComponent(torrentFileUrl)}`;
   
+  // Ensure announceUrl is a string (not an array)
+  const announceUrlString = Array.isArray(announceUrl) ? announceUrl[0] : announceUrl;
+  
   // Add additional magnet link parameters for better compatibility
   // For private torrents, we need to be very specific about the format
-  const magnetLink = `magnet:?${xtParam}&dn=${nameParam}&tr=${encodeURIComponent(announceUrl)}${additionalParams}${webSeedParam}`;
+  const magnetLink = `magnet:?${xtParam}&dn=${nameParam}&tr=${encodeURIComponent(announceUrlString)}${additionalParams}${webSeedParam}`;
   
   // Log magnet link for debugging
   console.log('[generateMagnetWithTokenHandler] Generated magnet link:', {
@@ -1133,6 +1145,7 @@ export async function generateMagnetWithTokenHandler(request: FastifyRequest, re
     name: magnetToken.torrent.name,
     originalTracker: tracker,
     announceUrl: announceUrl,
+    announceUrlString: announceUrlString,
     additionalParams,
     webSeedParam,
     fullMagnetLink: magnetLink
