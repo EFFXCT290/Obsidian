@@ -135,6 +135,7 @@ export default async function AdminSettingsPage() {
       peerBanCheck: serverT('admin.settings.fields.peerBanCheck', language),
       maxStatsJumpMultiplier: serverT('admin.settings.fields.maxStatsJumpMultiplier', language),
       brandingName: serverT('admin.settings.fields.brandingName', language),
+      showHomePageStats: serverT('admin.settings.fields.showHomePageStats', language),
     }
   };
 
