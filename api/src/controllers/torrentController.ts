@@ -1093,7 +1093,7 @@ export async function generateMagnetWithTokenHandler(request: FastifyRequest, re
   
   // Build magnet link with proper formatting
   // Include both v1 and v2 info hashes if available
-  let xtParam = `xt=urn:btih:${magnetToken.torrent.infoHash}`;
+  const xtParam = `xt=urn:btih:${magnetToken.torrent.infoHash}`;
   
   // For private torrents, we need to ensure the magnet link has the exact same announce URL
   // as the original torrent file to ensure proper metadata retrieval
