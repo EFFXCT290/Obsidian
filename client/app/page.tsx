@@ -77,12 +77,14 @@ export default async function Home() {
   // Get headers for language detection
   const headersList = await headers();
   const language = await getPreferredLanguage(headersList);
-  // Load branding
+  // Load branding and configuration
   let brandingName = 'Obsidian Tracker';
+  let showHomePageStats = true;
   try {
     const response = await fetch(`${API_BASE_URL}/config/branding`);
     const branding = await response.json();
     brandingName = branding.brandingName || brandingName;
+    showHomePageStats = branding.showHomePageStats ?? true;
   } catch {}
   
   // Server-side translations
@@ -159,18 +161,20 @@ export default async function Home() {
         </div>
         
         {/* Site Statistics */}
-        <Suspense fallback={
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="text-center p-4 bg-surface rounded-lg border border-border animate-pulse">
-                <div className="h-8 bg-text-secondary rounded mb-2"></div>
-                <div className="h-4 bg-text-secondary rounded w-16 mx-auto"></div>
-              </div>
-            ))}
-          </div>
-        }>
-          <SiteStatistics />
-        </Suspense>
+        {showHomePageStats && (
+          <Suspense fallback={
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="text-center p-4 bg-surface rounded-lg border border-border animate-pulse">
+                  <div className="h-8 bg-text-secondary rounded mb-2"></div>
+                  <div className="h-4 bg-text-secondary rounded w-16 mx-auto"></div>
+                </div>
+              ))}
+            </div>
+          }>
+            <SiteStatistics />
+          </Suspense>
+        )}
         
         <div className="flex space-x-6 mb-8">
           <Link 

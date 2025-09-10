@@ -965,7 +965,8 @@
 			"invalidStatsCheck":"Invalid Stats Check",
 			"peerBanCheck":"Peer Ban Check",
 				"maxStatsJumpMultiplier":"Multiplicador máximo de salto de estadísticas",
-				"brandingName":"Nombre de marca"
+				"brandingName":"Nombre de marca",
+				"showHomePageStats":"Mostrar estadísticas en página principal"
 			}
 		}
 	},

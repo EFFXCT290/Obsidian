@@ -5,10 +5,16 @@ export async function registerConfigRoutes(app: FastifyInstance) {
   app.get('/config/branding', async (_request, reply) => {
     try {
       const cfg = await getConfig();
-      return reply.send({ brandingName: (cfg as any).brandingName || 'Obsidian Tracker' });
+      return reply.send({ 
+        brandingName: (cfg as any).brandingName || 'Obsidian Tracker',
+        showHomePageStats: (cfg as any).showHomePageStats ?? true
+      });
     } catch (err) {
       app.log.error({ err }, 'Failed to load branding config');
-      return reply.send({ brandingName: 'Obsidian Tracker' });
+      return reply.send({ 
+        brandingName: 'Obsidian Tracker',
+        showHomePageStats: true
+      });
     }
   });
 

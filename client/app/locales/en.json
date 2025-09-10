@@ -965,7 +965,8 @@
 				"invalidStatsCheck":"Invalid Stats Check",
 				"peerBanCheck":"Peer Ban Check",
 				"maxStatsJumpMultiplier":"Max Stats Jump Multiplier",
-				"brandingName":"Branding Name"
+				"brandingName":"Branding Name",
+				"showHomePageStats":"Show Home Page Statistics"
 			}
 		}
 	},

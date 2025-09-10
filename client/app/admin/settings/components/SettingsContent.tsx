@@ -84,6 +84,7 @@ type ConfigState = {
   enablePeerBanCheck?: boolean;
   maxStatsJumpMultiplier?: number;
   brandingName?: string;
+  showHomePageStats?: boolean;
 };
 
 export default function SettingsContent({ translations }: SettingsContentProps) {
@@ -544,6 +545,23 @@ export default function SettingsContent({ translations }: SettingsContentProps) 
                 <p className="text-text-secondary">{translations.details?.branding}</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormField label={translations.fields?.brandingName || 'Branding Name'} value={config.brandingName || ''} onChange={(v) => handleChange('brandingName', v)} />
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-sm font-medium text-text">{translations.fields?.showHomePageStats || 'Show Home Page Statistics'}</h4>
+                      <p className="text-xs text-text-secondary">
+                        {Boolean(config.showHomePageStats) ? (translations.settings?.ui?.enabled || 'Enabled') : (translations.settings?.ui?.disabled || 'Disabled')}
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <span className={`text-xs ${!config.showHomePageStats ? 'text-primary' : 'text-text-secondary'}`}>{translations.settings?.ui?.off || 'Off'}</span>
+                      <ToggleSwitch
+                        checked={Boolean(config.showHomePageStats)}
+                        onChange={(e) => handleChange('showHomePageStats', e.target.checked)}
+                        aria-label={translations.fields?.showHomePageStats || 'Show Home Page Statistics'}
+                      />
+                      <span className={`text-xs ${config.showHomePageStats ? 'text-primary' : 'text-text-secondary'}`}>{translations.settings?.ui?.on || 'On'}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}

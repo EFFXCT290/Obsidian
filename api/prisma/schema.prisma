@@ -195,6 +195,7 @@ model Config {
   s3SecretAccessKey String?
   // Branding
   brandingName     String?
+  showHomePageStats Boolean @default(true)
   // Invitations
   inviteExpiryHours Int @default(6)
   maxInvitesPerUser Int @default(5)
