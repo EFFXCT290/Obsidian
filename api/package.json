@@ -23,7 +23,7 @@
     "@fastify/env": "^5.0.2",
     "@fastify/multipart": "^9.0.3",
     "@fastify/static": "^8.2.0",
-    "@prisma/client": "^6.11.1",
+    "@prisma/client": "^6.16.0",
     "argon2": "^0.43.1",
     "bencode": "^4.0.0",
     "fast-xml-parser": "^5.2.5",
@@ -32,7 +32,6 @@
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^7.0.5",
     "parse-torrent": "^11.0.18",
-    "prisma": "^6.11.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },
@@ -46,6 +45,7 @@
     "@typescript-eslint/eslint-plugin": "^8.39.0",
     "@typescript-eslint/parser": "^8.39.0",
     "eslint": "^9.32.0",
+    "prisma": "^6.16.0",
     "ts-node-dev": "^2.0.0",
     "tsx": "^4.20.3"
   },
