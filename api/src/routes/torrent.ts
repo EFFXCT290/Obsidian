@@ -43,7 +43,12 @@ export async function registerTorrentRoutes(app: FastifyInstance) {
     const torrent = await prisma.torrent.findUnique({ where: { id } });
     if (!torrent) return reply.status(404).send({ error: 'Torrent not found' });
     
-    const baseUrl = process.env.API_BASE_URL || 'http://localhost:3001';
+    // Use auto-detected protocol
+    const protocol = request.headers['x-forwarded-proto'] || 
+                     (request.headers['x-forwarded-ssl'] === 'on' ? 'https' : 'http');
+    const host = request.headers.host || 'localhost:3001';
+    const baseUrl = `${protocol}://${host}`;
+    
     const tracker = `${baseUrl}/announce?passkey=${user.passkey}`;
     const nameParam = encodeURIComponent(torrent.name || 'torrent');
     const magnetLink = `magnet:?xt=urn:btih:${torrent.infoHash}&dn=${nameParam}&tr=${encodeURIComponent(tracker)}`;
@@ -53,7 +58,9 @@ export async function registerTorrentRoutes(app: FastifyInstance) {
       infoHash: torrent.infoHash,
       name: torrent.name,
       tracker,
-      userPasskey: user.passkey
+      userPasskey: user.passkey,
+      detectedProtocol: protocol,
+      baseUrl
     });
   });
   app.get('/torrent/list', { preHandler: requireAuthIfNotOpen }, listTorrentsHandler); //DONE

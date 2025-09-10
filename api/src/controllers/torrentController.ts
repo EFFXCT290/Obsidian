@@ -76,8 +76,8 @@ export async function createMagnetTokenHandler(request: FastifyRequest, reply: F
     }
   });
   
-  // Return temporary magnet URL
-  const baseUrl = process.env.API_BASE_URL || 'http://localhost:3001';
+  // Return temporary magnet URL with auto-detected protocol
+  const baseUrl = getBaseUrlFromRequest(request);
   const magnetUrl = `${baseUrl}/torrent/${torrent.id}/magnet-secure?token=${token}`;
   
   return reply.send({
@@ -88,6 +88,15 @@ export async function createMagnetTokenHandler(request: FastifyRequest, reply: F
 }
 
 const prisma = new PrismaClient();
+
+// Helper function to detect the correct protocol (HTTP/HTTPS) from request
+function getBaseUrlFromRequest(request: FastifyRequest): string {
+  // Check for forwarded protocol (from reverse proxy) or SSL headers
+  const protocol = request.headers['x-forwarded-proto'] || 
+                   (request.headers['x-forwarded-ssl'] === 'on' ? 'https' : 'http');
+  const host = request.headers.host || 'localhost:3001';
+  return `${protocol}://${host}`;
+}
 
 // Helper to convert BigInt fields to strings recursively
 function convertBigInts(obj: any): any {
@@ -352,12 +361,13 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
 
 
 // Helper function to modify torrent announce URLs
-async function modifyTorrentAnnounceUrls(torrentBuffer: Buffer, passkey: string): Promise<Buffer> {
+async function modifyTorrentAnnounceUrls(torrentBuffer: Buffer, passkey: string, request?: FastifyRequest): Promise<Buffer> {
   try {
     const parsed = await parseTorrent(torrentBuffer);
     
     // Replace announce URLs with our tracker URL and user's passkey
-    const baseUrl = process.env.API_BASE_URL || 'http://localhost:3001';
+    // Use auto-detected protocol if request is available, otherwise fallback to env
+    const baseUrl = request ? getBaseUrlFromRequest(request) : (process.env.API_BASE_URL || 'http://localhost:3001');
     const newAnnounce = `${baseUrl}/announce?passkey=${passkey}`;
     
     // Create new torrent data with modified announce
@@ -1003,7 +1013,7 @@ export async function downloadTorrentWithTokenHandler(request: FastifyRequest, r
     const fileBuffer = await getFile({ file, config });
     
     // Modify the torrent file to replace announce URLs with user's passkey
-    const modifiedBuffer = await modifyTorrentAnnounceUrls(fileBuffer, downloadToken.user.passkey);
+    const modifiedBuffer = await modifyTorrentAnnounceUrls(fileBuffer, downloadToken.user.passkey, request);
     
     // Sanitize filename for HTTP header
     const sanitizedFilename = windowsSafeFilename(downloadToken.torrent.name || 'download');
@@ -1054,8 +1064,8 @@ export async function generateMagnetWithTokenHandler(request: FastifyRequest, re
     data: { used: true }
   });
   
-  // Generate magnet link with user's passkey
-  const baseUrl = process.env.API_BASE_URL || 'http://localhost:3001';
+  // Generate magnet link with user's passkey using auto-detected protocol
+  const baseUrl = getBaseUrlFromRequest(request);
   const tracker = `${baseUrl}/announce?passkey=${magnetToken.user.passkey}`;
   const nameParam = encodeURIComponent(magnetToken.torrent.name || 'torrent');
   
@@ -1117,7 +1127,14 @@ export async function generateMagnetWithTokenHandler(request: FastifyRequest, re
         if (originalAnnounce.includes('192.168.1.59:3000')) {
           announceUrl = originalAnnounce.replace('192.168.1.59:3000', baseUrl.replace('https://', '').replace('http://', ''));
         } else {
-          announceUrl = originalAnnounce;
+          // If the original announce URL has a different protocol, use our detected protocol
+          const urlParts = originalAnnounce.split('://');
+          if (urlParts.length === 2) {
+            const [, hostAndPath] = urlParts;
+            announceUrl = `${baseUrl.split('://')[0]}://${hostAndPath}`;
+          } else {
+            announceUrl = originalAnnounce;
+          }
         }
         
         console.log('[generateMagnetWithTokenHandler] Using original announce URL:', originalAnnounce, '-> converted to:', announceUrl);
