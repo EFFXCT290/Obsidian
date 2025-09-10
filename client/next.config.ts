@@ -1,13 +1,13 @@
 import type { NextConfig } from "next";
 
 // Helper function to create remote patterns from URL
-function createRemotePattern(url: string) {
+function createRemotePattern(url: string, pathname: string = '/files/**') {
   try {
     const urlObj = new URL(url);
     const pattern: any = {
       protocol: urlObj.protocol.replace(':', '') as 'http' | 'https',
       hostname: urlObj.hostname,
-      pathname: '/files/**',
+      pathname: pathname,
     };
     
     // Only add port if it's not the default port
@@ -26,6 +26,7 @@ function createRemotePattern(url: string) {
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
+      // Local development patterns
       {
         protocol: 'http',
         hostname: 'localhost',
@@ -38,15 +39,31 @@ const nextConfig: NextConfig = {
         port: '3001',
         pathname: '/files/**',
       },
-      // Dynamic API domain from environment
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3001',
+        pathname: '/uploads/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'localhost',
+        port: '3001',
+        pathname: '/uploads/**',
+      },
+      // Dynamic API domain from environment - files
       ...(process.env.NEXT_PUBLIC_API_URL ? 
-        [createRemotePattern(process.env.NEXT_PUBLIC_API_URL)].filter(Boolean) : []),
+        [createRemotePattern(process.env.NEXT_PUBLIC_API_URL, '/files/**')].filter(Boolean) : []),
+      // Dynamic API domain from environment - uploads (avatars, etc.)
+      ...(process.env.NEXT_PUBLIC_API_URL ? 
+        [createRemotePattern(process.env.NEXT_PUBLIC_API_URL, '/uploads/**')].filter(Boolean) : []),
       // Dynamic frontend domain from environment
       ...(process.env.NEXTAUTH_URL ? 
         [createRemotePattern(process.env.NEXTAUTH_URL)].filter(Boolean) : []),
     ],
     // Disable image optimization for development and when using external domains
-    unoptimized: process.env.NODE_ENV === 'development',
+    // Also disable in production if having issues with external image optimization
+    unoptimized: process.env.NODE_ENV === 'development' || process.env.DISABLE_IMAGE_OPTIMIZATION === 'true',
   },
 };
 
