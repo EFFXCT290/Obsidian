@@ -50,7 +50,7 @@ export function useI18n(initialLanguage?: string) {
   const provided = useI18nResources();
   const language = useMemo(() => {
     // Use initial language if provided (from server), otherwise detect from cookie
-    if (initialLanguage && (initialLanguage === 'en' || initialLanguage === 'es')) {
+    if (initialLanguage && isLang(initialLanguage)) {
       return initialLanguage;
     }
     return getCookieLanguage();

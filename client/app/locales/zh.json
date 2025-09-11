@@ -198,6 +198,7 @@
 		"viewAll": "查看全部",
 		"noTorrents": "暂无 Torrent",
 		"noAnnouncements": "暂无公告",
+		"title":"标题",
 		"size": "大小",
 		"uploader": "上传者",
 		"category": "分类",
@@ -255,13 +256,16 @@
 			"smallest": "最小"
 		},
 		"torrent": {
+			"title":"标题",
 			"seeders": "做种",
 			"leechers": "下载",
 			"completed": "完成",
 			"uploaded": "上传于",
 			"by": "由",
 			"size": "大小",
-			"download": "下载"
+			"download": "下载",
+			"uploader":"上传者",
+			"category":"分类"
 		},
 		"pagination": {
 			"previous": "上一页",
@@ -285,13 +289,16 @@
 			"smallest": "最小"
 		},
 		"torrent": {
+			"title":"标题",
 			"seeders": "做种",
 			"leechers": "下载",
 			"completed": "完成",
 			"uploaded": "上传于",
 			"by": "由",
 			"size": "大小",
-			"download": "下载"
+			"download": "下载",
+			"uploader":"上传者",
+			"category":"分类"
 		},
 		"pagination": {
 			"previous": "上一页",
@@ -1066,7 +1073,8 @@
 		"torrents": "Torrent",
 		"downloads": "下载",
 		"uploaded": "上传量",
-		"downloadStarted": "下载已开始"
+		"downloadStarted": "下载已开始",
+		"freeleech":"FL"
 	},
 	"language": {
 		"selector": {
@@ -1092,8 +1100,12 @@
 		},
 		"tabs": {
 			"overview": "概览",
-			"activity": "近期活动"
+			"activity": "近期活动",
+			"torrents":"我的种子",
+			"invitations":"邀请",
+			"preferences":"偏好设置"
 		},
+		"loading":"加载个人资料中...",
 		"activity": {
 			"comingSoon": "近期活动即将推出",
 			"description": "您的近期活动将在此处显示",
@@ -1404,6 +1416,35 @@
 				"选择最合适的分类和来源。",
 				"使用相关标签以提高可发现性。"
 			]
+		}
+	},
+	"userTorrents":{
+		"title":"我的种子",
+		"table":{
+			"title":"标题",
+			"date":"日期",
+			"size":"大小",
+			"seedersLeechers":"做种者 / 下载者",
+			"downloads":"下载次数",
+			"category":"分类",
+			"status":"状态"
+		},
+		"status":{
+			"approved":"已批准",
+			"pending":"待处理",
+			"rejected":"已拒绝"
+		},
+		"empty":"您尚未上传任何种子",
+		"loading":"正在加载您的种子...",
+		"error":"加载种子时出错",
+		"pagination":{
+			"showing":"显示",
+			"to":"到",
+			"of":"，共",
+			"results":"结果",
+			"previous":"上一页",
+			"next":"下一页",
+			"page":"页"
 		}
 	},
 	"errors":{

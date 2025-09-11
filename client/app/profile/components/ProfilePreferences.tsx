@@ -44,6 +44,7 @@ export default function ProfilePreferences() {
             <select value={preferredLanguage} onChange={(e) => setPreferredLanguage(e.target.value)} className="px-3 py-2 bg-background border border-border rounded text-text">
               <option value="es">Español</option>
               <option value="en">English</option>
+              <option value="zh">中文</option>
             </select>
           </div>
           <div className="flex items-center gap-2">
