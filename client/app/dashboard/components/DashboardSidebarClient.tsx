@@ -62,14 +62,14 @@ export default function DashboardSidebarClient({ serverNavItems, brandingName, c
       </nav>
 
       {/* Language Selector - Fixed at bottom */}
-      <div className="flex-shrink-0 p-3 border-t border-border bg-surface relative">
+      <div className="flex-shrink-0 p-3 bg-surface relative">
         {/* Desktop Language Selector */}
         <div className="hidden lg:block">
           <LanguageSelector currentLanguage={currentLanguage} />
         </div>
         
         {/* Mobile Language Selector */}
-        <div className="lg:hidden">
+        <div className="lg:hidden border-t border-border">
           <MobileLanguageSelector currentLanguage={currentLanguage} />
         </div>
       </div>
