@@ -255,18 +255,18 @@
 			"largest":"Más grandes",
 			"smallest":"Más pequeños"
 		},
-            "torrent":{
-              "title":"Título",
-              "seeders":"Seeders",
-              "leechers":"Leechers",
-              "completed":"Completados",
-              "uploaded":"Subido",
-              "by":"por",
-              "size":"Tamaño",
-              "download":"Descargar",
-              "uploader":"Subidor",
-              "category":"Categoría"
-            },
+		"torrent":{
+			"title":"Título",
+			"seeders":"Seeders",
+			"leechers":"Leechers",
+			"completed":"Completados",
+			"uploaded":"Subido",
+			"by":"por",
+			"size":"Tamaño",
+			"download":"Descargar",
+			"uploader":"Subidor",
+			"category":"Categoría"
+		},
 		"pagination":{
 			"previous":"Anterior",
 			"next":"Siguiente",
@@ -1444,6 +1444,26 @@
 			"previous":"Anterior",
 			"next":"Siguiente",
 			"page":"Página"
+		}
+	},
+	"errors":{
+		"404":{
+			"title":"Página No Encontrada",
+			"message":"La página que buscas no existe o ha sido movida",
+			"back":"Volver Atrás",
+			"home":"Ir al Inicio"
+		},
+		"500":{
+			"title":"Error del Servidor",
+			"message":"Ha ocurrido un error inesperado",
+			"retry":"Reintentar",
+			"home":"Ir al Inicio"
+		},
+		"global":{
+			"title":"Error Global del Servidor",
+			"message":"Ha ocurrido un error crítico en el servidor",
+			"retry":"Reintentar",
+			"home":"Ir al Inicio"
 		}
 	}
 }

@@ -1446,5 +1446,25 @@
 			"next":"Next",
 			"page":"Page"
 		}
+	},
+	"errors":{
+		"404":{
+			"title":"Page Not Found",
+			"message":"The page you are looking for does not exist or has been moved",
+			"back":"Go Back",
+			"home":"Go to Home"
+		},
+		"500":{
+			"title":"Server Error",
+			"message":"An unexpected error has occurred",
+			"retry":"Retry",
+			"home":"Go to Home"
+		},
+		"global":{
+			"title":"Global Server Error",
+			"message":"A critical server error has occurred",
+			"retry":"Retry",
+			"home":"Go to Home"
+		}
 	}
 }
