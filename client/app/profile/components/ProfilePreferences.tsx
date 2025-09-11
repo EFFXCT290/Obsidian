@@ -3,10 +3,13 @@
 import { useEffect, useState } from 'react';
 import { useI18n } from '@/app/hooks/useI18n';
 import { API_BASE_URL } from '@/lib/api';
+import { ToggleSwitch } from '@/app/components/ui/ToggleSwitch';
+import toast from 'react-hot-toast';
 
 export default function ProfilePreferences() {
   const { t } = useI18n();
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [preferredLanguage, setPreferredLanguage] = useState('es');
   const [allowEmail, setAllowEmail] = useState(true);
   const [publicProfile, setPublicProfile] = useState(false);
@@ -31,7 +34,29 @@ export default function ProfilePreferences() {
   }, []);
 
   const save = async () => {
-    await fetch(`${API_BASE_URL}/user/preferences`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify({ preferredLanguage, allowEmailNotifications: allowEmail, publicProfile }) });
+    setSaving(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/user/preferences`, { 
+        method: 'PUT', 
+        headers: authHeaders(), 
+        body: JSON.stringify({ 
+          preferredLanguage, 
+          allowEmailNotifications: allowEmail, 
+          publicProfile 
+        }) 
+      });
+      
+      if (response.ok) {
+        toast.success(t('profile.preferences.saved', 'Preferences saved successfully!'));
+      } else {
+        toast.error(t('profile.preferences.saveError', 'Failed to save preferences'));
+      }
+    } catch (error) {
+      console.error('Error saving preferences:', error);
+      toast.error(t('profile.preferences.saveError', 'Failed to save preferences'));
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -48,20 +73,34 @@ export default function ProfilePreferences() {
               <option value="en">English</option>
             </select>
           </div>
-          <div className="flex items-center gap-2">
-            <input id="allowEmail" type="checkbox" checked={allowEmail} onChange={(e) => setAllowEmail(e.target.checked)} />
-            <label htmlFor="allowEmail" className="text-sm">{t('profile.preferences.emailNotifications', 'Allow email notifications')}</label>
+          <div className="flex items-center justify-between">
+            <label htmlFor="allowEmail" className="text-sm font-medium text-text">{t('profile.preferences.emailNotifications', 'Allow email notifications')}</label>
+            <ToggleSwitch 
+              id="allowEmail" 
+              checked={allowEmail} 
+              onChange={(e) => setAllowEmail(e.target.checked)} 
+            />
           </div>
-          <div className="flex items-center gap-2">
-            <input id="publicProfile" type="checkbox" checked={publicProfile} onChange={(e) => setPublicProfile(e.target.checked)} />
-            <label htmlFor="publicProfile" className="text-sm">{t('profile.preferences.publicProfile', 'Make profile public')}</label>
+          <div className="flex items-center justify-between">
+            <label htmlFor="publicProfile" className="text-sm font-medium text-text">{t('profile.preferences.publicProfile', 'Make profile public')}</label>
+            <ToggleSwitch 
+              id="publicProfile" 
+              checked={publicProfile} 
+              onChange={(e) => setPublicProfile(e.target.checked)} 
+            />
           </div>
           {publicProfile && (
             <div className="text-sm text-text-secondary bg-primary/10 p-3 rounded border border-primary/20">
               {t('profile.preferences.publicProfileDescription', 'Your profile will be visible at /user/{username} and show your public torrents, ratio, and stats. Anonymous torrents will not be shown.')}
             </div>
           )}
-          <button onClick={save} className="px-4 py-2 bg-primary text-background rounded hover:bg-primary-dark">{t('profile.actions.save', 'Save')}</button>
+          <button 
+            onClick={save} 
+            disabled={saving}
+            className="px-6 py-2 bg-primary text-background rounded hover:bg-primary-dark disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            {saving ? t('common.saving', 'Saving...') : t('profile.actions.save', 'Save')}
+          </button>
         </div>
       )}
     </div>

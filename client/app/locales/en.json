@@ -1230,6 +1230,8 @@
 			"emailNotifications":"Allow email notifications",
 			"publicProfile":"Make profile public",
 			"publicProfileDescription":"Your profile will be visible at /user/{username} and show your public torrents, ratio, and stats. Anonymous torrents will not be shown.",
+			"saved":"Preferences saved successfully!",
+			"saveError":"Failed to save preferences",
 			"placeholder":"Preferences section (to be implemented)."
 		},
 		"recent":{

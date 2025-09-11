@@ -1229,6 +1229,8 @@
 			"emailNotifications":"Permitir notificaciones por email",
 			"publicProfile":"Hacer perfil público",
 			"publicProfileDescription":"Tu perfil será visible en /user/{username} y mostrará tus torrents públicos, ratio y estadísticas. Los torrents anónimos no se mostrarán.",
+			"saved":"¡Preferencias guardadas exitosamente!",
+			"saveError":"Error al guardar las preferencias",
 			"placeholder":"Sección de preferencias (por implementar)."
 		},
 		"recent":{
