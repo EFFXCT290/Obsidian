@@ -9,12 +9,12 @@ import { API_BASE_URL } from '@/lib/api';
 import ProfileHeader from './ProfileHeader';
 import ProfileSidebar from './ProfileSidebar';
 import ProfileStats from './ProfileStats';
-import ProfileInvitations from './ProfileInvitations';
-import ProfilePreferences from './ProfilePreferences';
 import ProfileTabs from './ProfileTabs';
+import { useI18n } from '../../hooks/useI18n';
 // import RecentActivity from './RecentActivity';
 
 export default function ProfileContent() {
+  const { t } = useI18n();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<{
     id: string;
@@ -184,26 +184,28 @@ export default function ProfileContent() {
     }
   };
 
-  if (loading || userLoading || rssLoading) return <div className="p-6 text-text">Loading profile...</div>;
+  if (loading || userLoading || rssLoading) return <div className="p-6 text-text">{t('profile.loading', 'Loading profile...')}</div>;
 
   return (
     <div className="min-h-screen bg-background text-text p-6">
       <div className="max-w-7xl mx-auto">
         <ProfileHeader />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <ProfileSidebar
-            user={user}
-            profile={profile}
-            previewUrl={previewUrl}
-            fileInputRef={fileInputRef}
-            formattedJoinDate={''}
-            onRemoveAvatar={handleRemoveAvatar}
-            onAvatarUpload={handleUploadAvatar}
-            setPreviewUrl={setPreviewUrl}
-            loading={!user}
-          />
-          <div className="md:col-span-2">
-            <ProfileTabs>
+        
+        {/* Profile Tabs Navigation - Outside the grid */}
+        <ProfileTabs>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <ProfileSidebar
+              user={user}
+              profile={profile}
+              previewUrl={previewUrl}
+              fileInputRef={fileInputRef}
+              formattedJoinDate={''}
+              onRemoveAvatar={handleRemoveAvatar}
+              onAvatarUpload={handleUploadAvatar}
+              setPreviewUrl={setPreviewUrl}
+              loading={!user}
+            />
+            <div className="md:col-span-2">
               <ProfileStats 
                 announceUrl={announceUrl} 
                 rssUrl={rssUrl}
@@ -213,11 +215,9 @@ export default function ProfileContent() {
                 onCopyRssUrl={handleCopyRssUrl}
                 onCopyScrapeUrl={handleCopyScrapeUrl} 
               />
-              <ProfileInvitations />
-              <ProfilePreferences />
-            </ProfileTabs>
+            </div>
           </div>
-        </div>
+        </ProfileTabs>
       </div>
     </div>
   );

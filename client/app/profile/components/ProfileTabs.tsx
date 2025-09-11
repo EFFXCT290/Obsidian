@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import { useI18n } from '../../hooks/useI18n';
 import RecentActivity from './RecentActivity';
+import UserTorrents from './UserTorrents';
+import ProfileInvitations from './ProfileInvitations';
+import ProfilePreferences from './ProfilePreferences';
 
 interface ProfileTabsProps {
   children: React.ReactNode;
@@ -15,6 +18,9 @@ export default function ProfileTabs({ children }: ProfileTabsProps) {
   const tabs = [
     { id: 'overview', label: t('profile.tabs.overview', 'Overview') },
     { id: 'activity', label: t('profile.tabs.activity', 'Recent Activity') },
+    { id: 'torrents', label: t('profile.tabs.torrents', 'My Torrents') },
+    { id: 'invitations', label: t('profile.tabs.invitations', 'Invitations') },
+    { id: 'preferences', label: t('profile.tabs.preferences', 'Preferences') },
   ];
 
   return (
@@ -46,9 +52,18 @@ export default function ProfileTabs({ children }: ProfileTabsProps) {
           </div>
         )}
         {activeTab === 'activity' && (
-          <div>
-            <RecentActivity />
+          <RecentActivity />
+        )}
+        {activeTab === 'torrents' && (
+          <div className="bg-surface rounded-lg border border-border p-6">
+            <UserTorrents />
           </div>
+        )}
+        {activeTab === 'invitations' && (
+          <ProfileInvitations />
+        )}
+        {activeTab === 'preferences' && (
+          <ProfilePreferences />
         )}
       </div>
     </div>

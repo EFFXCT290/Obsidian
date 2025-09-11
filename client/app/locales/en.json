@@ -1091,8 +1091,12 @@
 		},
 		"tabs":{
 			"overview":"Overview",
-			"activity":"Recent Activity"
+			"activity":"Recent Activity",
+			"torrents":"My Torrents",
+			"invitations":"Invitations",
+			"preferences":"Preferences"
 		},
+		"loading":"Loading profile...",
 		"activity":{
 			"comingSoon":"Recent Activity Coming Soon",
 			"description":"Your recent activities will appear here",
@@ -1403,6 +1407,36 @@
 				"Choose the most appropriate category and source.",
 				"Use relevant tags to improve discoverability."
 			]
+		}
+	},
+	"userTorrents":{
+		"title":"My Torrents",
+		"table":{
+			"title":"Title",
+			"date":"Date",
+			"size":"Size",
+			"seeders":"Seeders",
+			"leechers":"Leechers",
+			"downloads":"Downloads",
+			"category":"Category",
+			"status":"Status"
+		},
+		"status":{
+			"approved":"Approved",
+			"pending":"Pending",
+			"rejected":"Rejected"
+		},
+		"empty":"No torrents uploaded yet",
+		"loading":"Loading your torrents...",
+		"error":"Error loading torrents",
+		"pagination":{
+			"showing":"Showing",
+			"to":"to",
+			"of":"of",
+			"results":"results",
+			"previous":"Previous",
+			"next":"Next",
+			"page":"Page"
 		}
 	}
 }

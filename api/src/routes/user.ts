@@ -14,6 +14,7 @@ import { getCommentThreadHandler } from '../controllers/commentController.js';
 import { listUserInvitesHandler, createInviteHandler, cancelInviteHandler, getInviteByCodePublicHandler } from '../controllers/user/inviteController.js';
 import { getPreferencesHandler, updatePreferencesHandler } from '../controllers/user/userPreferenceController.js';
 import { getPopularTagsHandler, searchTorrentsByTagHandler, searchTorrentsByTextHandler } from '../controllers/user/tagController.js';
+import { getUserTorrentsHandler } from '../controllers/user/userTorrentController.js';
 
 export async function registerUserRoutes(app: FastifyInstance) {
   app.get('/notifications', { preHandler: requireAuth }, getUserNotificationsHandler); //DONE
@@ -41,6 +42,7 @@ export async function registerUserRoutes(app: FastifyInstance) {
   app.get('/user/rss-token', { preHandler: requireAuth }, getRssTokenHandler); //DONE
   app.post('/user/rss-token', { preHandler: requireAuth }, regenerateRssTokenHandler); //DONE
   app.get('/user/active-torrents', { preHandler: requireAuth }, getActiveTorrentsHandler);
+  app.get('/user/torrents', { preHandler: requireAuth }, getUserTorrentsHandler);
   app.get('/user/activities', { preHandler: requireAuth }, getUserActivitiesHandler);
   app.post('/user/avatar', { preHandler: requireAuth }, uploadAvatarHandler);
   app.delete('/user/avatar', { preHandler: requireAuth }, deleteAvatarHandler);
