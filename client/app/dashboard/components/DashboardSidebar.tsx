@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import DashboardSidebarClient from './DashboardSidebarClient';
+import { MobileSidebarWrapper } from './MobileSidebarWrapper';
 
 function SidebarSkeleton() {
   return (
@@ -18,13 +19,26 @@ function SidebarSkeleton() {
   );
 }
 
-export default function DashboardSidebar({ navItems }: { navItems: Array<{ href: string; label: string; icon: string }>}) {
+export default function DashboardSidebar({ navItems, brandingName, currentLanguage }: { navItems: Array<{ href: string; label: string; icon: string }>; brandingName?: string; currentLanguage?: string }) {
   return (
-    <aside className="w-64 bg-surface border-r border-border h-screen fixed left-0 top-16 z-20">
-      <Suspense fallback={<SidebarSkeleton />}> 
-        <DashboardSidebarClient serverNavItems={navItems} />
-      </Suspense>
-    </aside>
+    <>
+      {/* Desktop Sidebar */}
+      <aside className="hidden lg:block w-64 bg-surface border-r border-border h-[calc(100vh-4rem)] fixed left-0 top-16 z-20">
+        <Suspense fallback={<SidebarSkeleton />}> 
+          <DashboardSidebarClient serverNavItems={navItems} brandingName={brandingName} currentLanguage={currentLanguage} />
+        </Suspense>
+      </aside>
+
+
+      {/* Mobile Sidebar */}
+      <MobileSidebarWrapper>
+        <aside className="lg:hidden w-64 bg-surface border-r border-border h-[calc(100vh-4rem)] fixed left-0 top-16 z-50">
+        <Suspense fallback={<SidebarSkeleton />}> 
+          <DashboardSidebarClient serverNavItems={navItems} brandingName={brandingName} currentLanguage={currentLanguage} />
+        </Suspense>
+        </aside>
+      </MobileSidebarWrapper>
+    </>
   );
 }
 
