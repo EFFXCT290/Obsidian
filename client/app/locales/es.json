@@ -976,6 +976,39 @@
 			}
 		}
 	},
+	"publicProfile":{
+		"private":{
+			"title":"Perfil Privado",
+			"description":"Este usuario ha elegido mantener su perfil privado."
+		},
+		"joined":"Se unió",
+		"roles":{
+			"user":"Usuario",
+			"mod":"Moderador",
+			"admin":"Administrador",
+			"owner":"Propietario",
+			"founder":"Fundador"
+		},
+		"stats":{
+			"uploaded":"Subido",
+			"downloaded":"Descargado",
+			"ratio":"Ratio",
+			"torrents":"Torrents"
+		},
+		"publicTorrents":{
+			"title":"Torrents Públicos",
+			"empty":"No se encontraron torrents públicos"
+		},
+		"torrent":{
+			"title":"Título",
+			"size":"Tamaño",
+			"category":"Categoría",
+			"date":"Fecha",
+			"seeders":"Seeders",
+			"leechers":"Leechers",
+			"completed":"Completados"
+		}
+	},
 	"torrentDetail":{
 		"header":{
 			"pendingApproval":"Pendiente de aprobación",
@@ -1073,7 +1106,12 @@
 		"downloads":"Descargas",
 		"uploaded":"Subido",
 		"downloadStarted":"Descarga iniciada",
-		"freeleech":"FL"
+		"freeleech":"FL",
+		"yes":"Sí",
+		"no":"No",
+		"deleting":"Eliminando...",
+		"cancel":"Cancelar",
+		"save":"Guardar"
 	},
 	"language":{
 		"selector":{
@@ -1205,6 +1243,10 @@
 		"preferences":{
 			"language":"Idioma",
 			"emailNotifications":"Permitir notificaciones por email",
+			"publicProfile":"Hacer perfil público",
+			"publicProfileDescription":"Tu perfil será visible en /user/{username} y mostrará tus torrents públicos, ratio y estadísticas. Los torrents anónimos no se mostrarán.",
+			"saved":"¡Preferencias guardadas exitosamente!",
+			"saveError":"Error al guardar las preferencias",
 			"placeholder":"Sección de preferencias (por implementar)."
 		},
 		"recent":{
@@ -1426,13 +1468,38 @@
 			"seedersLeechers":"Seeders / Leechers",
 			"downloads":"Descargas",
 			"category":"Categoría",
-			"status":"Estado"
+			"status":"Estado",
+			"anonymous":"Anónimo",
+			"freeleech":"Freeleech",
+			"actions":"Acciones"
 		},
 		"status":{
 			"approved":"Aprobado",
 			"pending":"Pendiente",
 			"rejected":"Rechazado"
 		},
+		"actions":{
+			"delete":"Eliminar",
+			"edit":"Editar"
+		},
+		"modal":{
+			"title":"Editar Torrent",
+			"category":"Categoría",
+			"size":"Tamaño",
+			"date":"Fecha de subida",
+			"status":"Estado",
+			"editOptions":"Opciones de edición",
+			"anonymous":"Anónimo",
+			"anonymousDescription":"Ocultar tu identidad como uploader",
+			"freeleech":"Freeleech",
+			"freeleechDescription":"Las descargas no cuentan contra el ratio del usuario",
+			"cannotEdit":"Este torrent no se puede editar porque aún no está aprobado."
+		},
+		"updateSuccess":"Torrent actualizado exitosamente",
+		"updateError":"Error al actualizar el torrent",
+		"deleteSuccess":"Torrent eliminado exitosamente",
+		"deleteError":"Error al eliminar el torrent",
+		"deleteConfirm":"¿Estás seguro de que quieres eliminar este torrent? Esta acción no se puede deshacer.",
 		"empty":"Aún no has subido torrents",
 		"loading":"Cargando tus torrents...",
 		"error":"Error cargando torrents",

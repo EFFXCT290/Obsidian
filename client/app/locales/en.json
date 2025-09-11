@@ -977,6 +977,39 @@
 			}
 		}
 	},
+	"publicProfile":{
+		"private":{
+			"title":"Profile is Private",
+			"description":"This user has chosen to keep their profile private."
+		},
+		"joined":"Joined",
+		"roles":{
+			"user":"User",
+			"mod":"Moderator",
+			"admin":"Admin",
+			"owner":"Owner",
+			"founder":"Founder"
+		},
+		"stats":{
+			"uploaded":"Uploaded",
+			"downloaded":"Downloaded",
+			"ratio":"Ratio",
+			"torrents":"Torrents"
+		},
+		"publicTorrents":{
+			"title":"Public Torrents",
+			"empty":"No public torrents found"
+		},
+		"torrent":{
+			"title":"Title",
+			"size":"Size",
+			"category":"Category",
+			"date":"Date",
+			"seeders":"Seeders",
+			"leechers":"Leechers",
+			"completed":"Completed"
+		}
+	},
 	"torrentDetail":{
 		"header":{
 			"pendingApproval":"Pending approval",
@@ -1074,7 +1107,12 @@
 		"downloads":"Downloads",
 		"uploaded":"Uploaded",
 		"downloadStarted":"Download started",
-		"freeleech":"FL"
+		"freeleech":"FL",
+		"yes":"Yes",
+		"no":"No",
+		"deleting":"Deleting...",
+		"cancel":"Cancel",
+		"save":"Save"
 	},
 	"language":{
 		"selector":{
@@ -1206,6 +1244,10 @@
 		"preferences":{
 			"language":"Language",
 			"emailNotifications":"Allow email notifications",
+			"publicProfile":"Make profile public",
+			"publicProfileDescription":"Your profile will be visible at /user/{username} and show your public torrents, ratio, and stats. Anonymous torrents will not be shown.",
+			"saved":"Preferences saved successfully!",
+			"saveError":"Failed to save preferences",
 			"placeholder":"Preferences section (to be implemented)."
 		},
 		"recent":{
@@ -1427,13 +1469,38 @@
 			"seedersLeechers":"Seeders / Leechers",
 			"downloads":"Downloads",
 			"category":"Category",
-			"status":"Status"
+			"status":"Status",
+			"anonymous":"Anonymous",
+			"freeleech":"Freeleech",
+			"actions":"Actions"
 		},
 		"status":{
 			"approved":"Approved",
 			"pending":"Pending",
 			"rejected":"Rejected"
 		},
+		"actions":{
+			"delete":"Delete",
+			"edit":"Edit"
+		},
+		"modal":{
+			"title":"Edit Torrent",
+			"category":"Category",
+			"size":"Size",
+			"date":"Upload Date",
+			"status":"Status",
+			"editOptions":"Edit Options",
+			"anonymous":"Anonymous",
+			"anonymousDescription":"Hide your identity as the uploader",
+			"freeleech":"Freeleech",
+			"freeleechDescription":"Downloads do not count against user ratio",
+			"cannotEdit":"This torrent cannot be edited because it is not approved yet."
+		},
+		"updateSuccess":"Torrent updated successfully",
+		"updateError":"Failed to update torrent",
+		"deleteSuccess":"Torrent deleted successfully",
+		"deleteError":"Failed to delete torrent",
+		"deleteConfirm":"Are you sure you want to delete this torrent? This action cannot be undone.",
 		"empty":"No torrents uploaded yet",
 		"loading":"Loading your torrents...",
 		"error":"Error loading torrents",
