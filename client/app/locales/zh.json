@@ -1,0 +1,1409 @@
+{
+	"home": {
+		"title": "Obsidian Tracker",
+		"subtitle": "功能强大的 Torrent Tracker 服务器",
+		"description": "一个现代化的 Torrent Tracker 服务器",
+		"welcome": {
+			"title": "欢迎来到 Obsidian Tracker",
+			"description": "请登录或注册以访问服务器"
+		},
+		"footer": {
+			"description": "一个使用 Next.js 和 Fastify 构建的现代化 Torrent Tracker",
+			"login": "登录",
+			"register": "注册",
+			"about": "关于",
+			"stats": "统计",
+			"api": "API"
+		}
+	},
+	"sidebar": {
+		"nav": {
+			"home": "主页",
+			"categories": "分类",
+			"requests": "求种",
+			"announcements": "公告",
+			"wiki": "百科",
+			"rss": "RSS",
+			"bookmarks": "收藏"
+		}
+	},
+	"requests": {
+		"description": "请求特定内容或帮助解决其他用户的请求。",
+		"createRequest": "发布求种",
+		"myRequests": "我的求种",
+		"allRequests": "所有求种",
+		"openRequests": "开放的求种",
+		"filledRequests": "已解决的求种",
+		"closedRequests": "已关闭的求种",
+		"rejectedRequests": "已拒绝的求种",
+		"noRequests": "未找到任何求种",
+		"searchPlaceholder": "搜索求种...",
+		"filterBy": "筛选方式",
+		"status": "状态",
+		"category": "分类",
+		"createdBy": "创建者",
+		"filledBy": "应求者",
+		"createdAt": "创建于",
+		"viewRequest": "查看求种",
+		"fillRequest": "解决求种",
+		"requestDetails": "求种详情",
+		"backToList": "返回列表",
+		"requestNotFound": "未找到该求种",
+		"loadingRequest": "正在加载求种...",
+		"comments": "评论",
+		"noComments": "暂无评论",
+		"addComment": "添加评论",
+		"commentPlaceholder": "撰写评论...",
+		"postComment": "发表评论",
+		"commentPosted": "评论发表成功",
+		"errorPostingComment": "发表评论时出错",
+		"createNewRequest": "创建新求种",
+		"requestTitle": "求种标题",
+		"requestDescription": "求种描述",
+		"selectCategory": "选择分类",
+		"submitRequest": "提交求种",
+		"requestCreated": "求种创建成功",
+		"errorCreatingRequest": "创建求种时出错",
+		"fillWithTorrent": "使用 Torrent 应求",
+		"selectTorrent": "选择 Torrent",
+		"searchTorrents": "搜索 Torrent...",
+		"noTorrentsFound": "未找到 Torrent",
+		"fillRequestSuccess": "应求成功",
+		"errorFillingRequest": "应求出错",
+		"requestAlreadyFilled": "该求种已被解决",
+		"requestNotOpen": "该求种未开放",
+		"invalidTorrent": "无效或未获批准的 Torrent",
+		"titlePlaceholder": "为您的求种输入一个描述性标题",
+		"descriptionPlaceholder": "提供有关您正在寻找的内容的更多详细信息...",
+		"mustBeLoggedIn": "您必须登录才能执行此操作",
+		"failedToLoadRequests": "加载求种失败",
+		"failedToLoadRequest": "加载求种失败",
+		"failedToLoadComments": "加载评论失败",
+		"failedToLoadTorrents": "加载 Torrent 失败",
+		"failedToPostComment": "发表评论失败",
+		"failedToFillRequest": "应求失败",
+		"errorLoadingRequests": "加载求种时出错",
+		"errorLoadingRequest": "加载求种时出错",
+		"errorLoadingComments": "加载评论时出错",
+		"errorLoadingTorrents": "加载 Torrent 时出错",
+		"noRequestsForFilter": "在此筛选条件下未找到任何求种",
+		"viewTorrent": "查看 Torrent",
+		"filledWith": "应求来源：",
+		"postingComment": "正在发表...",
+		"creatingRequest": "正在创建...",
+		"fileSizes": {
+			"bytes": "字节",
+			"kb": "KB",
+			"mb": "MB",
+			"gb": "GB",
+			"tb": "TB"
+		},
+		"titleRequired": "标题为必填项",
+		"categoryRequired": "分类为必填项",
+		"failedToCreateRequest": "创建求种失败",
+		"notificationError": "求种已解决，但无法发送通知"
+	},
+	"bookmarks": {
+		"description": "管理您收藏的 Torrent",
+		"mustBeLoggedIn": "您必须登录才能查看收藏",
+		"errorLoadingBookmarks": "加载收藏时出错",
+		"searchPlaceholder": "搜索收藏...",
+		"resultsCount": "个收藏已找到",
+		"pageInfo": "第",
+		"of": "页，共",
+		"noResults": "未找到与您搜索匹配的收藏",
+		"noBookmarks": "暂无收藏",
+		"noBookmarksDescription": "开始收藏 Torrent 以在此处查看它们",
+		"editNote": "编辑备注",
+		"removeBookmark": "移除收藏",
+		"notePlaceholder": "添加备注...",
+		"saving": "保存中...",
+		"save": "保存",
+		"cancel": "取消",
+		"viewTorrent": "查看 Torrent",
+		"previous": "上一页",
+		"next": "下一页",
+		"confirmDelete": "您确定要移除此收藏吗？",
+		"confirmDeleteTitle": "删除收藏",
+		"confirmDeleteMessage": "您确定要移除此收藏吗？此操作无法撤销。",
+		"delete": "删除",
+		"bookmarkRemoved": "收藏已成功移除",
+		"errorRemovingBookmark": "移除收藏时出错",
+		"noteUpdated": "备注更新成功",
+		"errorUpdatingNote": "更新备注时出错"
+	},
+	"rss": {
+		"description": "管理您的个性化 Torrent RSS Feed",
+		"mustBeLoggedIn": "您必须登录才能访问 RSS",
+		"errorLoadingToken": "加载 RSS Token 时出错",
+		"tokenRegenerated": "RSS Token 已成功重新生成",
+		"errorRegeneratingToken": "重新生成 RSS Token 时出错",
+		"copiedToClipboard": "已复制到剪贴板",
+		"errorCopying": "复制到剪贴板时出错",
+		"disabled": "RSS 已禁用",
+		"disabledMessage": "您的账户已禁用 RSS 访问。请联系管理员。",
+		"yourRssToken": "您的 RSS Token",
+		"token": "RSS Token",
+		"copyToken": "复制 Token",
+		"regenerateToken": "重新生成 Token",
+		"tokenInfo": "Token 信息",
+		"tokenInfoMessage": "请妥善保管您的 RSS Token。任何拥有此 Token 的人都可以访问您的 RSS Feed。",
+		"feedUrls": "RSS Feed URL",
+		"allTorrents": "所有 Torrent",
+		"bookmarkedTorrents": "收藏的 Torrent",
+		"limitedCount": "数量有限 (10个 Torrent)",
+		"copyUrl": "复制 URL",
+		"openFeed": "打开 Feed",
+		"howToUse": "如何使用 RSS",
+		"searchParameters": "搜索参数",
+		"searchDescription": "按名称或描述搜索 Torrent",
+		"categoryDescription": "按分类 ID 筛选",
+		"countDescription": "限制 Torrent 数量 (最多 20 个)",
+		"bookmarksDescription": "仅显示您收藏的 Torrent",
+		"rssReaders": "RSS 阅读器",
+		"rssReadersDescription": "您可以使用任何 RSS 阅读器订阅这些 Feed。热门选项包括：",
+		"reader1": "Thunderbird (支持 RSS 的电子邮件客户端)",
+		"reader2": "Feedly (基于 Web 的 RSS 阅读器)",
+		"reader3": "RSS Guard (桌面 RSS 阅读器)",
+		"reader4": "移动应用，如 Feedly、Inoreader 等",
+		"security": "安全",
+		"securityDescription": "您的 RSS Token 是您账户唯一的。请妥善保管，如果怀疑已泄露，请重新生成。"
+	},
+	"wiki": {
+		"description": "浏览社区文档和指南",
+		"pageDescription": "Wiki 文档页面",
+		"searchPlaceholder": "搜索 Wiki 页面...",
+		"pagesFound": "个页面已找到",
+		"pageInfo": "第",
+		"of": "页，共",
+		"noResults": "未找到结果",
+		"noPages": "没有可用的 Wiki 页面",
+		"noResultsDescription": "尝试调整您的搜索词",
+		"noPagesDescription": "创建 Wiki 页面后将在此处显示",
+		"createdBy": "创建者",
+		"updated": "更新于",
+		"parentPage": "父页面",
+		"readMore": "阅读更多",
+		"subPages": "子页面",
+		"expand": "展开",
+		"collapse": "折叠",
+		"previous": "上一页",
+		"next": "下一页",
+		"wiki": "百科",
+		"backToWiki": "返回百科"
+	},
+	"dashboard": {
+		"latestTorrents": "最新 Torrent",
+		"pinnedAnnouncements": "置顶公告",
+		"viewAll": "查看全部",
+		"noTorrents": "暂无 Torrent",
+		"noAnnouncements": "暂无公告",
+		"size": "大小",
+		"uploader": "上传者",
+		"category": "分类",
+		"seeders": "做种者",
+		"leechers": "下载者",
+		"completed": "完成",
+		"uploaded": "上传于",
+		"by": "由",
+		"previous": "上一页",
+		"next": "下一页",
+		"page": "第",
+		"of": "页，共",
+		"allAnnouncements": "所有公告",
+		"createdBy": "创建者",
+		"createdAt": "创建于",
+		"updatedAt": "更新于",
+		"loading": "正在加载公告...",
+		"backToAnnouncements": "返回公告",
+		"notFound": "未找到公告",
+		"error": "加载公告时出错",
+		"description": "随时了解最新的站点公告和通知。"
+	},
+	"categories": {
+		"title": "分类",
+		"description": "浏览可用的不同内容分类。",
+		"popularTags": "热门标签",
+		"browseCategories": "浏览分类",
+		"latestTorrents": "最新 Torrent",
+		"viewAll": "查看全部",
+		"searchPlaceholder": "搜索分类...",
+		"noTorrents": "暂无 Torrent",
+		"seeders": "做种",
+		"leechers": "下载",
+		"completed": "完成",
+		"uploaded": "上传于",
+		"by": "由",
+		"size": "大小",
+		"loading": "正在加载分类..."
+	},
+	"categoryTorrents": {
+		"title": "分类 Torrent",
+		"description": "浏览此分类中所有可用的 Torrent。",
+		"breadcrumbHome": "主页",
+		"breadcrumbCategories": "分类",
+		"noTorrents": "此分类中没有可用的 Torrent。",
+		"loading": "正在加载 Torrent...",
+		"filters": {
+			"allSources": "所有来源",
+			"sortBy": "排序方式",
+			"newest": "最新",
+			"oldest": "最旧",
+			"mostSeeded": "做种最多",
+			"leastSeeded": "做种最少",
+			"largest": "最大",
+			"smallest": "最小"
+		},
+		"torrent": {
+			"seeders": "做种",
+			"leechers": "下载",
+			"completed": "完成",
+			"uploaded": "上传于",
+			"by": "由",
+			"size": "大小",
+			"download": "下载"
+		},
+		"pagination": {
+			"previous": "上一页",
+			"next": "下一页",
+			"page": "第",
+			"of": "页，共"
+		}
+	},
+	"search": {
+		"title": "搜索",
+		"description": "按名称、标签或分类搜索 Torrent。",
+		"noResults": "未找到结果。",
+		"loading": "搜索中...",
+		"filters": {
+			"sortBy": "排序方式",
+			"newest": "最新",
+			"oldest": "最旧",
+			"mostSeeded": "做种最多",
+			"leastSeeded": "做种最少",
+			"largest": "最大",
+			"smallest": "最小"
+		},
+		"torrent": {
+			"seeders": "做种",
+			"leechers": "下载",
+			"completed": "完成",
+			"uploaded": "上传于",
+			"by": "由",
+			"size": "大小",
+			"download": "下载"
+		},
+		"pagination": {
+			"previous": "上一页",
+			"next": "下一页",
+			"page": "第",
+			"of": "页，共"
+		}
+	},
+	"header": {
+		"search": {
+			"placeholder": "搜索..."
+		},
+		"upload": "上传",
+		"userMenu": {
+			"profile": "个人资料",
+			"adminPanel": "管理面板",
+			"moderatorPanel": "版主面板",
+			"logout": "退出登录"
+		}
+	},
+	"admin": {
+		"nav": {
+			"dashboard": "概览",
+			"users": "用户",
+			"torrentApprovals": "Torrent 审批",
+			"torrentManagement": "Torrent 管理",
+			"categories": "分类",
+			"announcements": "公告",
+			"wiki": "百科",
+			"peerban": "Peer 封禁",
+			"rssManagement": "RSS 管理",
+			"settings": "设置",
+			"configuration": "配置",
+			"requests": "求种"
+		},
+		"backToSite": "返回站点",
+		"title": "管理面板",
+		"categories": {
+			"title": "分类管理",
+			"description": "管理追踪器的分类及其层级结构。",
+			"addNew": "添加分类",
+			"addCategory": "添加新分类",
+			"editCategory": "编辑分类",
+			"list": "分类列表",
+			"name": "名称",
+			"icon": "图标",
+			"order": "顺序",
+			"parentCategory": "父分类",
+			"noParent": "无父分类",
+			"torrents": "个 torrent",
+			"requests": "个求种",
+			"create": "创建",
+			"update": "更新",
+			"edit": "编辑",
+			"delete": "删除",
+			"cancel": "取消",
+			"nameRequired": "名称为必填项",
+			"confirmDelete": "您确定要删除此分类吗？",
+			"noCategories": "没有可用的分类",
+			"created": "分类创建成功",
+			"updated": "分类更新成功",
+			"deleted": "分类删除成功",
+			"errorLoading": "加载分类时出错",
+			"errorCreating": "创建分类时出错",
+			"errorUpdating": "更新分类时出错",
+			"errorDeleting": "删除分类时出错",
+			"dragToReorder": "拖动以重新排序",
+			"reorderSuccess": "顺序更新成功",
+			"reorderError": "更新顺序时出错",
+			"moveToCategory": "移动到分类",
+			"moveToMain": "移动到主分类",
+			"moveSuccess": "分类移动成功",
+			"moveError": "移动分类时出错",
+			"dropZone": "放置区域",
+			"dropHereToMove": "拖放到此处以移动",
+			"errorHasSubcategories": "无法移动包含子分类的分类。请先移动子分类。",
+			"errorSubcategoryParent": "无法将分类移动到子分类中。只有根分类可以有子分类。",
+			"errorCircularReference": "无法移动分类：将创建循环引用。",
+			"errorSelfParent": "分类不能成为自己的父分类。"
+		},
+		"users": {
+			"title": "用户管理",
+			"description": "管理服务器用户、角色和权限。",
+			"search": "搜索",
+			"searching": "搜索中...",
+			"searchPlaceholder": "按用户名或电子邮件搜索...",
+			"users": "用户",
+			"noUsers": "未找到用户",
+			"editUser": "编辑用户",
+			"userDetails": "用户详情",
+			"username": "用户名",
+			"email": "电子邮件",
+			"role": "角色",
+			"status": "状态",
+			"emailVerified": "电子邮件已验证",
+			"createdAt": "创建于",
+			"actions": "操作",
+			"edit": "编辑",
+			"ban": "封禁",
+			"unban": "解封",
+			"enable": "启用",
+			"promote": "提升",
+			"demote": "降级",
+			"close": "关闭",
+			"save": "保存",
+			"saving": "保存中...",
+			"cancel": "取消",
+			"confirmBan": "您确定要封禁此用户吗？",
+			"confirmUnban": "您确定要解封此用户吗？",
+			"confirmPromote": "您确定要提升此用户吗？",
+			"confirmDemote": "您确定要降级此用户吗？",
+			"userBanned": "用户已成功封禁",
+			"userUnbanned": "用户已成功解封",
+			"userPromoted": "用户已成功提升",
+			"userDemoted": "用户已成功降级",
+			"userUpdated": "用户已成功更新",
+			"errorLoading": "加载用户时出错",
+			"errorUpdating": "更新用户时出错",
+			"errorBanning": "封禁用户时出错",
+			"errorUnbanning": "解封用户时出错",
+			"errorPromoting": "提升用户时出错",
+			"errorDemoting": "降级用户时出错",
+			"transferFounder": "转移创始人",
+			"founderRoleWarning": "创始人角色无法更改。请使用转移按钮转移创始人角色。",
+			"loading": "加载中...",
+			"roles": {
+				"USER": "用户",
+				"MOD": "版主",
+				"ADMIN": "管理员",
+				"OWNER": "所有者",
+				"FOUNDER": "创始人"
+			},
+			"statuses": {
+				"ACTIVE": "活跃",
+				"BANNED": "已封禁",
+				"DISABLED": "已禁用"
+			}
+		},
+		"torrentApprovals": {
+			"title": "Torrent 审批",
+			"description": "审核并批准待处理的 Torrent 上传。",
+			"stats": {
+				"total": "总 Torrent 数",
+				"approved": "已批准",
+				"pending": "待处理"
+			},
+			"filters": {
+				"all": "全部",
+				"approved": "已批准",
+				"pending": "待处理",
+				"rejected": "已拒绝",
+				"search": "搜索 Torrent..."
+			},
+			"table": {
+				"name": "名称",
+				"uploader": "上传者",
+				"category": "分类",
+				"size": "大小",
+				"date": "日期",
+				"status": "状态",
+				"actions": "操作"
+			},
+			"status": {
+				"approved": "已批准",
+				"pending": "待处理",
+				"rejected": "已拒绝"
+			},
+			"actions": {
+				"approve": "批准",
+				"reject": "拒绝",
+				"view": "查看",
+				"viewRejectionReason": "查看拒绝原因",
+				"approving": "批准中...",
+				"rejecting": "拒绝中..."
+			},
+			"modals": {
+				"approve": {
+					"title": "批准 Torrent",
+					"message": "您确定要批准此 Torrent 吗？",
+					"confirm": "批准",
+					"cancel": "取消"
+				},
+				"reject": {
+					"title": "拒绝 Torrent",
+					"message": "您确定要拒绝此 Torrent 吗？",
+					"reason": "拒绝原因 (可选):",
+					"confirm": "拒绝",
+					"cancel": "取消"
+				},
+				"rejectionInfo": {
+					"title": "拒绝信息",
+					"reason": "拒绝原因:",
+					"rejectedBy": "拒绝者:",
+					"rejectedAt": "拒绝日期:",
+					"noReason": "未指定原因",
+					"unknown": "未知",
+					"close": "关闭"
+				}
+			},
+			"notifications": {
+				"approved": "Torrent 批准成功",
+				"rejected": "Torrent 拒绝成功",
+				"error": "处理操作时出错"
+			},
+			"empty": {
+				"title": "没有待处理的 Torrent",
+				"description": "所有 Torrent 都已处理。"
+			}
+		},
+		"torrentManagement": {
+			"title": "Torrent 管理",
+			"description": "管理现有的 Torrent、分类和元数据。",
+			"search": {
+				"placeholder": "按名称搜索 Torrent..."
+			},
+			"filters": {
+				"allCategories": "所有分类",
+				"clear": "清除"
+			},
+			"edit": {
+				"name": "名称",
+				"description": "描述",
+				"category": "分类",
+				"save": "保存更改",
+				"cancel": "取消"
+			},
+			"info": {
+				"size": "大小",
+				"category": "分类",
+				"uploader": "上传者",
+				"created": "创建于",
+				"updated": "更新于"
+			},
+			"actions": {
+				"edit": "编辑 Torrent",
+				"delete": "删除 Torrent"
+			},
+			"delete": {
+				"confirmTitle": "删除 Torrent",
+				"confirmMessage": "您确定要删除此 Torrent 吗？此操作无法撤销。",
+				"confirm": "删除",
+				"cancel": "取消"
+			},
+			"pagination": {
+				"previous": "上一页",
+				"next": "下一页",
+				"page": "第 {current} 页，共 {total} 页"
+			},
+			"noResults": {
+				"title": "未找到 Torrent",
+				"description": "尝试调整您的搜索条件或筛选器。"
+			},
+			"notifications": {
+				"updated": "Torrent 更新成功",
+				"deleted": "Torrent 删除成功",
+				"deletedNoEmail": "Torrent 删除成功，但无法发送通知邮件",
+				"error": "管理 Torrent 时发生错误"
+			}
+		},
+		"rssManagement": {
+			"title": "RSS 管理",
+			"description": "配置和管理 RSS Feed 和设置。",
+			"search": {
+				"placeholder": "按用户名或电子邮件搜索用户...",
+				"clear": "清除"
+			},
+			"user": {
+				"email": "电子邮件",
+				"created": "创建于",
+				"emailVerified": "电子邮件已验证",
+				"emailNotVerified": "电子邮件未验证"
+			},
+			"rss": {
+				"enabled": "RSS 已启用",
+				"disabled": "RSS 已禁用",
+				"token": "RSS Token",
+				"showToken": "显示 Token",
+				"hideToken": "隐藏 Token"
+			},
+			"actions": {
+				"enable": "启用 RSS",
+				"disable": "禁用 RSS",
+				"resetToken": "重置 Token"
+			},
+			"pagination": {
+				"previous": "上一页",
+				"next": "下一页"
+			},
+			"noResults": {
+				"title": "未找到用户",
+				"description": "尝试调整您的搜索条件。"
+			},
+			"notifications": {
+				"rssEnabled": "RSS 访问已成功启用",
+				"rssDisabled": "RSS 访问已成功禁用",
+				"tokenReset": "RSS Token 已成功重置",
+				"tokenCopied": "RSS Token 已复制到剪贴板",
+				"copyError": "将 Token 复制到剪贴板失败",
+				"error": "管理 RSS 设置时发生错误"
+			}
+		},
+		"announcements": {
+			"title": "公告",
+			"description": "管理站点公告和通知。",
+			"addNew": "添加新公告",
+			"addAnnouncement": "添加公告",
+			"editAnnouncement": "编辑公告",
+			"list": "公告列表",
+			"titleField": "标题",
+			"body": "内容",
+			"pinned": "已置顶",
+			"visible": "可见",
+			"createdBy": "创建者",
+			"createdAt": "创建于",
+			"updatedAt": "更新于",
+			"create": "创建",
+			"update": "更新",
+			"edit": "编辑",
+			"delete": "删除",
+			"pin": "置顶",
+			"unpin": "取消置顶",
+			"show": "显示",
+			"hide": "隐藏",
+			"cancel": "取消",
+			"titleRequired": "标题为必填项",
+			"bodyRequired": "内容为必填项",
+			"confirmDelete": "您确定要删除此公告吗？",
+			"noAnnouncements": "未找到公告",
+			"created": "公告创建成功",
+			"updated": "公告更新成功",
+			"deleted": "公告删除成功",
+			"pinnedSuccess": "公告置顶成功",
+			"unpinnedSuccess": "公告取消置顶成功",
+			"shownSuccess": "公告显示成功",
+			"hiddenSuccess": "公告隐藏成功",
+			"errorLoading": "加载公告时出错",
+			"errorCreating": "创建公告时出错",
+			"errorUpdating": "更新公告时出错",
+			"errorDeleting": "删除公告时出错",
+			"errorPinning": "置顶公告时出错",
+			"errorUnpinning": "取消置顶公告时出错",
+			"errorShowing": "显示公告时出错",
+			"errorHiding": "隐藏公告时出错",
+			"sendEmail": "通过电子邮件发送"
+		},
+		"wiki": {
+			"title": "百科管理",
+			"description": "管理百科页面和文档。",
+			"addNew": "添加新百科页面",
+			"addWikiPage": "添加百科页面",
+			"editWikiPage": "编辑百科页面",
+			"list": "百科页面列表",
+			"slug": "标识",
+			"titleField": "标题",
+			"content": "内容",
+			"parentPage": "父页面",
+			"noParent": "无父页面 (主页面)",
+			"locked": "已锁定",
+			"visible": "可见",
+			"createdBy": "创建者",
+			"updatedBy": "更新者",
+			"createdAt": "创建于",
+			"updatedAt": "更新于",
+			"create": "创建",
+			"update": "更新",
+			"edit": "编辑",
+			"delete": "删除",
+			"lock": "锁定",
+			"unlock": "解锁",
+			"show": "显示",
+			"hide": "隐藏",
+			"cancel": "取消",
+			"slugRequired": "标识为必填项",
+			"titleRequired": "标题为必填项",
+			"contentRequired": "内容为必填项",
+			"confirmDelete": "您确定要删除此百科页面吗？",
+			"noWikiPages": "未找到百科页面",
+			"created": "百科页面创建成功",
+			"updated": "百科页面更新成功",
+			"deleted": "百科页面删除成功",
+			"lockedSuccess": "百科页面锁定成功",
+			"unlockedSuccess": "百科页面解锁成功",
+			"shownSuccess": "百科页面显示成功",
+			"hiddenSuccess": "百科页面隐藏成功",
+			"errorLoading": "加载百科页面时出错",
+			"errorCreating": "创建百科页面时出错",
+			"errorUpdating": "更新百科页面时出错",
+			"errorDeleting": "删除百科页面时出错",
+			"errorLocking": "锁定百科页面时出错",
+			"errorUnlocking": "解锁百科页面时出错",
+			"errorShowing": "显示百科页面时出错",
+			"errorHiding": "隐藏百科页面时出错"
+		},
+		"peerban": {
+			"title": "Peer 封禁",
+			"description": "管理 Peer 封禁和 IP 限制。",
+			"addNew": "添加新 Peer 封禁",
+			"addPeerBan": "添加 Peer 封禁",
+			"editPeerBan": "编辑 Peer 封禁",
+			"list": "Peer 封禁列表",
+			"userId": "用户 ID",
+			"passkey": "Passkey",
+			"peerId": "Peer ID",
+			"ip": "IP 地址",
+			"reason": "原因",
+			"expiresAt": "到期时间",
+			"noExpiration": "永不过期",
+			"bannedBy": "封禁者",
+			"createdAt": "创建于",
+			"status": "状态",
+			"active": "有效",
+			"expired": "已过期",
+			"permanent": "永久",
+			"create": "创建",
+			"update": "更新",
+			"edit": "编辑",
+			"delete": "删除",
+			"remove": "移除封禁",
+			"cancel": "取消",
+			"reasonRequired": "原因为必填项",
+			"banTypeRequired": "至少需要一种封禁类型 (用户 ID、Passkey、Peer ID 或 IP)",
+			"confirmDelete": "您确定要移除此 Peer 封禁吗？",
+			"noPeerBans": "未找到 Peer 封禁",
+			"created": "Peer 封禁创建成功",
+			"removed": "Peer 封禁移除成功",
+			"errorLoading": "加载 Peer 封禁时出错",
+			"errorCreating": "创建 Peer 封禁时出错",
+			"errorRemoving": "移除 Peer 封禁时出错",
+			"filterBy": "筛选方式",
+			"allBans": "所有封禁",
+			"activeBans": "有效封禁",
+			"expiredBans": "过期封禁",
+			"searchBy": "搜索方式",
+			"searchPlaceholder": "输入用户 ID、Passkey、Peer ID 或 IP...",
+			"banTypes": {
+				"userId": "用户 ID",
+				"passkey": "Passkey",
+				"peerId": "Peer ID",
+				"ip": "IP 地址"
+			}
+		},
+		"requests": {
+			"title": "求种管理",
+			"description": "管理用户求种和完成状态。",
+			"list": "求种列表",
+			"titleField": "标题",
+			"descriptionField": "描述",
+			"category": "分类",
+			"status": "状态",
+			"createdBy": "创建者",
+			"filledBy": "解决者",
+			"filledTorrent": "解决的 Torrent",
+			"createdAt": "创建于",
+			"updatedAt": "更新于",
+			"open": "开放",
+			"filled": "已解决",
+			"closed": "已关闭",
+			"rejected": "已拒绝",
+			"close": "关闭",
+			"reject": "拒绝",
+			"view": "查看",
+			"reason": "原因",
+			"reasonOptional": "原因 (可选)",
+			"closeRequest": "关闭求种",
+			"rejectRequest": "拒绝求种",
+			"viewRequest": "查看求种",
+			"cancel": "取消",
+			"confirmClose": "您确定要关闭此求种吗？",
+			"confirmReject": "您确定要拒绝此求种吗？",
+			"noRequests": "未找到求种",
+			"closedSuccess": "求种关闭成功",
+			"rejectedSuccess": "求种拒绝成功",
+			"errorLoading": "加载求种时出错",
+			"errorClosing": "关闭求种时出错",
+			"errorRejecting": "拒绝求种时出错",
+			"filterBy": "筛选方式",
+			"allRequests": "所有求种",
+			"openRequests": "开放的求种",
+			"filledRequests": "已解决的求种",
+			"closedRequests": "已关闭的求种",
+			"rejectedRequests": "已拒绝的求种",
+			"searchBy": "搜索方式",
+			"searchPlaceholder": "搜索求种...",
+			"requestDetails": "求种详情",
+			"backToList": "返回列表",
+			"requestNotFound": "未找到求种",
+			"loadingRequest": "正在加载求种...",
+			"comments": "评论",
+			"noComments": "暂无评论",
+			"addComment": "添加评论",
+			"commentPlaceholder": "撰写评论...",
+			"postComment": "发表评论",
+			"commentPosted": "评论发表成功",
+			"errorPostingComment": "发表评论时出错"
+		},
+		"userRequests": {
+			"title": "求种",
+			"description": "请求特定内容或帮助满足其他用户的请求。",
+			"createRequest": "创建求种",
+			"myRequests": "我的求种",
+			"allRequests": "所有求种",
+			"openRequests": "开放的求种",
+			"filledRequests": "已解决的求种",
+			"closedRequests": "已关闭的求种",
+			"rejectedRequests": "已拒绝的求种",
+			"noRequests": "未找到求种",
+			"searchPlaceholder": "搜索求种...",
+			"filterBy": "筛选方式",
+			"status": "状态",
+			"category": "分类",
+			"createdBy": "创建者",
+			"filledBy": "解决者",
+			"createdAt": "创建于",
+			"viewRequest": "查看求种",
+			"fillRequest": "解决求种",
+			"requestDetails": "求种详情",
+			"backToList": "返回列表",
+			"requestNotFound": "未找到求种",
+			"loadingRequest": "正在加载求种...",
+			"comments": "评论",
+			"noComments": "暂无评论",
+			"addComment": "添加评论",
+			"commentPlaceholder": "撰写评论...",
+			"postComment": "发表评论",
+			"commentPosted": "评论发表成功",
+			"createNewRequest": "创建新求种",
+			"requestTitle": "求种标题",
+			"requestDescription": "求种描述",
+			"selectCategory": "选择分类",
+			"submitRequest": "提交求种",
+			"requestCreated": "求种创建成功",
+			"errorCreatingRequest": "创建求种时出错",
+			"fillWithTorrent": "使用 Torrent 解决",
+			"selectTorrent": "选择 Torrent",
+			"searchTorrents": "搜索 Torrent...",
+			"noTorrentsFound": "未找到 Torrent",
+			"fillRequestSuccess": "求种解决成功",
+			"errorFillingRequest": "解决求种时出错",
+			"requestAlreadyFilled": "此求种已被解决",
+			"requestNotOpen": "此求种未开放",
+			"invalidTorrent": "无效或未批准的 Torrent",
+			"titlePlaceholder": "为您的求种输入一个描述性标题",
+			"descriptionPlaceholder": "提供有关您正在寻找的内容的更多详细信息...",
+			"mustBeLoggedIn": "您必须登录才能执行此操作",
+			"failedToLoadRequests": "加载求种失败",
+			"failedToLoadRequest": "加载求种失败",
+			"failedToLoadComments": "加载评论失败",
+			"failedToLoadTorrents": "加载 Torrent 失败",
+			"failedToPostComment": "发表评论失败",
+			"failedToFillRequest": "解决求种失败",
+			"errorLoadingRequests": "加载求种时出错",
+			"errorLoadingRequest": "加载求种时出错",
+			"errorLoadingComments": "加载评论时出错",
+			"errorLoadingTorrents": "加载 Torrent 时出错",
+			"noRequestsForFilter": "在此筛选条件下未找到求种",
+			"viewTorrent": "查看 Torrent",
+			"filledWith": "解决来源：",
+			"postingComment": "正在发表...",
+			"creatingRequest": "正在创建...",
+			"fileSizes": {
+				"bytes": "字节",
+				"kb": "KB",
+				"mb": "MB",
+				"gb": "GB",
+				"tb": "TB"
+			},
+			"titleRequired": "标题为必填项",
+			"categoryRequired": "分类为必填项",
+			"failedToCreateRequest": "创建求种失败"
+		},
+		"settings": {
+			"title": "配置",
+			"description": "管理全局追踪器配置。",
+			"sections": {
+				"tracker": "追踪器",
+				"ratio": "分享率 & H&R",
+				"announce": "Announce",
+				"clients": "客户端",
+				"invitations": "邀请",
+				"rss": "RSS",
+				"storage": "存储",
+				"smtp": "SMTP",
+				"antiCheat": "反作弊",
+				"branding": "品牌"
+			},
+			"ui": {
+				"sectionsTitle": "部分",
+				"save": "保存配置",
+				"saving": "保存中...",
+				"saved": "配置已保存",
+				"errorLoading": "加载配置失败",
+				"errorSaving": "保存配置失败",
+				"smtpTest": "测试 SMTP",
+				"smtpSuccess": "测试邮件已发送",
+				"smtpError": "发送测试邮件失败",
+				"on": "开",
+				"off": "关",
+				"enabled": "已启用",
+				"disabled": "已禁用"
+			},
+			"tracker": {
+				"description": "常规追踪器和注册选项。"
+			},
+			"ratio": {
+				"description": "分享率、魔力值和 Hit & Run 参数。"
+			},
+			"ratioPresets": {
+				"title": "分享率预设",
+				"easy": "简单",
+				"balanced": "均衡",
+				"strict": "严格",
+				"custom": "自定义",
+				"active": "当前",
+				"manualTitle": "手动配置",
+				"customBadge": "自定义配置"
+			},
+			"announce": {
+				"description": "Announce 间隔和设置。"
+			},
+			"clients": {
+				"description": "白名单/黑名单和允许的指纹。"
+			},
+			"invitations": {
+				"description": "邀请配置和限制。"
+			},
+			"rss": {
+				"description": "默认 RSS 首选项。"
+			},
+			"storage": {
+				"description": "存储类型和 S3 凭据。"
+			},
+			"smtp": {
+				"description": "邮件服务器和发件人地址。"
+			},
+			"antiCheat": {
+				"description": "完整性和反作弊控制。"
+			},
+			"branding": {
+				"description": "站点名称和身份。"
+			},
+			"fields": {
+				"registrationMode": "注册模式",
+				"requireTorrentApproval": "需要 Torrent 审批",
+				"requireTorrentApprovalHelp": "版主必须批准新的 Torrent",
+				"minRatio": "最低分享率",
+				"bonusPointsPerHour": "每小时魔力值",
+				"hitAndRunThreshold": "Hit & Run 阈值",
+				"requiredSeedingMinutes": "要求做种分钟数",
+				"defaultAnnounceInterval": "默认 Announce 间隔 (秒)",
+				"minAnnounceInterval": "最小 Announce 间隔 (秒)",
+				"whitelistedClients": "白名单客户端 (逗号分隔)",
+				"blacklistedClients": "黑名单客户端 (逗号分隔)",
+				"allowedFingerprints": "允许的指纹 (逗号分隔)",
+				"rssDefaultCount": "默认 RSS 数量",
+				"inviteExpiryHours": "邀请有效期 (小时)",
+				"maxInvitesPerUser": "每位用户最大邀请数",
+				"storageType": "存储类型",
+				"s3Bucket": "S3 存储桶",
+				"s3Region": "S3 区域",
+				"s3AccessKeyId": "S3 Access Key ID",
+				"s3SecretAccessKey": "S3 Secret Access Key",
+				"smtpHost": "SMTP 主机",
+				"smtpPort": "SMTP 端口",
+				"smtpUser": "SMTP 用户",
+				"smtpPass": "SMTP 密码",
+				"smtpFrom": "SMTP 发件人",
+				"ghostLeechingCheck": "幽灵吸血检查",
+				"cheatingClientCheck": "作弊客户端检查",
+				"ipAbuseCheck": "IP 滥用检查",
+				"announceRateCheck": "Announce 频率检查",
+				"invalidStatsCheck": "无效统计检查",
+				"peerBanCheck": "Peer 封禁检查",
+				"maxStatsJumpMultiplier": "最大统计跳跃倍数",
+				"brandingName": "品牌名称",
+				"showHomePageStats": "在主页显示统计信息"
+			}
+		}
+	},
+	"torrentDetail": {
+		"header": {
+			"pendingApproval": "待审批",
+			"notFound": "未找到",
+			"rejected": "已拒绝",
+			"viewRejectionReason": "查看拒绝原因"
+		},
+		"fields": {
+			"commentsTitle": "评论",
+			"size": "大小",
+			"seeders": "做种",
+			"leechers": "下载",
+			"completed": "完成",
+			"category": "分类",
+			"tags": "标签",
+			"noTags": "无标签",
+			"noDescription": "无描述"
+		},
+		"fileList": {
+			"title": "文件",
+			"search": "搜索文件...",
+			"noResults": "未找到结果",
+			"noFiles": "无文件",
+			"summary": "总计: {{files}} 个文件, {{totalSize}}"
+		},
+		"actions": {
+			"title": "操作",
+			"torrent": "Torrent",
+			"magnet": "磁力链接",
+			"magnetGenerating": "生成中...",
+			"addBookmark": "添加到收藏",
+			"removeBookmark": "从收藏中移除",
+			"like": "赞",
+			"dislike": "踩",
+			"copyLink": "复制链接",
+			"copied": "链接已复制",
+			"copyError": "复制链接失败",
+			"bookmarkAdded": "已添加到收藏",
+			"bookmarkRemoved": "已从收藏中移除",
+			"bookmarkError": "收藏操作失败",
+			"downloadError": "下载 Torrent 失败",
+			"loadError": "加载 Torrent 失败",
+			"disabled": "在 Torrent 被批准前，操作被禁用。",
+			"voteOk": "投票已记录",
+			"voteError": "投票失败",
+			"magnetError": "生成磁力链接失败",
+			"errorLoading": "加载评论时出错"
+		},
+		"comments": {
+			"disabled": "在 Torrent 被批准前，评论被禁用。",
+			"empty": "暂无评论",
+			"loginRequired": "登录以发表评论",
+			"reply": "回复",
+			"send": "发送",
+			"cancel": "取消",
+			"newCommentTitle": "新评论",
+			"placeholder": "撰写您的评论...",
+			"sending": "发送中...",
+			"addComment": "添加评论",
+			"created": "评论已添加",
+			"createError": "创建评论失败",
+			"replied": "回复已发布",
+			"replyError": "回复失败",
+			"page": "第",
+			"of": "页，共"
+		},
+		"nfo": {
+			"title": "NFO 文件"
+		},
+		"modals": {
+			"rejectionInfo": {
+				"title": "拒绝信息",
+				"reason": "拒绝原因:",
+				"rejectedBy": "拒绝者:",
+				"rejectedAt": "拒绝日期:",
+				"noReason": "未指定原因",
+				"unknown": "未知",
+				"close": "关闭"
+			}
+		},
+		"uploader": {
+			"title": "上传者",
+			"uploaded": "上传量",
+			"downloaded": "下载量",
+			"ratio": "分享率",
+			"anonymous": "匿名"
+		}
+	},
+	"common": {
+		"loading": "加载中...",
+		"submitting": "提交表单中...",
+		"formReady": "表单已就绪",
+		"users": "用户",
+		"torrents": "Torrent",
+		"downloads": "下载",
+		"uploaded": "上传量",
+		"downloadStarted": "下载已开始"
+	},
+	"language": {
+		"selector": {
+			"title": "选择语言",
+			"spanish": "西班牙语",
+			"english": "英语",
+			"chinese": "中文"
+		},
+		"notification": {
+			"changed": "语言已更改为 {{language}}",
+			"spanish": "西班牙语",
+			"english": "英语",
+			"chinese": "中文"
+		}
+	},
+	"profile": {
+		"title": "个人资料",
+		"sections": {
+			"stats": "统计",
+			"invitations": "邀请",
+			"preferences": "偏好设置",
+			"recent": "近期活动"
+		},
+		"tabs": {
+			"overview": "概览",
+			"activity": "近期活动"
+		},
+		"activity": {
+			"comingSoon": "近期活动即将推出",
+			"description": "您的近期活动将在此处显示",
+			"items": "个活动",
+			"empty": "没有近期活动",
+			"emptyDescription": "当您在站点上执行操作时，您的活动将在此处显示",
+			"showing": "显示",
+			"to": "到",
+			"of": "，共",
+			"activities": "个活动",
+			"previous": "上一页",
+			"next": "下一页"
+		},
+		"activities": {
+			"torrent_uploaded": {
+				"title": "您上传了 \"{{torrentName}}\"",
+				"subtitle": "分类: Torrent"
+			},
+			"torrent_downloaded": {
+				"title": "您下载了 \"{{torrentName}}\"",
+				"subtitle": "下载完成"
+			},
+			"torrent_approved": {
+				"title": "您的 Torrent \"{{torrentName}}\" 已被批准",
+				"subtitle": "由管理员批准"
+			},
+			"bookmark_added": {
+				"title": "您收藏了 \"{{torrentName}}\"",
+				"subtitle": "已添加到收藏"
+			},
+			"bookmark_removed": {
+				"title": "您从收藏中移除了 \"{{torrentName}}\"",
+				"subtitle": "已从收藏中移除"
+			},
+			"torrent_liked": {
+				"title": "您赞了 \"{{torrentName}}\"",
+				"subtitle": "👍 赞"
+			},
+			"torrent_disliked": {
+				"title": "您踩了 \"{{torrentName}}\"",
+				"subtitle": "👎 踩"
+			},
+			"request_created": {
+				"title": "您创建了求种 \"{{requestTitle}}\"",
+				"subtitle": "新求种"
+			},
+			"request_filled": {
+				"title": "您的求种 \"{{requestTitle}}\" 已被解决",
+				"subtitle": "解决者: {{filledBy}}"
+			},
+			"request_filled_by_you": {
+				"title": "您解决了求种 \"{{requestTitle}}\"",
+				"subtitle": "使用: {{torrentName}}"
+			},
+			"comment_added": {
+				"title": "您评论了 \"{{entityName}}\"",
+				"subtitle": "新评论"
+			}
+		},
+		"fields": {
+			"username": "用户名",
+			"email": "电子邮件",
+			"ratio": "分享率",
+			"points": "魔力值",
+			"rank": "等级",
+			"joinDate": "加入日期",
+			"announceUrl": "Announce URL",
+			"uploaded": "上传量",
+			"downloaded": "下载量"
+		},
+		"actions": {
+			"uploadAvatar": "上传头像",
+			"removeAvatar": "移除",
+			"copy": "复制",
+			"save": "保存"
+		},
+		"invitations": {
+			"available": "可用邀请",
+			"create": "创建邀请",
+			"generated": {
+				"title": "邀请链接",
+				"copied": "链接已复制",
+				"copyError": "复制链接失败"
+			},
+			"active": {
+				"cancel": "取消",
+				"cancelSuccess": "邀请已取消",
+				"cancelError": "取消邀请失败"
+			},
+			"none": "没有有效的邀请",
+			"expires": "到期时间",
+			"status": "状态",
+			"used": "已使用",
+			"expired": "已过期",
+			"noExpiry": "永不过期",
+			"disabledByMode": "邀请目前因注册模式而被禁用。您可以保留您的邀请，但现在无法创建或使用它们。"
+		},
+		"preferences": {
+			"language": "语言",
+			"emailNotifications": "允许电子邮件通知",
+			"placeholder": "偏好设置部分 (待实现)。"
+		},
+		"recent": {
+			"placeholder": "近期活动将在此处显示。"
+		},
+		"notification": {
+			"avatarUpdated": "头像已更新",
+			"uploadError": "头像上传错误",
+			"avatarRemoved": "头像已移除",
+			"removalError": "头像移除错误",
+			"noAnnounceUrl": "没有可用的 Announce URL",
+			"announceCopied": "Announce URL 已复制",
+			"copyError": "复制失败"
+		}
+	},
+	"auth": {
+		"placeholders": {
+			"username": "输入您的用户名",
+			"email": "输入您的电子邮件",
+			"password": "输入您的密码",
+			"confirmPassword": "确认您的密码",
+			"login": "输入您的电子邮件或用户名"
+		},
+		"register": {
+			"title": "注册",
+			"username": "用户名",
+			"email": "电子邮件",
+			"password": "密码",
+			"confirmPassword": "确认密码",
+			"submit": "注册",
+			"loading": "创建账户中...",
+			"hasAccount": "已有账户？",
+			"login": "登录",
+			"errors": {
+				"username": "用户名必须在 3 到 20 个字符之间",
+				"email": "请输入有效的电子邮件",
+				"passwordRequirements": "密码必须至少为 6 个字符",
+				"passwordMatch": "密码不匹配",
+				"invalidCredentials": "无效的电子邮件/用户名或密码",
+				"userBanned": "您的账户已被永久封禁",
+				"signInError": "登录时发生错误"
+			},
+			"passwordStrength": {
+				"weak": "弱",
+				"fair": "中",
+				"good": "良",
+				"strong": "强"
+			},
+			"securityRecommendations": "安全建议",
+			"passwordRequirements": {
+				"minLength": "至少 8 个字符",
+				"uppercase": "至少一个大写字母",
+				"lowercase": "至少一个小写字母",
+				"number": "至少一个数字",
+				"special": "至少一个特殊字符"
+			},
+			"success": {
+				"firstUser": "用户注册成功。您是管理员，您的电子邮件已自动验证。",
+				"withVerification": "用户注册成功。请检查您的电子邮件以验证您的账户。"
+			},
+			"invite": {
+				"required": "需要邀请码",
+				"invalid": "无效的邀请码",
+				"used": "此邀请已被使用",
+				"deactivated": "此邀请已被停用",
+				"expired": "此邀请已过期"
+			},
+			"registrationClosed": "注册当前已关闭",
+			"registrationClosedMessage": "平台当前不接受新注册。",
+			"registrationClosedDescription": "如果您有有效的邀请码或需要特殊访问权限，请联系管理员。",
+			"inviteOnly": {
+				"title": "仅限邀请注册",
+				"message": "您需要一个有效的邀请链接才能创建账户。"
+			},
+			"inviteBanner": {
+				"invitedBy": "邀请人",
+				"code": "代码",
+				"expires": "到期时间",
+				"invalid": "无效或已过期的邀请。"
+			},
+			"goToLogin": "前往登录",
+			"alreadyHaveAccount": "已有账户？",
+			"signInHere": "在此登录"
+		},
+		"login": {
+			"title": "登录",
+			"formAriaLabel": "登录表单",
+			"login": "电子邮件或用户名",
+			"password": "密码",
+			"submit": "登录",
+			"loading": "登录中...",
+			"forgotPassword": "忘记密码？",
+			"noAccount": "没有账户？",
+			"signUpLink": "注册",
+			"logout": "退出登录",
+			"errors": {
+				"loginRequired": "需要电子邮件或用户名",
+				"loginMinLength": "登录名必须至少为 3 个字符",
+				"passwordRequired": "需要密码",
+				"passwordMinLength": "密码必须至少为 6 个字符",
+				"invalidCredentials": "凭据无效"
+			},
+			"success": "成功登录",
+			"error": "登录时出错"
+		},
+		"notification": {
+			"successLogin": "登录成功！",
+			"successLogout": "已退出登录",
+			"successRegister": "注册成功！请登录。",
+			"error": "发生错误。请重试。"
+		},
+		"unverified": {
+			"title": "验证您的电子邮件",
+			"message": "您的账户已创建，但您的电子邮件尚未验证。请检查您的收件箱并点击验证链接。",
+			"resend": "重新发送验证邮件"
+		}
+	},
+	"upload": {
+		"title": "上传 Torrent",
+		"subtitle": "与社区分享您的内容。",
+		"form": {
+			"name": {
+				"label": "名称",
+				"placeholder": "Torrent 名称",
+				"issues": {
+					"empty": "名称不能为空。",
+					"invalidChars": "包含无效字符: \\ / : * ? \" < > | 或控制字符。",
+					"emojis": "名称中不允许使用表情符号。",
+					"trailing": "不能以空格或点结尾。",
+					"reserved": "不能使用 Windows 保留名称 (CON, PRN, AUX, NUL, COM1-9, LPT1-9)。",
+					"tooLong": "名称太长 (最多 200 个字符)。",
+					"review": "检查名称："
+				}
+			},
+			"category": {
+				"label": "分类",
+				"placeholder": "选择一个分类"
+			},
+			"source": {
+				"label": "来源",
+				"placeholder": "选择一个来源"
+			},
+			"description": {
+				"label": "描述",
+				"placeholder": "描述您的 Torrent"
+			},
+			"tags": {
+				"label": "标签 ({{count}})",
+				"suggested": "建议标签",
+				"popular": "热门标签",
+				"customPlaceholder": "添加自定义标签"
+			}
+		},
+		"areas": {
+			"torrent": {
+				"title": ".torrent 文件",
+				"subtitle": "拖放或选择文件",
+				"select": "选择 .torrent"
+			},
+			"image": {
+				"title": "海报图片 (可选)",
+				"subtitle": "JPG, PNG, GIF, WEBP",
+				"select": "选择图片",
+				"remove": "移除图片"
+			},
+			"nfo": {
+				"title": "附加 NFO (可选)",
+				"subtitle": "仅 .nfo 文件",
+				"select": "选择 NFO",
+				"remove": "移除 NFO"
+			}
+		},
+		"options": {
+			"anonymous": {
+				"label": "匿名上传",
+				"desc": "隐藏您作为上传者的用户名"
+			},
+			"freeleech": {
+				"label": "免费下载",
+				"desc": "下载流量不计入统计"
+			}
+		},
+		"actions": {
+			"upload": "上传",
+			"uploading": "上传中...",
+			"reset": "重置",
+			"panelTitle": "要启用上传按钮，请完成：",
+			"notePrivate": "请记住：.torrent 必须是私有的，并在 announce URL 中包含您的 passkey。",
+			"reasons": {
+				"missingTorrent": "选择一个 .torrent 文件。",
+				"missingName": "输入一个 Torrent 名称。",
+				"missingDescription": "添加一个描述 (最少 10 个字符)。",
+				"missingCategory": "选择一个分类。",
+				"missingSource": "选择一个来源。",
+				"missingTags": "添加至少一个标签。"
+			}
+		},
+		"toasts": {
+			"missingTorrent": "请选择一个 .torrent 文件",
+			"success": "Torrent 上传成功",
+			"error": "上传 Torrent 时出错"
+		},
+		"tips": {
+			"title": "提示",
+			"items": [
+				"确保您的 .torrent 文件有效并反映内容。",
+				"提供清晰简洁的描述。",
+				"选择最合适的分类和来源。",
+				"使用相关标签以提高可发现性。"
+			]
+		}
+	}
+}

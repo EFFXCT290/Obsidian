@@ -1079,12 +1079,14 @@
 		"selector":{
 			"title":"Seleccionar idioma",
 			"spanish":"Español",
-			"english":"Inglés"
+			"english":"Inglés",
+			"chinese":"Chino"
 		},
 		"notification":{
 			"changed":"Idioma cambiado a {{language}}",
 			"spanish":"Español",
-			"english":"Inglés"
+			"english":"Inglés",
+			"chinese":"Chino"
 		}
 	},
 	"profile":{

@@ -110,7 +110,8 @@ export default async function Home() {
   const languageNotificationTranslations = {
     changed: serverT('language.notification.changed', language),
     spanish: serverT('language.notification.spanish', language),
-    english: serverT('language.notification.english', language)
+    english: serverT('language.notification.english', language),
+    chinese: serverT('language.notification.chinese', language),
   };
 
   return (

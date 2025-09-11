@@ -23,7 +23,8 @@ export function LanguageSelector({ currentLanguage }: { currentLanguage?: string
   // Available languages configuration with flags and display names
   const languages = [
     { code: "es", name: "Español", flag: "🇪🇸" },
-    { code: "en", name: "English", flag: "🇺🇸" }
+    { code: "en", name: "English", flag: "🇺🇸" },
+    { code: "zh", name: "中文", flag: "🇨🇳" },
   ]
 
   // Find the current language object for display

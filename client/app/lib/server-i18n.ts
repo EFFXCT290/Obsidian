@@ -6,12 +6,14 @@
 
 import esTranslations from "../locales/es.json";
 import enTranslations from "../locales/en.json";
+import zhTranslations from '../locales/zh.json';
 import { cookies } from "next/headers";
 
 // Translation resources for server-side use
 const serverResources = {
   es: esTranslations,
   en: enTranslations,
+  zh: zhTranslations,
 } as const;
 
 // Default language
@@ -24,7 +26,7 @@ const DEFAULT_LANGUAGE = "es";
 export async function getLanguageFromHeaders(headers: Headers): Promise<string> {
   // Check for custom language header first
   const customLang = headers.get("x-language");
-  if (customLang && (customLang === "es" || customLang === "en")) {
+  if (customLang && isLanguageSupported(customLang)) {
     return customLang;
   }
 
@@ -36,10 +38,10 @@ export async function getLanguageFromHeaders(headers: Headers): Promise<string> 
       .split(",")
       .map(lang => lang.split(";")[0].trim().toLowerCase());
     
-    // Check for Spanish or English
+    // Check for available language
     for (const lang of languages) {
-      if (lang.startsWith("es")) return "es";
-      if (lang.startsWith("en")) return "en";
+      const lng = lang.slice(0, 2);
+      if(isLanguageSupported(lng)) return lng;
     }
   }
 
@@ -55,7 +57,7 @@ export async function getLanguageFromCookies(): Promise<string> {
     const cookieStore = await cookies();
     const languageCookie = cookieStore.get("i18nextLng");
     
-    if (languageCookie && (languageCookie.value === "es" || languageCookie.value === "en")) {
+    if (languageCookie && isLanguageSupported(languageCookie.value)) {
       return languageCookie.value;
     }
   } catch (error) {

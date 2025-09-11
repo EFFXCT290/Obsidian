@@ -1080,12 +1080,14 @@
 		"selector":{
 			"title":"Select language",
 			"spanish":"Spanish",
-			"english":"English"
+			"english":"English",
+			"chinese":"Chinese"
 		},
 		"notification":{
 			"changed":"Language changed to {{language}}",
 			"spanish":"Spanish",
-			"english":"English"
+			"english":"English",
+			"chinese":"Chinese"
 		}
 	},
 	"profile":{

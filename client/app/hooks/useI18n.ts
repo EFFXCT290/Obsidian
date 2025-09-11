@@ -8,19 +8,28 @@
 import { useCallback, useMemo } from 'react';
 import es from '@/app/locales/es.json';
 import en from '@/app/locales/en.json';
+import zh from '@/app/locales/zh.json';
 import { useI18nResources } from './I18nProvider';
 
-type Resources = typeof es & typeof en;
+const allLanguages = { en, es, zh } as const;
+type Lang = keyof typeof allLanguages;
+const AVAIL_LANG = Object.keys(allLanguages) as Lang[];
+type Resources = typeof allLanguages[Lang];
 
-function getCookieLanguage(): 'es' | 'en' {
+function isLang(x: string): x is Lang {
+  return (AVAIL_LANG as readonly string[]).includes(x);
+}
+
+function getCookieLanguage(): Lang {
   try {
     if (typeof document === 'undefined') return 'es';
     const match = document.cookie.match(/(?:^|; )i18nextLng=([^;]+)/);
     const lng = match ? decodeURIComponent(match[1]) : '';
-    if (lng === 'en' || lng === 'es') return lng;
+    if (isLang(lng)) return lng;
   } catch {}
   const nav = (typeof navigator !== 'undefined' && navigator.language) ? navigator.language.toLowerCase() : 'es';
-  if (nav.startsWith('en')) return 'en';
+  const lng = nav.slice(0, 2);
+  if (isLang(lng)) return lng;
   return 'es';
 }
 
@@ -48,7 +57,8 @@ export function useI18n(initialLanguage?: string) {
   }, [initialLanguage]);
   const resources: Resources = useMemo(() => {
     if (provided) return provided as Resources;
-    return ({ ...(language === 'en' ? en : es) }) as Resources;
+    if (isLang(language)) return allLanguages[language];
+    return es;
   }, [provided, language]);
 
   const t = useCallback((key: string, fallback?: string): string => {
