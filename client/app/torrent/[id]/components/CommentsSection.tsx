@@ -33,7 +33,7 @@ interface CommentsResponse {
 
 const MAX_DEPTH = 4;
 
-export default function CommentsSection({ torrentId }: { torrentId: string }) {
+export default function CommentsSection({ torrentId, torrentUploaderId, isAnonymous = false }: { torrentId: string; torrentUploaderId?: string; isAnonymous?: boolean }) {
   const { t } = useI18n();
   const [comments, setComments] = useState<CommentData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -175,6 +175,12 @@ export default function CommentsSection({ torrentId }: { torrentId: string }) {
     const isReplying = replyingTo === comment.id;
     const canReply = depth < MAX_DEPTH - 1;
     const score = calculateScore(comment._count?.upvotes || 0, comment._count?.downvotes || 0);
+    
+    // Check if this comment is from the torrent uploader and torrent is anonymous
+    const isUploaderComment = torrentUploaderId && comment.user?.id === torrentUploaderId;
+    const displayUsername = isAnonymous && isUploaderComment ? 'Anónimo' : (comment.user?.username || 'Usuario');
+    const displayAvatarUrl = isAnonymous && isUploaderComment ? null : comment.user?.avatarUrl;
+    
     return (
       <div key={comment.id} className="mb-4">
         <div className="flex">
@@ -185,9 +191,9 @@ export default function CommentsSection({ torrentId }: { torrentId: string }) {
           )}
           <div className="flex-1 min-w-0">
             <div className="flex items-center space-x-2 mb-2">
-              <UserAvatar avatarUrl={comment.user?.avatarUrl || null} username={comment.user?.username || 'Usuario'} />
+              <UserAvatar avatarUrl={displayAvatarUrl || null} username={displayUsername} />
               <div className="flex items-center space-x-2">
-                <span className="text-sm font-medium text-text">{comment.user?.username || 'Usuario'}</span>
+                <span className="text-sm font-medium text-text">{displayUsername}</span>
                 {comment.isOP && (
                   <span className="px-2 py-1 text-xs bg-green/10 text-green rounded font-medium border border-green/20">OP</span>
                 )}

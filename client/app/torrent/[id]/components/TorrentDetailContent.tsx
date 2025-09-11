@@ -30,6 +30,7 @@ interface TorrentResponse {
   tags?: string[];
   files?: { path: string; size: number }[];
   uploader?: { id: string; username: string; avatarUrl?: string | null; uploaded?: string; downloaded?: string; ratio?: number } | null;
+  uploaderId?: string;
   bookmarked?: boolean;
   userVote?: 'up' | 'down' | null;
   isApproved?: boolean;
@@ -38,6 +39,7 @@ interface TorrentResponse {
   rejectedBy?: { id: string; username: string };
   rejectedAt?: string;
   freeleech?: boolean;
+  isAnonymous?: boolean;
 }
 
 // Legacy comment types removed
@@ -281,7 +283,11 @@ export default function TorrentDetailContent({ torrentId }: { torrentId: string 
               {t('torrentDetail.comments.disabled','Los comentarios están desactivados hasta que el torrent sea aprobado.')}
             </div>
           ) : (
-            <CommentsSection torrentId={torrentId} />
+            <CommentsSection 
+              torrentId={torrentId} 
+              torrentUploaderId={data?.uploaderId || data?.uploader?.id}
+              isAnonymous={data?.isAnonymous || false}
+            />
           )}
         </div>
 
@@ -306,7 +312,7 @@ export default function TorrentDetailContent({ torrentId }: { torrentId: string 
           />
           )}
 
-          <UploaderPanel uploader={data?.uploader || null} loading={!hasMounted || isLoading} />
+          <UploaderPanel uploader={data?.uploader || null} loading={!hasMounted || isLoading} isAnonymous={data?.isAnonymous || false} />
         </div>
       </div>
 

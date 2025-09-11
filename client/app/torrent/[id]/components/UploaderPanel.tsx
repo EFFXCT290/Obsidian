@@ -9,9 +9,10 @@ import { useI18n } from '@/app/hooks/useI18n';
 interface Props {
   uploader: { id: string; username: string; avatarUrl?: string | null; uploaded?: string; downloaded?: string; ratio?: number } | null;
   loading: boolean;
+  isAnonymous?: boolean;
 }
 
-export default function UploaderPanel({ uploader, loading }: Props) {
+export default function UploaderPanel({ uploader, loading, isAnonymous = false }: Props) {
   const { t } = useI18n();
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
@@ -35,7 +36,7 @@ export default function UploaderPanel({ uploader, loading }: Props) {
             <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
               <User size={20} className="text-primary" />
             </div>
-          ) : uploader?.avatarUrl ? (
+          ) : !isAnonymous && uploader?.avatarUrl ? (
             <Image
               src={uploader.avatarUrl?.startsWith('http') ? uploader.avatarUrl : `${API_BASE_URL}${uploader.avatarUrl}`}
               alt="Avatar"
@@ -57,32 +58,36 @@ export default function UploaderPanel({ uploader, loading }: Props) {
               </>
             ) : (
               <>
-                <p className="text-text font-medium" suppressHydrationWarning>{uploader?.username || t('torrentDetail.uploader.anonymous','Anónimo')}</p>
-                {uploader?.ratio !== undefined && (
+                <p className="text-text font-medium" suppressHydrationWarning>
+                  {isAnonymous ? t('torrentDetail.uploader.anonymous','Anónimo') : (uploader?.username || t('torrentDetail.uploader.anonymous','Anónimo'))}
+                </p>
+                {!isAnonymous && uploader?.ratio !== undefined && (
                   <p className="text-text-secondary text-sm" suppressHydrationWarning>{t('torrentDetail.uploader.ratio','Ratio')}: {Number(uploader.ratio || 0).toFixed(2)}</p>
                 )}
               </>
             )}
           </div>
         </div>
-        <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-text-secondary">{t('torrentDetail.uploader.uploaded','Subido')}</span>
-              {loading || !mounted || !uploader ? (
-                <div className="w-16 h-3 bg-text-secondary/10 rounded animate-pulse"></div>
-              ) : (
-                <span className="text-text" suppressHydrationWarning>{formatBytes(uploader.uploaded)}</span>
-              )}
-            </div>
-            <div className="flex justify-between">
-              <span className="text-text-secondary">{t('torrentDetail.uploader.downloaded','Descargado')}</span>
-              {loading || !mounted || !uploader ? (
-                <div className="w-16 h-3 bg-text-secondary/10 rounded animate-pulse"></div>
-              ) : (
-                <span className="text-text" suppressHydrationWarning>{formatBytes(uploader.downloaded)}</span>
-              )}
-            </div>
-        </div>
+        {!isAnonymous && (
+          <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-text-secondary">{t('torrentDetail.uploader.uploaded','Subido')}</span>
+                {loading || !mounted || !uploader ? (
+                  <div className="w-16 h-3 bg-text-secondary/10 rounded animate-pulse"></div>
+                ) : (
+                  <span className="text-text" suppressHydrationWarning>{formatBytes(uploader.uploaded)}</span>
+                )}
+              </div>
+              <div className="flex justify-between">
+                <span className="text-text-secondary">{t('torrentDetail.uploader.downloaded','Descargado')}</span>
+                {loading || !mounted || !uploader ? (
+                  <div className="w-16 h-3 bg-text-secondary/10 rounded animate-pulse"></div>
+                ) : (
+                  <span className="text-text" suppressHydrationWarning>{formatBytes(uploader.downloaded)}</span>
+                )}
+              </div>
+          </div>
+        )}
       </div>
     </div>
   );

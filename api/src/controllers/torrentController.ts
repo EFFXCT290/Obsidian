@@ -2,7 +2,6 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import parseTorrent from 'parse-torrent';
 import bencode from 'bencode';
 import { PrismaClient } from '@prisma/client';
-import type { Prisma } from '@prisma/client';
 import { requireTorrentApproval } from '../services/configService.js';
 import { saveFile, getFile } from '../services/fileStorageService.js';
 import { getConfig } from '../services/configService.js';
@@ -402,21 +401,33 @@ async function modifyTorrentAnnounceUrls(torrentBuffer: Buffer, passkey: string,
 export async function getTorrentHandler(request: FastifyRequest, reply: FastifyReply) {
   const { id } = request.params as any;
   const user = (request as any).user;
-  type TorrentWithRelations = Prisma.TorrentGetPayload<{
-    include: {
-      uploader: { select: { id: true; username: true; upload: true; download: true; avatarUrl: true } },
-      category: { select: { name: true } },
-      _count: { select: { bookmarks: true; votes: true; comments: true } }
-    }
-  }>;
   const torrent = await prisma.torrent.findUnique({
     where: { id },
-    include: {
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      infoHash: true,
+      size: true,
+      createdAt: true,
+      updatedAt: true,
+      isApproved: true,
+      isRejected: true,
+      rejectionReason: true,
+      rejectedAt: true,
+      freeleech: true,
+      isAnonymous: true,
+      posterUrl: true,
+      tags: true,
+      filePath: true,
+      uploaderId: true,
+      categoryId: true,
       uploader: { select: { id: true, username: true, upload: true, download: true, avatarUrl: true } },
       category: { select: { name: true } },
+      rejectedBy: { select: { id: true, username: true } },
       _count: { select: { bookmarks: true, comments: true } }
-    }
-  }) as TorrentWithRelations | null;
+    } as any
+  }) as any;
   if (!torrent) return reply.status(404).send({ error: 'Torrent not found' });
   // Allow viewing pending torrents to uploader and staff
   if (!torrent.isApproved) {
@@ -472,21 +483,37 @@ export async function getTorrentHandler(request: FastifyRequest, reply: FastifyR
   }
   // Enrich uploader details with ratio and byte stats as strings
   if (torrent.uploader) {
-    const up = torrent.uploader.upload || (0 as any);
-    const down = torrent.uploader.download || (0 as any);
-    const ratio = (typeof down === 'bigint' && down > 0n)
-      ? Number(up) / Number(down)
-      : 0;
-    result.uploader = {
-      id: torrent.uploader.id,
-      username: torrent.uploader.username,
-      avatarUrl: torrent.uploader.avatarUrl || null,
-      uploaded: (torrent.uploader.upload as any)?.toString?.() ?? '0',
-      downloaded: (torrent.uploader.download as any)?.toString?.() ?? '0',
-      ratio
-    };
+    // Check if torrent is anonymous and user is not the uploader or staff
+    const isStaff = user && (user.role === 'ADMIN' || user.role === 'MOD' || user.role === 'OWNER' || user.role === 'FOUNDER');
+    const isUploader = user && torrent.uploaderId && user.id === torrent.uploaderId;
+    
+    if (torrent.isAnonymous && !isStaff && !isUploader) {
+      // Hide uploader details for anonymous torrents (except for uploader and staff)
+      result.uploader = {
+        id: 'anonymous',
+        username: 'Anónimo',
+        avatarUrl: null,
+        uploaded: '0',
+        downloaded: '0',
+        ratio: 0
+      };
+    } else {
+      // Show full uploader details
+      const up = torrent.uploader.upload || (0 as any);
+      const down = torrent.uploader.download || (0 as any);
+      const ratio = (typeof down === 'bigint' && down > 0n)
+        ? Number(up) / Number(down)
+        : 0;
+      result.uploader = {
+        id: torrent.uploader.id,
+        username: torrent.uploader.username,
+        avatarUrl: torrent.uploader.avatarUrl || null,
+        uploaded: (torrent.uploader.upload as any)?.toString?.() ?? '0',
+        downloaded: (torrent.uploader.download as any)?.toString?.() ?? '0',
+        ratio
+      };
+    }
   }
-  // Hide uploader details if anonymous in future (when implemented)
   
   // Add bookmarked property if user is logged in (user may be attached in OPEN mode)
   if (user && user.id) {
