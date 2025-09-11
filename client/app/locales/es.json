@@ -255,17 +255,18 @@
 			"largest":"Más grandes",
 			"smallest":"Más pequeños"
 		},
-		"torrent":{
-			"seeders":"Seeders",
-			"leechers":"Leechers",
-			"completed":"Completados",
-			"uploaded":"Subido",
-			"by":"por",
-			"size":"Tamaño",
-			"download":"Descargar",
-			"uploader":"Subidor",
-			"category":"Categoría"
-		},
+            "torrent":{
+              "title":"Título",
+              "seeders":"Seeders",
+              "leechers":"Leechers",
+              "completed":"Completados",
+              "uploaded":"Subido",
+              "by":"por",
+              "size":"Tamaño",
+              "download":"Descargar",
+              "uploader":"Subidor",
+              "category":"Categoría"
+            },
 		"pagination":{
 			"previous":"Anterior",
 			"next":"Siguiente",

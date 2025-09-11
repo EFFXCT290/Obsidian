@@ -256,6 +256,7 @@
 			"smallest":"Smallest"
 		},
 		"torrent":{
+			"title":"Title",
 			"seeders":"Seeders",
 			"leechers":"Leechers",
 			"completed":"Completed",
@@ -288,6 +289,7 @@
 			"smallest":"Smallest"
 		},
 		"torrent":{
+			"title":"Title",
 			"seeders":"Seeders",
 			"leechers":"Leechers",
 			"completed":"Completed",

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import useSWR from 'swr';
 import { useI18n } from '../../hooks/useI18n';
 import { API_BASE_URL } from '@/lib/api';

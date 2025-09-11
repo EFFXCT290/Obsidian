@@ -4,9 +4,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { 
-  Download, 
-  User, 
-  Time, 
   ChevronRight, 
   Filter,
   SortUp
@@ -75,6 +72,7 @@ interface CategoryTorrentsClientProps {
       smallest: string;
     };
     torrent: {
+      title: string;
       seeders: string;
       leechers: string;
       completed: string;
@@ -82,6 +80,8 @@ interface CategoryTorrentsClientProps {
       by: string;
       size: string;
       download: string;
+      uploader: string;
+      category: string;
     };
     pagination: {
       previous: string;
@@ -410,12 +410,16 @@ export default function CategoryTorrentsClient({
                           </div>
                         </td>
                         <td className="px-4 py-3 text-text-secondary text-sm w-32">
-                          <Link 
-                            href={`/category/${encodeURIComponent(torrent.category.name)}/torrents`}
-                            className="text-primary hover:text-primary-hover transition-colors"
-                          >
-                            {torrent.category.name}
-                          </Link>
+                          {torrent.category ? (
+                            <Link 
+                              href={`/category/${encodeURIComponent(torrent.category.name)}/torrents`}
+                              className="text-primary hover:text-primary-hover transition-colors"
+                            >
+                              {torrent.category.name}
+                            </Link>
+                          ) : (
+                            <span className="text-red-500">No category</span>
+                          )}
                         </td>
                         <td className="px-4 py-3 text-text-secondary text-sm w-24">
                           {formatRelativeTime(torrent.createdAt)}

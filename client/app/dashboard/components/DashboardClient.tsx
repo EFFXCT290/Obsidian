@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight, Download, User, Calendar, Tag } from '@styled-icons/boxicons-regular';
+import { ChevronLeft, ChevronRight, User, Calendar } from '@styled-icons/boxicons-regular';
 import { API_BASE_URL } from '@/lib/api';
 
 interface Torrent {
@@ -61,6 +61,7 @@ interface DashboardClientProps {
     viewAll: string;
     noTorrents: string;
     noAnnouncements: string;
+    title: string;
     size: string;
     uploader: string;
     category: string;

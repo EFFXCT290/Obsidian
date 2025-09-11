@@ -4,9 +4,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { 
-  Download, 
-  User, 
-  Time, 
   Search as SearchIcon,
   SortUp,
   Tag
@@ -56,6 +53,7 @@ interface SearchClientProps {
       smallest: string;
     };
     torrent: {
+      title: string;
       seeders: string;
       leechers: string;
       completed: string;
@@ -63,6 +61,8 @@ interface SearchClientProps {
       by: string;
       size: string;
       download: string;
+      uploader: string;
+      category: string;
     };
     pagination: {
       previous: string;
