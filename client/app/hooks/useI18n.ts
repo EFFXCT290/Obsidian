@@ -37,9 +37,15 @@ function getByKeyPath(obj: unknown, keyPath: string): unknown {
 }
 
 // Client-side translation hook using cookie language and bundled resources
-export function useI18n() {
+export function useI18n(initialLanguage?: string) {
   const provided = useI18nResources();
-  const language = useMemo(() => getCookieLanguage(), []);
+  const language = useMemo(() => {
+    // Use initial language if provided (from server), otherwise detect from cookie
+    if (initialLanguage && (initialLanguage === 'en' || initialLanguage === 'es')) {
+      return initialLanguage;
+    }
+    return getCookieLanguage();
+  }, [initialLanguage]);
   const resources: Resources = useMemo(() => {
     if (provided) return provided as Resources;
     return ({ ...(language === 'en' ? en : es) }) as Resources;

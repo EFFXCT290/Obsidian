@@ -12,20 +12,23 @@ import {
   rotatePasskeyHandler
 } from '../controllers/authController.js';
 import { requireAuth } from '../middleware/authMiddleware.js';
-import { createAuthRateLimitConfig } from '../middleware/rateLimitMiddleware.js';
+// import { createAuthRateLimitConfig } from '../middleware/rateLimitMiddleware.js'; // Not used in this simplified approach
 
 export async function registerAuthRoutes(app: FastifyInstance) {
-  // Register rate limiting for general auth endpoints (register, login)
-  await app.register(rateLimit, createAuthRateLimitConfig('general'));
-
-  // Register rate limiting for email verification endpoints
-  await app.register(rateLimit, createAuthRateLimitConfig('email'));
-
-  // Register rate limiting for password reset endpoints
-  await app.register(rateLimit, createAuthRateLimitConfig('password'));
-
-  // Register rate limiting for profile endpoints
-  await app.register(rateLimit, createAuthRateLimitConfig('profile'));
+  // Register a single, very lenient rate limiter for all auth endpoints
+  await app.register(rateLimit, {
+    max: 500, // Increased to 500 requests per window
+    timeWindow: '5 minutes', // Reduced to 5 minute window for faster reset
+    keyGenerator: (request) => request.ip,
+    errorResponseBuilder: (request, context) => ({
+      statusCode: 429,
+      error: 'Too Many Requests',
+      message: 'Too many authentication attempts. Please try again later.',
+      retryAfter: Math.round(Number(context.after) / 1000) || 15
+    }),
+    skipOnError: false,
+    enableDraftSpec: true
+  });
 
   // Authentication routes with rate limiting applied
   app.post('/auth/register', registerHandler);

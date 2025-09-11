@@ -63,6 +63,7 @@ export default async function LoginPage() {
         <Suspense fallback={<SignInLoading loginLabel={loginLabel} passwordLabel={passwordLabel} loginPlaceholder={loginPlaceholder} passwordPlaceholder={passwordPlaceholder} />}>
           <SignInForm
             registrationMode={'open'}
+            serverLanguage={language}
             serverTranslations={{
               loginLabel,
               passwordLabel,

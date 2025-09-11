@@ -17,13 +17,14 @@ import { API_BASE_URL } from '@/lib/api';
 interface SignInFormProps {
   registrationMode: string;
   serverTranslations?: Record<string, string>;
+  serverLanguage?: string;
 }
 
 interface FormData { login: string; password: string; }
 interface FormErrors { login?: string; password?: string; }
 
-export default function SignInForm({ registrationMode, serverTranslations }: SignInFormProps) {
-  const { t } = useI18n();
+export default function SignInForm({ registrationMode, serverTranslations, serverLanguage }: SignInFormProps) {
+  const { t } = useI18n(serverLanguage);
   const router = useRouter();
 
   const [formData, setFormData] = useState<FormData>({ login: '', password: '' });
