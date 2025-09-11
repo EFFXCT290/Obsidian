@@ -300,7 +300,12 @@ export default function DashboardClient({ translations }: DashboardClientProps) 
                           </Link>
                         </td>
                         <td className="px-4 py-3 text-text-secondary text-sm w-32">
-                          {torrent.category.name}
+                          <Link 
+                            href={`/category/${encodeURIComponent(torrent.category.name)}/torrents`}
+                            className="text-primary hover:text-primary-hover transition-colors"
+                          >
+                            {torrent.category.name}
+                          </Link>
                         </td>
                         <td className="px-4 py-3 text-text-secondary text-sm w-24">
                           {formatRelativeTime(torrent.createdAt)}
