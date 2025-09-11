@@ -58,13 +58,11 @@ export default function UserTorrents() {
   };
 
   const formatDate = (dateString: string): string => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
   };
 
   const getStatusBadge = (status: string) => {
@@ -133,11 +131,8 @@ export default function UserTorrents() {
                 <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                   {t('userTorrents.table.size', 'Size')}
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
-                  {t('userTorrents.table.seeders', 'Seeders')}
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
-                  {t('userTorrents.table.leechers', 'Leechers')}
+                <th className="px-4 py-3 text-center text-xs font-medium text-text-secondary uppercase tracking-wider">
+                  {t('userTorrents.table.seedersLeechers', 'Seeders / Leechers')}
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                   {t('userTorrents.table.downloads', 'Downloads')}
@@ -168,11 +163,8 @@ export default function UserTorrents() {
                   <td className="px-4 py-3 text-text-secondary text-sm">
                     {formatFileSize(torrent.size)}
                   </td>
-                  <td className="px-4 py-3 text-text-secondary text-sm">
-                    {torrent.seeders}
-                  </td>
-                  <td className="px-4 py-3 text-text-secondary text-sm">
-                    {torrent.leechers}
+                  <td className="px-4 py-3 text-text-secondary text-sm text-center">
+                    <span className="text-green-500">{torrent.seeders}</span> / <span className="text-red-500">{torrent.leechers}</span>
                   </td>
                   <td className="px-4 py-3 text-text-secondary text-sm">
                     {torrent.downloads}

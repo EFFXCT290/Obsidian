@@ -1415,8 +1415,7 @@
 			"title":"Título",
 			"date":"Fecha",
 			"size":"Tamaño",
-			"seeders":"Seeders",
-			"leechers":"Leechers",
+			"seedersLeechers":"Seeders / Leechers",
 			"downloads":"Descargas",
 			"category":"Categoría",
 			"status":"Estado"

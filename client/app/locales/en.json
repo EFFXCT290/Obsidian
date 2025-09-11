@@ -1415,8 +1415,7 @@
 			"title":"Title",
 			"date":"Date",
 			"size":"Size",
-			"seeders":"Seeders",
-			"leechers":"Leechers",
+			"seedersLeechers":"Seeders / Leechers",
 			"downloads":"Downloads",
 			"category":"Category",
 			"status":"Status"
