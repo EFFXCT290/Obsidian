@@ -359,7 +359,7 @@ export default function SearchClient({ searchParams, translations }: SearchClien
                     </Link>
                     {torrent.freeleech && (
                       <span className="bg-green-500/10 text-green-500 px-2 py-1 rounded text-sm font-medium border border-green-500/20">
-                        {translations.freeleech || 'FL'}
+                        FL
                       </span>
                     )}
                   </div>

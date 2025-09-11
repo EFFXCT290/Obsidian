@@ -21,7 +21,7 @@ const DEFAULT_LANGUAGE = "es";
  * Get user's preferred language from headers
  * Supports Accept-Language header and custom headers
  */
-export function getLanguageFromHeaders(headers: Headers): string {
+export async function getLanguageFromHeaders(headers: Headers): Promise<string> {
   // Check for custom language header first
   const customLang = headers.get("x-language");
   if (customLang && (customLang === "es" || customLang === "en")) {
@@ -78,7 +78,7 @@ export async function getPreferredLanguage(headers: Headers): Promise<string> {
   }
   
   // Fallback to header detection
-  return getLanguageFromHeaders(headers);
+  return await getLanguageFromHeaders(headers);
 }
 
 /**
