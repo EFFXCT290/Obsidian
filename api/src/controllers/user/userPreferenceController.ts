@@ -99,7 +99,8 @@ export async function getPublicProfileHandler(request: FastifyRequest, reply: Fa
       createdAt: torrent.createdAt,
       category: torrent.category?.name || 'General',
       seeders: 0, // We'll get this from a separate query if needed
-      leechers: 0 // We'll get this from a separate query if needed
+      leechers: 0, // We'll get this from a separate query if needed
+      completed: 0 // We'll get this from a separate query if needed
     }))
   });
 }

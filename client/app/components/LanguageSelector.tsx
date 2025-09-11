@@ -14,7 +14,7 @@ import { cn } from "@/app/lib/utils"
  * - Prevents hydration mismatches
  * - Responsive design with smooth animations
  */
-export function LanguageSelector({ currentLanguage }: { currentLanguage?: string }) {
+export function LanguageSelector({ currentLanguage, className }: { currentLanguage?: string; className?: string }) {
   // State to control dropdown visibility
   const [isOpen, setIsOpen] = useState(false)
   // State to track current language
@@ -59,7 +59,7 @@ export function LanguageSelector({ currentLanguage }: { currentLanguage?: string
   }
 
   return (
-    <div className="fixed bottom-4 left-4 z-50">
+    <div className={cn("relative z-50", className || "fixed bottom-4 left-4")}>
       <div className="relative">
         {/* Main button that toggles the dropdown */}
         <button

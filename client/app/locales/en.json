@@ -999,6 +999,15 @@
 		"publicTorrents":{
 			"title":"Public Torrents",
 			"empty":"No public torrents found"
+		},
+		"torrent":{
+			"title":"Title",
+			"size":"Size",
+			"category":"Category",
+			"date":"Date",
+			"seeders":"Seeders",
+			"leechers":"Leechers",
+			"completed":"Completed"
 		}
 	},
 	"torrentDetail":{

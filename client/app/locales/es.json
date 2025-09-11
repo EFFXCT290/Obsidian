@@ -998,6 +998,15 @@
 		"publicTorrents":{
 			"title":"Torrents Públicos",
 			"empty":"No se encontraron torrents públicos"
+		},
+		"torrent":{
+			"title":"Título",
+			"size":"Tamaño",
+			"category":"Categoría",
+			"date":"Fecha",
+			"seeders":"Seeders",
+			"leechers":"Leechers",
+			"completed":"Completados"
 		}
 	},
 	"torrentDetail":{
