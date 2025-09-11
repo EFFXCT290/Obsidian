@@ -37,6 +37,7 @@ interface TorrentResponse {
   rejectionReason?: string;
   rejectedBy?: { id: string; username: string };
   rejectedAt?: string;
+  freeleech?: boolean;
 }
 
 // Legacy comment types removed
@@ -173,9 +174,16 @@ export default function TorrentDetailContent({ torrentId }: { torrentId: string 
         </div>
       ) : null}
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-text" suppressHydrationWarning>
-          {hasMounted && data ? data.name : ' '}
-        </h1>
+        <div className="flex items-center gap-3 mb-2">
+          <h1 className="text-2xl font-semibold text-text" suppressHydrationWarning>
+            {hasMounted && data ? data.name : ' '}
+          </h1>
+          {hasMounted && data && data.freeleech && (
+            <span className="bg-green-500/10 text-green-500 px-2 py-1 rounded text-sm font-medium border border-green-500/20">
+              {t('common.freeleech', 'FL')}
+            </span>
+          )}
+        </div>
         <div className="text-sm text-text-secondary mt-1 flex items-center gap-2" suppressHydrationWarning>
           <span>{createdAtFormatted}</span>
           {hasMounted && data && data.isRejected && (

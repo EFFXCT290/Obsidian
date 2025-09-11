@@ -1066,7 +1066,8 @@
 		"torrents":"Torrents",
 		"downloads":"Downloads",
 		"uploaded":"Uploaded",
-		"downloadStarted":"Download started"
+		"downloadStarted":"Download started",
+		"freeleech":"FL"
 	},
 	"language":{
 		"selector":{

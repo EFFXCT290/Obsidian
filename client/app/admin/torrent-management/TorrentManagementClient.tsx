@@ -16,6 +16,7 @@ interface Torrent {
   createdAt: string;
   updatedAt: string;
   isApproved: boolean;
+  freeleech?: boolean;
   uploader: {
     id: string;
     username: string;
@@ -328,7 +329,14 @@ export default function TorrentManagementClient() {
               <div className="space-y-3">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-text mb-1">{torrent.name}</h3>
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="text-lg font-semibold text-text">{torrent.name}</h3>
+                      {torrent.freeleech && (
+                        <span className="bg-green-500/10 text-green-500 px-2 py-1 rounded text-sm font-medium border border-green-500/20">
+                          FL
+                        </span>
+                      )}
+                    </div>
                     {torrent.description && (
                       <p className="text-text-secondary text-sm mb-2">{torrent.description}</p>
                     )}

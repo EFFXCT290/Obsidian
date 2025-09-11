@@ -11,6 +11,7 @@ interface Torrent {
   description: string;
   size: number;
   createdAt: string;
+  freeleech?: boolean;
   uploader: {
     id: string;
     username: string;
@@ -266,9 +267,16 @@ export default function DashboardClient({ translations }: DashboardClientProps) 
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-text hover:text-primary transition-colors font-medium line-clamp-2">
-                        {torrent.name}
-                      </h3>
+                      <div className="flex items-center gap-2 mb-2">
+                        <h3 className="text-text hover:text-primary transition-colors font-medium line-clamp-2">
+                          {torrent.name}
+                        </h3>
+                        {torrent.freeleech && (
+                          <span className="bg-green-500/10 text-green-500 px-2 py-1 rounded text-sm font-medium border border-green-500/20">
+                            FL
+                          </span>
+                        )}
+                      </div>
                       <div className="flex items-center space-x-4 mt-2 text-sm text-text-secondary">
                         <span className="flex items-center">
                           <Download size={14} className="mr-1" />

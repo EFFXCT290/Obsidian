@@ -126,6 +126,7 @@ model Torrent {
   comments    Comment[]
   votes       TorrentVote[]
   tags        String[]   @default([])
+  freeleech   Boolean    @default(false)
 }
 
 model Announce {

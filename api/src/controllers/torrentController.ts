@@ -173,7 +173,7 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
   let torrentBuffer = null, torrentFileMeta = null;
   let nfoBuffer = null, nfoFileMeta = null;
   let posterBuffer = null, posterFileMeta = null;
-  let name, description, categoryId, posterUrlField, tagsField;
+  let name, description, categoryId, posterUrlField, tagsField, freeleechField;
 
   for await (const part of parts) {
     console.log('[uploadTorrentHandler] Received part:', part.fieldname, part.type);
@@ -196,10 +196,11 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
       if (part.fieldname === 'categoryId') categoryId = String(part.value);
       if (part.fieldname === 'posterUrl') posterUrlField = part.value;
       if (part.fieldname === 'tags') tagsField = part.value;
+      if (part.fieldname === 'freeleech') freeleechField = part.value;
     }
   }
   console.log('[uploadTorrentHandler] Finished reading all parts');
-  console.log('[uploadTorrentHandler] Form data:', { name, description, categoryId, tagsField });
+  console.log('[uploadTorrentHandler] Form data:', { name, description, categoryId, tagsField, freeleechField });
 
   if (!torrentBuffer) {
     console.log('[uploadTorrentHandler] .torrent file is required');
@@ -333,6 +334,9 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
     }
   }
 
+  // Parse freeleech field (default to false if not provided)
+  const freeleech = freeleechField === 'true' || freeleechField === true;
+
   const torrent = await prisma.torrent.create({
     data: {
       infoHash: parsed.infoHash,
@@ -346,7 +350,8 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
       categoryId: category.id,
       posterFileId: posterFileUploaded ? posterFileUploaded.id : undefined,
       posterUrl: posterUrl || null,
-      tags: tags
+      tags: tags,
+      freeleech: freeleech
     }
   });
   console.log('[uploadTorrentHandler] Torrent created:', torrent.id);
@@ -434,6 +439,7 @@ export async function listTorrentsHandler(request: FastifyRequest, reply: Fastif
         createdAt: true, 
         updatedAt: true,
         uploaderId: true,
+        freeleech: true,
         uploader: {
           select: {
             id: true,

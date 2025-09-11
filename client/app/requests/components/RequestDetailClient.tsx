@@ -36,6 +36,7 @@ interface Torrent {
   id: string;
   name: string;
   size: number;
+  freeleech?: boolean;
   uploader: {
     id: string;
     username: string;
@@ -508,7 +509,14 @@ export default function RequestDetailClient({ requestId, onBack }: RequestDetail
                   {torrents.map((torrent) => (
                     <div key={torrent.id} className="flex items-center justify-between p-4 bg-background border border-border rounded-lg hover:border-primary/50 transition-colors">
                       <div className="flex-1">
-                        <h4 className="font-medium text-text mb-1">{torrent.name}</h4>
+                        <div className="flex items-center gap-2 mb-1">
+                          <h4 className="font-medium text-text">{torrent.name}</h4>
+                          {torrent.freeleech && (
+                            <span className="bg-green-500/10 text-green-500 px-2 py-1 rounded text-sm font-medium border border-green-500/20">
+                              FL
+                            </span>
+                          )}
+                        </div>
                         <div className="flex items-center gap-4 text-sm text-text-secondary">
                           <span>{formatFileSize(torrent.size)}</span>
                           <span>{torrent.uploader.username}</span>

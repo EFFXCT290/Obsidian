@@ -21,6 +21,7 @@ interface Torrent {
   leechers: number;
   completed: number;
   createdAt: string;
+  freeleech?: boolean;
   uploader: {
     id: string;
     username: string;
@@ -349,12 +350,19 @@ export default function SearchClient({ searchParams, translations }: SearchClien
             <div key={torrent.id} className="bg-surface rounded-lg border border-border p-6 hover:border-primary/50 transition-colors">
               <div className="flex items-start justify-between">
                 <div className="flex-1 min-w-0">
-                  <Link
-                    href={`/torrent/${torrent.id}`}
-                    className="block text-lg font-semibold text-text hover:text-primary transition-colors mb-2"
-                  >
-                    {torrent.name}
-                  </Link>
+                  <div className="flex items-center gap-2 mb-2">
+                    <Link
+                      href={`/torrent/${torrent.id}`}
+                      className="text-lg font-semibold text-text hover:text-primary transition-colors"
+                    >
+                      {torrent.name}
+                    </Link>
+                    {torrent.freeleech && (
+                      <span className="bg-green-500/10 text-green-500 px-2 py-1 rounded text-sm font-medium border border-green-500/20">
+                        {translations.freeleech || 'FL'}
+                      </span>
+                    )}
+                  </div>
                   
                   <div className="flex items-center space-x-4 text-sm text-text-secondary mb-3">
                     <div className="flex items-center space-x-1">

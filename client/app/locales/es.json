@@ -1066,7 +1066,8 @@
 		"torrents":"Torrents",
 		"downloads":"Descargas",
 		"uploaded":"Subido",
-		"downloadStarted":"Descarga iniciada"
+		"downloadStarted":"Descarga iniciada",
+		"freeleech":"FL"
 	},
 	"language":{
 		"selector":{

@@ -112,6 +112,7 @@ export default function UploadContent() {
       if (uploadedImage) formData.append('poster', uploadedImage);
       if (uploadedNfo) formData.append('nfo', uploadedNfo);
       if (Array.isArray(data.tags)) formData.append('tags', JSON.stringify(data.tags));
+      formData.append('freeleech', data.freeleech.toString());
 
       const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
       const headers: HeadersInit = token ? { Authorization: `Bearer ${token}` } : {};
