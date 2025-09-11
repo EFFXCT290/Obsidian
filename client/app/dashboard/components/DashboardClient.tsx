@@ -258,52 +258,70 @@ export default function DashboardClient({ translations }: DashboardClientProps) 
           <p className="text-text-secondary text-center py-8">{translations.noTorrents}</p>
         ) : (
           <>
-            <div className="space-y-3">
-              {torrents.map((torrent) => (
-                <Link 
-                  key={torrent.id}
-                  href={`/torrent/${torrent.id}`}
-                  className="block p-4 border border-border rounded-lg hover:bg-accent-background transition-colors cursor-pointer"
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3 className="text-text hover:text-primary transition-colors font-medium line-clamp-2">
-                          {torrent.name}
-                        </h3>
-                        {torrent.freeleech && (
-                          <span className="bg-green-500/10 text-green-500 px-2 py-1 rounded text-sm font-medium border border-green-500/20">
-                            FL
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex items-center space-x-4 mt-2 text-sm text-text-secondary">
-                        <span className="flex items-center">
-                          <Download size={14} className="mr-1" />
-                          {formatBytes(torrent.size)}
-                        </span>
-                        <span className="flex items-center">
-                          <User size={14} className="mr-1" />
-                          {torrent.uploader.username}
-                        </span>
-                        <span className="flex items-center">
-                          <Tag size={14} className="mr-1" />
+            {/* Table */}
+            <div className="overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-border">
+                  <thead className="bg-surface-secondary">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                        {translations.title}
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                        {translations.category}
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                        {translations.uploaded}
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                        {translations.size}
+                      </th>
+                      <th className="px-4 py-3 text-center text-xs font-medium text-text-secondary uppercase tracking-wider">
+                        {translations.seeders} / {translations.leechers}
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                        {translations.completed}
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                        {translations.uploader}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {torrents.map((torrent) => (
+                      <tr key={torrent.id} className="hover:bg-surface-secondary/50">
+                        <td className="px-4 py-3 min-w-0 w-2/5">
+                          <Link 
+                            href={`/torrent/${torrent.id}`}
+                            className="text-primary hover:text-primary-hover font-medium block truncate"
+                            title={torrent.name}
+                          >
+                            {torrent.name.length > 80 ? `${torrent.name.substring(0, 80)}...` : torrent.name}
+                          </Link>
+                        </td>
+                        <td className="px-4 py-3 text-text-secondary text-sm w-32">
                           {torrent.category.name}
-                        </span>
-                        <span className="flex items-center">
-                          <Calendar size={14} className="mr-1" />
+                        </td>
+                        <td className="px-4 py-3 text-text-secondary text-sm w-24">
                           {formatRelativeTime(torrent.createdAt)}
-                        </span>
-                      </div>
-                      <div className="flex items-center space-x-4 mt-2 text-sm text-text-secondary">
-                        <span>{translations.seeders}: {torrent.seeders}</span>
-                        <span>{translations.leechers}: {torrent.leechers}</span>
-                        <span>{translations.completed}: {torrent.completed}</span>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
+                        </td>
+                        <td className="px-4 py-3 text-text-secondary text-sm w-20">
+                          {formatBytes(torrent.size)}
+                        </td>
+                        <td className="px-4 py-3 text-text-secondary text-sm text-center w-24">
+                          <span className="text-green-500">{torrent.seeders}</span> / <span className="text-red-500">{torrent.leechers}</span>
+                        </td>
+                        <td className="px-4 py-3 text-text-secondary text-sm w-20">
+                          {torrent.completed}
+                        </td>
+                        <td className="px-4 py-3 text-text-secondary text-sm w-32">
+                          {torrent.uploader.username}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
             
             {/* Pagination for torrents */}

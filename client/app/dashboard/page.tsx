@@ -16,6 +16,7 @@ export default async function DashboardPage() {
     viewAll: serverT('dashboard.viewAll', language),
     noTorrents: serverT('dashboard.noTorrents', language),
     noAnnouncements: serverT('dashboard.noAnnouncements', language),
+    title: serverT('dashboard.title', language),
     size: serverT('dashboard.size', language),
     uploader: serverT('dashboard.uploader', language),
     category: serverT('dashboard.category', language),
@@ -32,7 +33,7 @@ export default async function DashboardPage() {
 
   return (
     <DashboardWrapper>
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-screen-2xl mx-auto px-4">
         <Suspense fallback={
           <div className="space-y-6">
             {/* Pinned Announcements Skeleton */}

@@ -188,7 +188,7 @@ export default function ProfileContent() {
 
   return (
     <div className="min-h-screen bg-background text-text p-6">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-screen-2xl mx-auto">
         <ProfileHeader />
         
         {/* Profile Tabs Navigation - Outside the grid */}

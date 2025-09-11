@@ -145,31 +145,31 @@ export default function UserTorrents() {
             <tbody className="divide-y divide-border">
               {data.torrents.map((torrent) => (
                 <tr key={torrent.id} className="hover:bg-surface-secondary/50">
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 min-w-0 w-2/5">
                     <Link 
                       href={`/torrent/${torrent.id}`}
-                      className="text-primary hover:text-primary-hover font-medium truncate block max-w-xs"
+                      className="text-primary hover:text-primary-hover font-medium block truncate"
                       title={torrent.name}
                     >
-                      {torrent.name}
+                      {torrent.name.length > 80 ? `${torrent.name.substring(0, 80)}...` : torrent.name}
                     </Link>
                   </td>
-                  <td className="px-4 py-3 text-text-secondary text-sm">
+                  <td className="px-4 py-3 text-text-secondary text-sm w-32">
                     {torrent.category.name}
                   </td>
-                  <td className="px-4 py-3 text-text-secondary text-sm">
+                  <td className="px-4 py-3 text-text-secondary text-sm w-24">
                     {formatDate(torrent.createdAt)}
                   </td>
-                  <td className="px-4 py-3 text-text-secondary text-sm">
+                  <td className="px-4 py-3 text-text-secondary text-sm w-20">
                     {formatFileSize(torrent.size)}
                   </td>
-                  <td className="px-4 py-3 text-text-secondary text-sm text-center">
+                  <td className="px-4 py-3 text-text-secondary text-sm text-center w-24">
                     <span className="text-green-500">{torrent.seeders}</span> / <span className="text-red-500">{torrent.leechers}</span>
                   </td>
-                  <td className="px-4 py-3 text-text-secondary text-sm">
+                  <td className="px-4 py-3 text-text-secondary text-sm w-20">
                     {torrent.downloads}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 w-24">
                     <span className={getStatusBadge(torrent.status)}>
                       {t(`userTorrents.status.${torrent.status}`, torrent.status)}
                     </span>
