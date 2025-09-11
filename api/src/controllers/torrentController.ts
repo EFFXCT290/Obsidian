@@ -173,7 +173,7 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
   let torrentBuffer = null, torrentFileMeta = null;
   let nfoBuffer = null, nfoFileMeta = null;
   let posterBuffer = null, posterFileMeta = null;
-  let name, description, categoryId, posterUrlField, tagsField, freeleechField;
+  let name, description, categoryId, posterUrlField, tagsField, freeleechField, isAnonymousField;
 
   for await (const part of parts) {
     console.log('[uploadTorrentHandler] Received part:', part.fieldname, part.type);
@@ -197,10 +197,11 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
       if (part.fieldname === 'posterUrl') posterUrlField = part.value;
       if (part.fieldname === 'tags') tagsField = part.value;
       if (part.fieldname === 'freeleech') freeleechField = part.value;
+      if (part.fieldname === 'isAnonymous') isAnonymousField = part.value;
     }
   }
   console.log('[uploadTorrentHandler] Finished reading all parts');
-  console.log('[uploadTorrentHandler] Form data:', { name, description, categoryId, tagsField, freeleechField });
+  console.log('[uploadTorrentHandler] Form data:', { name, description, categoryId, tagsField, freeleechField, isAnonymousField });
 
   if (!torrentBuffer) {
     console.log('[uploadTorrentHandler] .torrent file is required');
@@ -337,6 +338,9 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
   // Parse freeleech field (default to false if not provided)
   const freeleech = freeleechField === 'true' || freeleechField === true;
 
+  // Parse isAnonymous field (default to false if not provided)
+  const isAnonymous = isAnonymousField === 'true' || isAnonymousField === true;
+
   const torrent = await prisma.torrent.create({
     data: {
       infoHash: parsed.infoHash,
@@ -351,8 +355,9 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
       posterFileId: posterFileUploaded ? posterFileUploaded.id : undefined,
       posterUrl: posterUrl || null,
       tags: tags,
-      freeleech: freeleech
-    }
+      freeleech: freeleech,
+      isAnonymous: isAnonymous
+    } as any
   });
   console.log('[uploadTorrentHandler] Torrent created:', torrent.id);
 
@@ -440,6 +445,7 @@ export async function listTorrentsHandler(request: FastifyRequest, reply: Fastif
         updatedAt: true,
         uploaderId: true,
         freeleech: true,
+        isAnonymous: true,
         uploader: {
           select: {
             id: true,
@@ -453,7 +459,7 @@ export async function listTorrentsHandler(request: FastifyRequest, reply: Fastif
             name: true
           }
         }
-      }
+      } as any
     }),
     prisma.torrent.count({ where })
   ]);
@@ -462,8 +468,8 @@ export async function listTorrentsHandler(request: FastifyRequest, reply: Fastif
   const torrentsWithStats = await Promise.all(
     torrents.map(async (torrent) => {
       const [seederLeecherCounts, completedCount] = await Promise.all([
-        getSeederLeecherCounts(torrent.id),
-        getCompletedCount(torrent.id)
+        getSeederLeecherCounts(torrent.id as any),
+        getCompletedCount(torrent.id as any)
       ]);
 
       return {
@@ -471,7 +477,11 @@ export async function listTorrentsHandler(request: FastifyRequest, reply: Fastif
         size: torrent.size?.toString?.() ?? "0",
         seeders: seederLeecherCounts.complete,
         leechers: seederLeecherCounts.incomplete,
-        completed: completedCount
+        completed: completedCount,
+        uploader: {
+          ...(torrent as any).uploader,
+          username: (torrent as any).isAnonymous ? 'Anónimo' : (torrent as any).uploader.username
+        }
       };
     })
   );

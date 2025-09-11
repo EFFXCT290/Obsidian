@@ -127,6 +127,7 @@ model Torrent {
   votes       TorrentVote[]
   tags        String[]   @default([])
   freeleech   Boolean    @default(false)
+  isAnonymous Boolean    @default(false)
 }
 
 model Announce {
