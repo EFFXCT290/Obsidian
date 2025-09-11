@@ -12,7 +12,7 @@ import { getUserActivitiesHandler } from '../controllers/user/userActivityContro
 import { uploadAvatarHandler, deleteAvatarHandler, disableSelfHandler } from '../controllers/authController.js';
 import { getCommentThreadHandler } from '../controllers/commentController.js';
 import { listUserInvitesHandler, createInviteHandler, cancelInviteHandler, getInviteByCodePublicHandler } from '../controllers/user/inviteController.js';
-import { getPreferencesHandler, updatePreferencesHandler } from '../controllers/user/userPreferenceController.js';
+import { getPreferencesHandler, updatePreferencesHandler, getPublicProfileHandler } from '../controllers/user/userPreferenceController.js';
 import { getPopularTagsHandler, searchTorrentsByTagHandler, searchTorrentsByTextHandler } from '../controllers/user/tagController.js';
 import { getUserTorrentsHandler } from '../controllers/user/userTorrentController.js';
 
@@ -53,6 +53,7 @@ export async function registerUserRoutes(app: FastifyInstance) {
   app.get('/invite/:code', getInviteByCodePublicHandler);
   app.get('/user/preferences', { preHandler: requireAuth }, getPreferencesHandler);
   app.put('/user/preferences', { preHandler: requireAuth }, updatePreferencesHandler);
+  app.get('/user/:username', getPublicProfileHandler); // Public user profile
   app.get('/tags/popular', getPopularTagsHandler); // Get popular tags with usage counts
   app.get('/tags/:tag/torrents', searchTorrentsByTagHandler); // Search torrents by tag
   app.get('/search', searchTorrentsByTextHandler); // Search torrents by text query

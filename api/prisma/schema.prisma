@@ -60,6 +60,7 @@ model User {
   // Preferences
   preferredLanguage String? // 'es' | 'en'
   allowEmailNotifications Boolean @default(true)
+  publicProfile Boolean @default(false) // If true, profile is visible at /user/:username
 
   @@index([rssToken])
 }
