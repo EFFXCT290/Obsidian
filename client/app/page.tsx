@@ -35,7 +35,11 @@ function formatBytes(bytes: number): string {
 /**
  * Statistics component that fetches data from the API
  */
-async function SiteStatistics() {
+async function SiteStatistics({language}: {language: string}) {
+  const usersText = serverT('common.users', language);
+  const torrentsText = serverT('common.torrents', language);
+  const downloadsText = serverT('common.downloads', language);
+  const uploadedText = serverT('common.uploaded', language);
   try {
     const response = await fetch(`${API_BASE_URL}/stats`);
     const stats = await response.json();
@@ -43,19 +47,19 @@ async function SiteStatistics() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div className="text-center p-4 bg-surface rounded-lg border border-border">
           <div className="text-2xl font-bold text-primary">{stats.totalUsers.toLocaleString()}</div>
-          <div className="text-sm text-text-secondary">Users</div>
+          <div className="text-sm text-text-secondary">{usersText}</div>
         </div>
         <div className="text-center p-4 bg-surface rounded-lg border border-border">
           <div className="text-2xl font-bold text-green">{stats.totalTorrents.toLocaleString()}</div>
-          <div className="text-sm text-text-secondary">Torrents</div>
+          <div className="text-sm text-text-secondary">{torrentsText}</div>
         </div>
         <div className="text-center p-4 bg-surface rounded-lg border border-border">
           <div className="text-2xl font-bold text-orange">{stats.totalDownloads.toLocaleString()}</div>
-          <div className="text-sm text-text-secondary">Downloads</div>
+          <div className="text-sm text-text-secondary">{downloadsText}</div>
         </div>
         <div className="text-center p-4 bg-surface rounded-lg border border-border">
           <div className="text-2xl font-bold text-yellow">{formatBytes(stats.totalUploadBytes)}</div>
-          <div className="text-sm text-text-secondary">Uploaded</div>
+          <div className="text-sm text-text-secondary">{uploadedText}</div>
         </div>
       </div>
     );
@@ -173,7 +177,7 @@ export default async function Home() {
               ))}
             </div>
           }>
-            <SiteStatistics />
+            <SiteStatistics language={language} />
           </Suspense>
         )}
         
