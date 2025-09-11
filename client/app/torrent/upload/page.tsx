@@ -6,7 +6,7 @@ import { headers } from 'next/headers';
 import { I18nProvider } from '@/app/hooks/I18nProvider';
 
 export default async function UploadPage() {
-  const hdrs = headers();
+  const hdrs = await headers();
   const language = await getPreferredLanguage(hdrs as unknown as Headers);
   const resources = getTranslations(language);
   return (
