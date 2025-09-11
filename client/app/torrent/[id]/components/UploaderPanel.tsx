@@ -68,26 +68,24 @@ export default function UploaderPanel({ uploader, loading, isAnonymous = false }
             )}
           </div>
         </div>
-        {!isAnonymous && (
-          <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-text-secondary">{t('torrentDetail.uploader.uploaded','Subido')}</span>
-                {loading || !mounted || !uploader ? (
-                  <div className="w-16 h-3 bg-text-secondary/10 rounded animate-pulse"></div>
-                ) : (
-                  <span className="text-text" suppressHydrationWarning>{formatBytes(uploader.uploaded)}</span>
-                )}
-              </div>
-              <div className="flex justify-between">
-                <span className="text-text-secondary">{t('torrentDetail.uploader.downloaded','Descargado')}</span>
-                {loading || !mounted || !uploader ? (
-                  <div className="w-16 h-3 bg-text-secondary/10 rounded animate-pulse"></div>
-                ) : (
-                  <span className="text-text" suppressHydrationWarning>{formatBytes(uploader.downloaded)}</span>
-                )}
-              </div>
-          </div>
-        )}
+        <div className={`space-y-2 text-sm ${isAnonymous ? 'hidden' : ''}`} suppressHydrationWarning>
+            <div className="flex justify-between">
+              <span className="text-text-secondary">{t('torrentDetail.uploader.uploaded','Subido')}</span>
+              {loading || !mounted || !uploader ? (
+                <div className="w-16 h-3 bg-text-secondary/10 rounded animate-pulse"></div>
+              ) : (
+                <span className="text-text" suppressHydrationWarning>{formatBytes(uploader.uploaded)}</span>
+              )}
+            </div>
+            <div className="flex justify-between">
+              <span className="text-text-secondary">{t('torrentDetail.uploader.downloaded','Descargado')}</span>
+              {loading || !mounted || !uploader ? (
+                <div className="w-16 h-3 bg-text-secondary/10 rounded animate-pulse"></div>
+              ) : (
+                <span className="text-text" suppressHydrationWarning>{formatBytes(uploader.downloaded)}</span>
+              )}
+            </div>
+        </div>
       </div>
     </div>
   );
