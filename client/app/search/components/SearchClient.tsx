@@ -22,11 +22,12 @@ interface Torrent {
   completed: number;
   createdAt: string;
   freeleech?: boolean;
+  isAnonymous?: boolean;
   uploader: {
     id: string;
     username: string;
   };
-  category: {
+  category?: {
     id: string;
     name: string;
   };
@@ -122,11 +123,17 @@ export default function SearchClient({ searchParams, translations }: SearchClien
         ...(selectedSort && { sort: selectedSort }),
       });
 
-      const response = await fetch(`${API_BASE_URL}/tags/${encodeURIComponent(selectedTag)}/torrents?${params}`);
+      const url = `${API_BASE_URL}/torrent/list?${params}&tag=${encodeURIComponent(selectedTag)}`;
+      console.log('SearchClient - Fetching URL:', url);
+      const response = await fetch(url);
       if (response.ok) {
         const data = await response.json();
+        console.log('SearchClient - Torrents data:', data);
+        console.log('SearchClient - First torrent category:', data.torrents?.[0]?.category);
         setTorrents(data.torrents || []);
         setTotal(data.total || 0);
+      } else {
+        console.error('SearchClient - Response not ok:', response.status, response.statusText);
       }
     } catch (error) {
       console.error('Error searching torrents by tag:', error);
@@ -145,11 +152,17 @@ export default function SearchClient({ searchParams, translations }: SearchClien
         ...(selectedSort && { sort: selectedSort }),
       });
 
-      const response = await fetch(`${API_BASE_URL}/search?${params}`);
+      const url = `${API_BASE_URL}/torrent/list?${params}`;
+      console.log('SearchClient - Text search URL:', url);
+      const response = await fetch(url);
       if (response.ok) {
         const data = await response.json();
+        console.log('SearchClient - Text search data:', data);
+        console.log('SearchClient - First torrent category:', data.torrents?.[0]?.category);
         setTorrents(data.torrents || []);
         setTotal(data.total || 0);
+      } else {
+        console.error('SearchClient - Text search response not ok:', response.status, response.statusText);
       }
     } catch (error) {
       console.error('Error searching torrents by text:', error);
@@ -344,92 +357,126 @@ export default function SearchClient({ searchParams, translations }: SearchClien
       )}
 
       {/* Results */}
-      <div className="space-y-4">
+      <div className="bg-surface rounded-lg border border-border p-6">
         {torrents.length > 0 ? (
-          torrents.map((torrent) => (
-            <div key={torrent.id} className="bg-surface rounded-lg border border-border p-6 hover:border-primary/50 transition-colors">
-              <div className="flex items-start justify-between">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Link
-                      href={`/torrent/${torrent.id}`}
-                      className="text-lg font-semibold text-text hover:text-primary transition-colors"
-                    >
-                      {torrent.name}
-                    </Link>
-                    {torrent.freeleech && (
-                      <span className="bg-green-500/10 text-green-500 px-2 py-1 rounded text-sm font-medium border border-green-500/20">
-                        FL
-                      </span>
-                    )}
-                  </div>
-                  
-                  <div className="flex items-center space-x-4 text-sm text-text-secondary mb-3">
-                    <div className="flex items-center space-x-1">
-                      <User size={14} />
-                      <span>{torrent.seeders}</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Download size={14} />
-                      <span>{torrent.leechers}</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Time size={14} />
-                      <span>{formatRelativeTime(torrent.createdAt)}</span>
-                    </div>
-                    <span>{formatBytes(torrent.size)}</span>
-                  </div>
-
-                  <div className="text-sm text-text-secondary">
-                    {translations.torrent.uploaded} {formatRelativeTime(torrent.createdAt)} {translations.torrent.by}{' '}
-                    <Link
-                      href={`/user/${torrent.uploader.id}`}
-                      className="text-primary hover:text-primary/80 transition-colors"
-                    >
-                      {torrent.uploader.username}
-                    </Link>
-                  </div>
-
-                  {/* Tags */}
-                  {torrent.tags && torrent.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-2">
-                      {torrent.tags.slice(0, 5).map((tag) => (
-                        <Link
-                          key={tag}
-                          href={`/search?tag=${encodeURIComponent(tag)}`}
-                          className="text-xs px-2 py-1 bg-primary/10 text-primary rounded hover:bg-primary/20 transition-colors"
-                        >
-                          {tag}
-                        </Link>
-                      ))}
-                      {torrent.tags.length > 5 && (
-                        <span className="text-xs text-text-secondary">
-                          +{torrent.tags.length - 5} more
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
-
-                <div className="ml-4 flex flex-col items-end space-y-2">
-                  <Link
-                    href={`/torrent/${torrent.id}/download`}
-                    className="inline-flex items-center space-x-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
-                  >
-                    <Download size={16} />
-                    <span>{translations.torrent.download}</span>
-                  </Link>
-                  
-                  <div className="text-xs text-text-secondary text-right">
-                    <div>{torrent.completed} {translations.torrent.completed}</div>
-                  </div>
-                </div>
+          <>
+            {/* Table */}
+            <div className="overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-border">
+                  <thead className="bg-surface-secondary">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                        {translations.torrent.title || 'Title'}
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                        {translations.torrent.category}
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                        {translations.torrent.uploaded}
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                        {translations.torrent.size}
+                      </th>
+                      <th className="px-4 py-3 text-center text-xs font-medium text-text-secondary uppercase tracking-wider">
+                        {translations.torrent.seeders} / {translations.torrent.leechers}
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                        {translations.torrent.completed}
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                        {translations.torrent.uploader}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {torrents.map((torrent) => (
+                      <tr key={torrent.id} className="hover:bg-surface-secondary/50">
+                        <td className="px-4 py-3 min-w-0 w-2/5">
+                          <div className="flex items-center gap-2">
+                            <Link 
+                              href={`/torrent/${torrent.id}`}
+                              className="text-primary hover:text-primary-hover font-medium block truncate"
+                              title={torrent.name}
+                            >
+                              {torrent.name.length > 80 ? `${torrent.name.substring(0, 80)}...` : torrent.name}
+                            </Link>
+                            {torrent.freeleech && (
+                              <span className="bg-green-500/10 text-green-500 px-2 py-1 rounded text-xs font-medium border border-green-500/20 flex-shrink-0">
+                                FL
+                              </span>
+                            )}
+                          </div>
+                          {/* Tags */}
+                          {torrent.tags && torrent.tags.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {torrent.tags.slice(0, 3).map((tag) => (
+                                <Link
+                                  key={tag}
+                                  href={`/search?tag=${encodeURIComponent(tag)}`}
+                                  className="text-xs px-1 py-0.5 bg-primary/10 text-primary rounded hover:bg-primary/20 transition-colors"
+                                >
+                                  {tag}
+                                </Link>
+                              ))}
+                              {torrent.tags.length > 3 && (
+                                <span className="text-xs text-text-secondary">
+                                  +{torrent.tags.length - 3}
+                                </span>
+                              )}
+                            </div>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 text-text-secondary text-sm w-32">
+                          {torrent.category ? (
+                            <Link 
+                              href={`/category/${encodeURIComponent(torrent.category.name)}/torrents`}
+                              className="text-primary hover:text-primary-hover transition-colors"
+                            >
+                              {torrent.category.name}
+                            </Link>
+                          ) : (
+                            <span className="text-red-500">No category</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 text-text-secondary text-sm w-24">
+                          {formatRelativeTime(torrent.createdAt)}
+                        </td>
+                        <td className="px-4 py-3 text-text-secondary text-sm w-20">
+                          {formatBytes(torrent.size)}
+                        </td>
+                        <td className="px-4 py-3 text-text-secondary text-sm text-center w-24">
+                          <span className="text-green-500">{torrent.seeders}</span> / <span className="text-red-500">{torrent.leechers}</span>
+                        </td>
+                        <td className="px-4 py-3 text-text-secondary text-sm w-20">
+                          {torrent.completed}
+                        </td>
+                        <td className="px-4 py-3 text-text-secondary text-sm w-32">
+                          {torrent.isAnonymous ? (
+                            <span className="text-text-secondary">Anónimo</span>
+                          ) : (
+                            <Link
+                              href={`/user/${torrent.uploader.id}`}
+                              className="text-primary hover:text-primary-hover transition-colors"
+                            >
+                              {torrent.uploader.username}
+                            </Link>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
-          ))
+          </>
         ) : (
-          <div className="text-center py-8">
-            <div className="text-text-secondary">{translations.noResults}</div>
+          <div className="text-center py-12">
+            <SearchIcon size={48} className="mx-auto text-text-secondary mb-4" />
+            <h3 className="text-lg font-semibold text-text mb-2">{translations.noResults}</h3>
+            <p className="text-text-secondary">
+              {searchQuery ? `No se encontraron resultados para "${searchQuery}"` : 'Intenta ajustar tus criterios de búsqueda'}
+            </p>
           </div>
         )}
       </div>

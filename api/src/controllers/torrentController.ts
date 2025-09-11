@@ -398,101 +398,6 @@ async function modifyTorrentAnnounceUrls(torrentBuffer: Buffer, passkey: string,
   }
 }
 
-export async function listTorrentsHandler(request: FastifyRequest, reply: FastifyReply) {
-  const { page = 1, limit = 20, q, categoryId, status } = request.query as any;
-  const take = Math.min(Number(limit) || 20, 100);
-  const skip = (Number(page) - 1) * take;
-  const where: any = {};
-  
-  // Handle status filtering
-  if (status === 'approved') {
-    where.isApproved = true;
-  } else if (status === 'pending') {
-    where.isApproved = false;
-    where.isRejected = false;
-  } else if (status === 'rejected') {
-    where.isRejected = true;
-  } else {
-    // Default to approved torrents for public access
-    where.isApproved = true;
-  }
-  
-  // Handle search query
-  if (q) {
-    where.OR = [
-      { name: { contains: q, mode: 'insensitive' } },
-      { description: { contains: q, mode: 'insensitive' } }
-    ];
-  }
-  
-  // Handle category filtering
-  if (categoryId && categoryId !== 'all') {
-    where.categoryId = categoryId;
-  }
-  const [torrents, total] = await Promise.all([
-    prisma.torrent.findMany({
-      where,
-      skip,
-      take,
-      orderBy: { createdAt: 'desc' },
-      select: { 
-        id: true, 
-        name: true, 
-        description: true, 
-        infoHash: true, 
-        size: true, 
-        createdAt: true, 
-        updatedAt: true,
-        uploaderId: true,
-        freeleech: true,
-        isAnonymous: true,
-        uploader: {
-          select: {
-            id: true,
-            username: true,
-            role: true
-          }
-        },
-        category: {
-          select: {
-            id: true,
-            name: true
-          }
-        }
-      } as any
-    }),
-    prisma.torrent.count({ where })
-  ]);
-
-  // Calculate stats for each torrent
-  const torrentsWithStats = await Promise.all(
-    torrents.map(async (torrent) => {
-      const [seederLeecherCounts, completedCount] = await Promise.all([
-        getSeederLeecherCounts(torrent.id as any),
-        getCompletedCount(torrent.id as any)
-      ]);
-
-      return {
-        ...torrent,
-        size: torrent.size?.toString?.() ?? "0",
-        seeders: seederLeecherCounts.complete,
-        leechers: seederLeecherCounts.incomplete,
-        completed: completedCount,
-        uploader: {
-          ...(torrent as any).uploader,
-          username: (torrent as any).isAnonymous ? 'Anónimo' : (torrent as any).uploader.username
-        }
-      };
-    })
-  );
-
-  return reply.send({
-    torrents: torrentsWithStats,
-    total,
-    page: Number(page),
-    limit: take
-  });
-}
 
 export async function getTorrentHandler(request: FastifyRequest, reply: FastifyReply) {
   const { id } = request.params as any;
@@ -1374,6 +1279,122 @@ export async function deleteTorrentHandler(request: FastifyRequest, reply: Fasti
     console.error('[deleteTorrentHandler] Error:', error);
     return reply.status(500).send({ error: 'Failed to delete torrent' });
   }
+}
+
+export async function listTorrentsHandler(request: FastifyRequest, reply: FastifyReply) {
+  const { page = 1, limit = 20, q, categoryId, status, tag } = request.query as any;
+  const take = Math.min(Number(limit) || 20, 100);
+  const skip = (Number(page) - 1) * take;
+  const where: any = {};
+
+  // Handle status filtering
+  if (status === 'approved') {
+    where.isApproved = true;
+  } else if (status === 'pending') {
+    where.isApproved = false;
+    where.isRejected = false;
+  } else if (status === 'rejected') {
+    where.isRejected = true;
+  } else {
+    // Default to approved torrents for public access
+    where.isApproved = true;
+  }
+
+  // Handle search query
+  if (q) {
+    where.OR = [
+      { name: { contains: q, mode: 'insensitive' } },
+      { description: { contains: q, mode: 'insensitive' } }
+    ];
+  }
+
+  // Handle category filtering
+  if (categoryId && categoryId !== 'all') {
+    // Try to find category by name first, then by ID
+    const category = await prisma.category.findFirst({
+      where: {
+        OR: [
+          { name: categoryId },
+          { id: categoryId }
+        ]
+      }
+    });
+    
+    if (category) {
+      where.categoryId = category.id;
+    }
+  }
+
+  // Handle tag filtering
+  if (tag) {
+    where.tags = {
+      has: tag
+    };
+  }
+
+  const [torrents, total] = await Promise.all([
+    prisma.torrent.findMany({
+      where,
+      skip,
+      take,
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        infoHash: true,
+        size: true,
+        createdAt: true,
+        updatedAt: true,
+        uploaderId: true,
+        freeleech: true,
+        isAnonymous: true,
+        uploader: {
+          select: {
+            id: true,
+            username: true,
+            role: true
+          }
+        },
+        category: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      } as any
+    }),
+    prisma.torrent.count({ where })
+  ]);
+
+  // Calculate stats for each torrent
+  const torrentsWithStats = await Promise.all(
+    torrents.map(async (torrent) => {
+      const [seederLeecherCounts, completedCount] = await Promise.all([
+        getSeederLeecherCounts(torrent.id as any),
+        getCompletedCount(torrent.id as any)
+      ]);
+
+      return {
+        ...torrent,
+        size: torrent.size?.toString?.() ?? "0",
+        seeders: seederLeecherCounts.complete,
+        leechers: seederLeecherCounts.incomplete,
+        completed: completedCount,
+        uploader: {
+          ...(torrent as any).uploader,
+          username: (torrent as any).isAnonymous ? 'Anónimo' : (torrent as any).uploader.username
+        }
+      };
+    })
+  );
+
+  return reply.send({
+    torrents: torrentsWithStats,
+    total,
+    page: Number(page),
+    limit: take
+  });
 }
 
 const ALLOWED_IMAGE_TYPES = ['jpg', 'jpeg', 'png', 'gif', 'webp'];

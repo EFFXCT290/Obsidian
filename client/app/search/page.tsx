@@ -96,6 +96,8 @@ export default async function SearchPage({ searchParams }: PageProps) {
       by: serverT('search.torrent.by', language),
       size: serverT('search.torrent.size', language),
       download: serverT('search.torrent.download', language),
+      uploader: serverT('search.torrent.uploader', language),
+      category: serverT('search.torrent.category', language),
     },
     pagination: {
       previous: serverT('search.pagination.previous', language),
@@ -107,7 +109,7 @@ export default async function SearchPage({ searchParams }: PageProps) {
 
   return (
     <DashboardWrapper>
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-screen-2xl mx-auto px-4">
         <Suspense fallback={<SearchSkeleton />}>
           <SearchClient 
             searchParams={resolvedSearchParams}

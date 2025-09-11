@@ -113,6 +113,8 @@ export default async function CategoryTorrentsPage({ params, searchParams }: Pag
       by: serverT('categoryTorrents.torrent.by', language),
       size: serverT('categoryTorrents.torrent.size', language),
       download: serverT('categoryTorrents.torrent.download', language),
+      uploader: serverT('categoryTorrents.torrent.uploader', language),
+      category: serverT('categoryTorrents.torrent.category', language),
     },
     pagination: {
       previous: serverT('categoryTorrents.pagination.previous', language),
@@ -124,7 +126,7 @@ export default async function CategoryTorrentsPage({ params, searchParams }: Pag
 
   return (
     <DashboardWrapper>
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-screen-2xl mx-auto px-4">
         <Suspense fallback={<CategoryTorrentsSkeleton />}>
           <CategoryTorrentsClient 
             categoryName={categoryName}

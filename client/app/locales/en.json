@@ -262,7 +262,9 @@
 			"uploaded":"Uploaded",
 			"by":"by",
 			"size":"Size",
-			"download":"Download"
+			"download":"Download",
+			"uploader":"Uploader",
+			"category":"Category"
 		},
 		"pagination":{
 			"previous":"Previous",
@@ -292,7 +294,9 @@
 			"uploaded":"Uploaded",
 			"by":"by",
 			"size":"Size",
-			"download":"Download"
+			"download":"Download",
+			"uploader":"Uploader",
+			"category":"Category"
 		},
 		"pagination":{
 			"previous":"Previous",

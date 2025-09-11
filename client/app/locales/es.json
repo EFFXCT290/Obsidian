@@ -262,7 +262,9 @@
 			"uploaded":"Subido",
 			"by":"por",
 			"size":"Tamaño",
-			"download":"Descargar"
+			"download":"Descargar",
+			"uploader":"Subidor",
+			"category":"Categoría"
 		},
 		"pagination":{
 			"previous":"Anterior",
@@ -292,7 +294,9 @@
 			"uploaded":"Subido",
 			"by":"por",
 			"size":"Tamaño",
-			"download":"Descargar"
+			"download":"Descargar",
+			"uploader":"Uploader",
+			"category":"Categoría"
 		},
 		"pagination":{
 			"previous":"Anterior",
@@ -448,7 +452,7 @@
 			},
 			"table":{
 				"name":"Nombre",
-				"uploader":"Subidor",
+				"uploader":"Uploader",
 				"category":"Categoría",
 				"size":"Tamaño",
 				"date":"Fecha",
@@ -522,7 +526,7 @@
 			"info":{
 				"size":"Tamaño",
 				"category":"Categoría",
-				"uploader":"Subidor",
+				"uploader":"Uploader",
 				"created":"Creado",
 				"updated":"Actualizado"
 			},
