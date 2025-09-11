@@ -5,6 +5,9 @@ import useSWR from 'swr';
 import { useI18n } from '../../hooks/useI18n';
 import { API_BASE_URL } from '@/lib/api';
 import Link from 'next/link';
+import toast from 'react-hot-toast';
+import { Edit } from '@styled-icons/boxicons-regular/Edit';
+import TorrentEditModal from './TorrentEditModal';
 
 interface UserTorrent {
   id: string;
@@ -14,6 +17,8 @@ interface UserTorrent {
   seeders: number;
   leechers: number;
   downloads: number;
+  isAnonymous: boolean;
+  freeleech: boolean;
   category: {
     id: string;
     name: string;
@@ -31,11 +36,13 @@ interface UserTorrentsResponse {
 export default function UserTorrents() {
   const { t } = useI18n();
   const [page, setPage] = useState(1);
+  const [editingTorrent, setEditingTorrent] = useState<UserTorrent | null>(null);
+  const [updatingTorrents, setUpdatingTorrents] = useState<Set<string>>(new Set());
   const limit = 20;
 
   const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
   
-  const { data, error, isLoading } = useSWR<UserTorrentsResponse>(
+  const { data, error, isLoading, mutate } = useSWR<UserTorrentsResponse>(
     token ? [`${API_BASE_URL}/user/torrents?page=${page}&limit=${limit}`, token] : null,
     async ([url, _token]) => {
       const headers: HeadersInit = { 'Content-Type': 'application/json' };
@@ -63,6 +70,76 @@ export default function UserTorrents() {
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
+  };
+
+  const updateTorrent = async (torrentId: string, updates: { isAnonymous?: boolean; freeleech?: boolean }) => {
+    if (!token) return;
+    
+    setUpdatingTorrents(prev => new Set(prev).add(torrentId));
+    
+    try {
+      const response = await fetch(`${API_BASE_URL}/user/torrents/${torrentId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(updates)
+      });
+
+      if (response.ok) {
+        toast.success(t('userTorrents.updateSuccess', 'Torrent updated successfully'));
+        // Revalidate the data to refresh the list
+        mutate();
+      } else {
+        toast.error(t('userTorrents.updateError', 'Failed to update torrent'));
+      }
+    } catch (error) {
+      console.error('Error updating torrent:', error);
+      toast.error(t('userTorrents.updateError', 'Failed to update torrent'));
+    } finally {
+      setUpdatingTorrents(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(torrentId);
+        return newSet;
+      });
+    }
+  };
+
+  const deleteTorrent = async (torrentId: string) => {
+    if (!token) return;
+    
+    if (!confirm(t('userTorrents.deleteConfirm', 'Are you sure you want to delete this torrent? This action cannot be undone.'))) {
+      return;
+    }
+    
+    setUpdatingTorrents(prev => new Set(prev).add(torrentId));
+    
+    try {
+      const response = await fetch(`${API_BASE_URL}/user/torrents/${torrentId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        toast.success(t('userTorrents.deleteSuccess', 'Torrent deleted successfully'));
+        // Revalidate the data to refresh the list
+        mutate();
+      } else {
+        toast.error(t('userTorrents.deleteError', 'Failed to delete torrent'));
+      }
+    } catch (error) {
+      console.error('Error deleting torrent:', error);
+      toast.error(t('userTorrents.deleteError', 'Failed to delete torrent'));
+    } finally {
+      setUpdatingTorrents(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(torrentId);
+        return newSet;
+      });
+    }
   };
 
   const getStatusBadge = (status: string) => {
@@ -140,6 +217,9 @@ export default function UserTorrents() {
                 <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                   {t('userTorrents.table.status', 'Status')}
                 </th>
+                <th className="px-4 py-3 text-center text-xs font-medium text-text-secondary uppercase tracking-wider">
+                  {t('userTorrents.table.actions', 'Actions')}
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -179,6 +259,16 @@ export default function UserTorrents() {
                       {t(`userTorrents.status.${torrent.status}`, torrent.status)}
                     </span>
                   </td>
+                  <td className="px-4 py-3 text-center w-16">
+                    <button
+                      onClick={() => setEditingTorrent(torrent)}
+                      disabled={updatingTorrents.has(torrent.id)}
+                      className="text-primary hover:text-primary-hover disabled:opacity-50 disabled:cursor-not-allowed p-1"
+                      title={t('userTorrents.actions.edit', 'Edit torrent')}
+                    >
+                      <Edit size={16} />
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -213,6 +303,16 @@ export default function UserTorrents() {
           </div>
         </div>
       )}
+
+      {/* Edit Modal */}
+      <TorrentEditModal
+        torrent={editingTorrent}
+        isOpen={editingTorrent !== null}
+        onClose={() => setEditingTorrent(null)}
+        onUpdate={updateTorrent}
+        onDelete={deleteTorrent}
+        isUpdating={editingTorrent ? updatingTorrents.has(editingTorrent.id) : false}
+      />
     </div>
   );
 }

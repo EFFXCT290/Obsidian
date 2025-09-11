@@ -32,6 +32,7 @@ export async function getUserTorrentsHandler(request: FastifyRequest, reply: Fas
           isApproved: true,
           isRejected: true,
           isAnonymous: true,
+          freeleech: true,
           rejectionReason: true,
           category: {
             select: {
