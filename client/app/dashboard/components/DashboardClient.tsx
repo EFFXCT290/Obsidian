@@ -227,7 +227,12 @@ export default function DashboardClient({ translations }: DashboardClientProps) 
                     <div className="flex items-center mt-2 text-sm text-text-secondary">
                       <span className="flex items-center">
                         <User size={14} className="mr-1" />
-                        {translations.by} {announcement.createdBy.username}
+                        {translations.by} <Link 
+                          href={`/user/${encodeURIComponent(announcement.createdBy.username)}`}
+                          className="text-primary hover:text-primary-hover transition-colors"
+                        >
+                          {announcement.createdBy.username}
+                        </Link>
                       </span>
                       <span className="mx-2">•</span>
                       <span className="flex items-center">
@@ -321,7 +326,12 @@ export default function DashboardClient({ translations }: DashboardClientProps) 
                           {torrent.completed}
                         </td>
                         <td className="px-4 py-3 text-text-secondary text-sm w-32">
-                          {torrent.uploader.username}
+                          <Link 
+                            href={`/user/${encodeURIComponent(torrent.uploader.username)}`}
+                            className="text-primary hover:text-primary-hover transition-colors"
+                          >
+                            {torrent.uploader.username}
+                          </Link>
                         </td>
                       </tr>
                     ))}

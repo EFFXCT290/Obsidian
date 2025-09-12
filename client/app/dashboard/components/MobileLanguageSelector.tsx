@@ -16,14 +16,15 @@ export default function MobileLanguageSelector({ currentLanguage = 'es' }: Mobil
 
   const languages = [
     { code: 'es', name: 'Español', flag: '🇪🇸' },
-    { code: 'en', name: 'English', flag: '🇺🇸' }
+    { code: 'en', name: 'English', flag: '🇺🇸' },
+    { code: 'zh', name: '中文', flag: '🇨🇳' }
   ];
 
   const currentLang = languages.find(lang => lang.code === currentLanguage) || languages[0];
 
   const handleLanguageChange = (langCode: string) => {
-    // Set language in localStorage
-    localStorage.setItem('preferredLanguage', langCode);
+    // Update cookie (same as desktop version)
+    document.cookie = `i18nextLng=${langCode}; path=/; max-age=31536000`;
     
     // Reload the page to apply the new language
     window.location.reload();
