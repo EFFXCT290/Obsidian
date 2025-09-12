@@ -11,8 +11,6 @@
   [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
   [![Node.js](https://img.shields.io/badge/node.js-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
   [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
-  [![GitHub stars](https://img.shields.io/github/stars/EFFXCT290/Obsidian.svg?style=social&label=Star)](https://github.com/EFFXCT290/Obsidian)
-  [![GitHub forks](https://img.shields.io/github/forks/EFFXCT290/Obsidian.svg?style=social&label=Fork)](https://github.com/EFFXCT290/Obsidian/fork)
 </div>
 
 A modern, feature-rich BitTorrent tracker built with Next.js, Fastify, and PostgreSQL. Obsidian Tracker provides a comprehensive platform for managing torrents, users, and community features with a focus on performance, security, and user experience.
