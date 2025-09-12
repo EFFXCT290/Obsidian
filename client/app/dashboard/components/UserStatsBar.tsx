@@ -55,32 +55,32 @@ export default function UserStatsBar() {
 
   if (!userStats) {
     return (
-      <div className="flex items-center space-x-1 sm:space-x-2 text-xs text-text-secondary">
-        <div className="w-24 sm:w-32 h-3 bg-text-secondary/10 rounded animate-pulse" />
+      <div className="flex items-center space-x-2 sm:space-x-4 text-sm sm:text-base text-text-secondary">
+        <div className="w-24 sm:w-32 h-4 bg-text-secondary/10 rounded animate-pulse" />
       </div>
     );
   }
 
   return (
-    <div className="flex items-center space-x-1 sm:space-x-2 text-xs text-text-secondary">
+    <div className="flex items-center space-x-2 sm:space-x-4 text-sm sm:text-base text-text-secondary">
       <div className="flex items-center space-x-1">
-        <Upload size={12} className="text-green-500" />
+        <Upload size={16} className="text-green-500" />
         <span>{formatBytes(userStats.uploaded)}</span>
       </div>
       <div className="flex items-center space-x-1">
-        <Download size={12} className="text-red-500" />
+        <Download size={16} className="text-red-500" />
         <span>{formatBytes(userStats.downloaded)}</span>
       </div>
       <div className="flex items-center space-x-1">
-        <BarChartSquare size={12} className="text-blue-500" />
+        <BarChartSquare size={16} className="text-blue-500" />
         <span>{userStats.ratio.toFixed(2)}</span>
       </div>
       <div className="flex items-center space-x-1">
-        <Award size={12} className="text-yellow-500" />
+        <Award size={16} className="text-yellow-500" />
         <span>{userStats.bonusPoints} BP</span>
       </div>
       <div className="flex items-center space-x-1">
-        <Award size={12} className="text-pink-500" />
+        <Award size={16} className="text-pink-500" />
         <span>{userStats.hitnrunCount} H&R</span>
       </div>
     </div>
