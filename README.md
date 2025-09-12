@@ -1,6 +1,19 @@
-# Obsidian Tracker
-
-**The OverPowered Torrent Tracker**
+<div align="center">
+  <img src="https://raw.githubusercontent.com/EFFXCT290/Obsidian/main/client/public/logo.png" alt="Obsidian Tracker Logo" width="200" height="200">
+  
+  # Obsidian Tracker
+  
+  **The OverPowered Torrent Tracker**
+  
+  [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/EFFXCT290/Obsidian)
+  [![Build Status](https://github.com/EFFXCT290/Obsidian/workflows/CI/badge.svg)](https://github.com/EFFXCT290/Obsidian/actions)
+  [![Stable](https://img.shields.io/badge/status-stable-green.svg)](https://github.com/EFFXCT290/Obsidian/releases)
+  [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+  [![Node.js](https://img.shields.io/badge/node.js-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
+  [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
+  [![GitHub stars](https://img.shields.io/github/stars/EFFXCT290/Obsidian.svg?style=social&label=Star)](https://github.com/EFFXCT290/Obsidian)
+  [![GitHub forks](https://img.shields.io/github/forks/EFFXCT290/Obsidian.svg?style=social&label=Fork)](https://github.com/EFFXCT290/Obsidian/fork)
+</div>
 
 A modern, feature-rich BitTorrent tracker built with Next.js, Fastify, and PostgreSQL. Obsidian Tracker provides a comprehensive platform for managing torrents, users, and community features with a focus on performance, security, and user experience.
 
@@ -73,8 +86,8 @@ A modern, feature-rich BitTorrent tracker built with Next.js, Fastify, and Postg
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-username/obsidian-tracker.git
-cd obsidian-tracker
+git clone https://github.com/EFFXCT290/Obsidian.git
+cd Obsidian
 ```
 
 ### 2. Install Dependencies
@@ -411,7 +424,7 @@ For more information about the AGPL-3.0 License, visit [gnu.org/licenses/agpl-3.
 ## 📞 Support
 
 For support, please:
-1. Search existing [Issues](https://github.com/your-username/obsidian-tracker/issues)
+1. Search existing [Issues](https://github.com/EFFXCT290/Obsidian/issues)
 2. Create a new issue if your problem isn't already reported
 3. Contact the development team on [Discord](https://discord.gg/C26GGafb) 
 
