@@ -977,6 +977,32 @@
 			}
 		}
 	},
+	"latestTorrents":{
+		"pageTitle":"Latest Torrents - Obsidian Tracker",
+		"title":"Latest Torrents",
+		"subtitle":"Discover the most recent torrents uploaded to the platform",
+		"noTorrents":"No torrents available at this time",
+		"size":"Size",
+		"uploader":"Uploaded by",
+		"category":"Category",
+		"seeders":"Seeders",
+		"leechers":"Leechers",
+		"completed":"Completed",
+		"uploaded":"Uploaded",
+		"previous":"Previous",
+		"next":"Next",
+		"page":"Page",
+		"of":"of",
+		"torrent":{
+			"title":"Title",
+			"size":"Size",
+			"category":"Category",
+			"date":"Date",
+			"seeders":"Seeders",
+			"leechers":"Leechers",
+			"completed":"Completed"
+		}
+	},
 	"publicProfile":{
 		"private":{
 			"title":"Profile is Private",

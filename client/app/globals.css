@@ -95,7 +95,7 @@
 
   /* Ensure content doesn't shift when scrollbar appears */
   html {
-    scrollbar-gutter: stable;
+    /* scrollbar-gutter: stable; */
   }
 }
 

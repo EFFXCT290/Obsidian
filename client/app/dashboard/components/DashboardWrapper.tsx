@@ -34,21 +34,23 @@ export default async function DashboardWrapper({ children }: DashboardWrapperPro
 
   return (
     <MobileSidebarProvider>
-      <div className="min-h-screen bg-background">
+      <div className="h-screen bg-background overflow-hidden">
         <Suspense fallback={
-          <div className="h-16 bg-surface border-b border-border fixed top-0 left-0 right-0 z-30" />
+          <div className="h-16 bg-surface border-b border-border fixed top-0 left-0 right-0 z-50" />
         }>
           <DashboardHeader language={language} brandingName={brandingName} />
         </Suspense>
 
         <Suspense fallback={
-          <div className="w-64 bg-surface border-r border-border h-screen fixed left-0 top-16 z-20" />
+          <div className="w-64 bg-surface border-r border-border h-[calc(100vh-4rem)] fixed left-0 top-16 z-20" />
         }>
           <DashboardSidebar navItems={navItems} brandingName={brandingName} currentLanguage={language} />
         </Suspense>
 
-        <main className="flex-1 lg:ml-64 pt-16 p-4 sm:p-6">
-          {children}
+        <main className="h-full lg:ml-64 pt-16 overflow-y-auto">
+          <div className="p-4 sm:p-6">
+            {children}
+          </div>
         </main>
       </div>
     </MobileSidebarProvider>

@@ -319,6 +319,32 @@
 			"logout": "退出登录"
 		}
 	},
+	"latestTorrents":{
+		"pageTitle":"最新 Torrent - Obsidian Tracker",
+		"title":"最新 Torrent",
+		"subtitle":"发现平台上最新上传的 torrent",
+		"noTorrents":"目前没有可用的 torrent",
+		"size":"大小",
+		"uploader":"上传者",
+		"category":"分类",
+		"seeders":"做种者",
+		"leechers":"下载者",
+		"completed":"完成",
+		"uploaded":"上传于",
+		"previous":"上一页",
+		"next":"下一页",
+		"page":"第",
+		"of":"页，共",
+		"torrent":{
+			"title":"标题",
+			"size":"大小",
+			"category":"分类",
+			"date":"日期",
+			"seeders":"做种者",
+			"leechers":"下载者",
+			"completed":"完成"
+		}
+	},
 	"admin": {
 		"nav": {
 			"dashboard": "概览",

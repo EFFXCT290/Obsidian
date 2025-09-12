@@ -12,6 +12,7 @@ interface Torrent {
   size: number;
   createdAt: string;
   freeleech?: boolean;
+  isAnonymous?: boolean;
   uploader: {
     id: string;
     username: string;
@@ -253,7 +254,7 @@ export default function DashboardClient({ translations }: DashboardClientProps) 
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-text">{translations.latestTorrents}</h2>
           <Link 
-            href="/torrent"
+            href="/latest-torrents"
             className="text-primary hover:text-primary-dark transition-colors text-sm font-medium"
           >
             {translations.viewAll} →
@@ -326,12 +327,16 @@ export default function DashboardClient({ translations }: DashboardClientProps) 
                           {torrent.completed}
                         </td>
                         <td className="px-4 py-3 text-text-secondary text-sm w-32">
-                          <Link 
-                            href={`/user/${encodeURIComponent(torrent.uploader.username)}`}
-                            className="text-primary hover:text-primary-hover transition-colors"
-                          >
-                            {torrent.uploader.username}
-                          </Link>
+                          {torrent.isAnonymous ? (
+                            <span className="text-text-secondary">Anónimo</span>
+                          ) : (
+                            <Link 
+                              href={`/user/${encodeURIComponent(torrent.uploader.username)}`}
+                              className="text-primary hover:text-primary-hover transition-colors"
+                            >
+                              {torrent.uploader.username}
+                            </Link>
+                          )}
                         </td>
                       </tr>
                     ))}
