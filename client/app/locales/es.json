@@ -1234,10 +1234,19 @@
 			"ratio":"Ratio",
 			"points":"Puntos",
 			"rank":"Rango",
-			"joinDate":"Fecha de registro",
+			"userSince":"Usuario desde",
 			"announceUrl":"URL de announce",
 			"uploaded":"Subido",
 			"downloaded":"Descargado"
+		},
+		"time":{
+			"justNow":"hace un momento",
+			"ago":"hace",
+			"minutes":"minutos",
+			"hours":"horas",
+			"days":"días",
+			"months":"meses",
+			"years":"años"
 		},
 		"actions":{
 			"uploadAvatar":"Subir avatar",

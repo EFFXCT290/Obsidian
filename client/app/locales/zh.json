@@ -1197,10 +1197,19 @@
 			"ratio": "分享率",
 			"points": "魔力值",
 			"rank": "等级",
-			"joinDate": "加入日期",
+			"userSince": "用户自",
 			"announceUrl": "Announce URL",
 			"uploaded": "上传量",
 			"downloaded": "下载量"
+		},
+		"time": {
+			"justNow": "刚刚",
+			"ago": "前",
+			"minutes": "分钟",
+			"hours": "小时",
+			"days": "天",
+			"months": "个月",
+			"years": "年"
 		},
 		"actions": {
 			"uploadAvatar": "上传头像",

@@ -15,6 +15,10 @@ import { useI18n } from '../../hooks/useI18n';
 
 export default function ProfileContent() {
   const { t } = useI18n();
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString();
+  };
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<{
     id: string;
@@ -199,7 +203,7 @@ export default function ProfileContent() {
               profile={profile}
               previewUrl={previewUrl}
               fileInputRef={fileInputRef}
-              formattedJoinDate={''}
+              formattedJoinDate={profile ? formatDate(profile.joinDate) : ''}
               onRemoveAvatar={handleRemoveAvatar}
               onAvatarUpload={handleUploadAvatar}
               setPreviewUrl={setPreviewUrl}

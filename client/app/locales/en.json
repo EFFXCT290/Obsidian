@@ -1235,10 +1235,19 @@
 			"ratio":"Ratio",
 			"points":"Points",
 			"rank":"Rank",
-			"joinDate":"Join date",
+			"userSince":"User since",
 			"announceUrl":"Announce URL",
 			"uploaded":"Uploaded",
 			"downloaded":"Downloaded"
+		},
+		"time":{
+			"justNow":"just now",
+			"ago":"ago",
+			"minutes":"minutes",
+			"hours":"hours",
+			"days":"days",
+			"months":"months",
+			"years":"years"
 		},
 		"actions":{
 			"uploadAvatar":"Upload avatar",
