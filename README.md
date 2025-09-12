@@ -413,6 +413,16 @@ For more information about the AGPL-3.0 License, visit [gnu.org/licenses/agpl-3.
 
 ## 🙏 Acknowledgments
 
+### Core Development Team
+- **[@CerealKillerjs](https://github.com/CerealKillerjs)**: Core & Frontend development and architecture
+- **[@EFFXCT290](https://github.com/EFFXCT290)**: Core & Frontend development and architecture
+
+### Translations
+- **[@CerealKillerjs](https://github.com/CerealKillerjs)**: Spanish & English translations
+- **[@EFFXCT290](https://github.com/EFFXCT290)**: Spanish & English translations
+- **[@Izumiko](https://github.com/Izumiko)**: Chinese translation
+
+### Open Source Libraries
 - **Next.js Team**: For the amazing React framework
 - **Fastify Team**: For the high-performance web framework
 - **Prisma Team**: For the excellent database toolkit
