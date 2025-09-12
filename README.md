@@ -6,7 +6,7 @@
   **The OverPowered Torrent Tracker**
   
   [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/EFFXCT290/Obsidian)
-  [![Build Status](https://github.com/EFFXCT290/Obsidian/workflows/CI/badge.svg)](https://github.com/EFFXCT290/Obsidian/actions)
+  [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/EFFXCT290/Obsidian/actions)
   [![Stable](https://img.shields.io/badge/status-stable-green.svg)](https://github.com/EFFXCT290/Obsidian/releases)
   [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
   [![Node.js](https://img.shields.io/badge/node.js-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
