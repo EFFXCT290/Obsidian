@@ -41,6 +41,13 @@ export default function ProfileContent() {
     downloaded: number;
     ratio: number;
     bonusPoints: number;
+    rank?: string | null;
+    rankData?: {
+      rank?: {
+        name: string;
+        color?: string;
+      };
+    };
   } | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [rssToken, setRssToken] = useState<string | null>(null);
@@ -85,6 +92,8 @@ export default function ProfileContent() {
         downloaded: downloaded,
         ratio: currentUser.ratio ?? (downloaded ? uploaded / downloaded : 0),
         bonusPoints: currentUser.bonusPoints ?? 0,
+        rank: currentUser.rank || null,
+        rankData: currentUser.rankData || null,
       });
     }
     setLoading(false);
@@ -195,7 +204,7 @@ export default function ProfileContent() {
         <ProfileHeader />
         
         {/* Profile Tabs Navigation - Outside the grid */}
-        <ProfileTabs>
+        <ProfileTabs profile={profile}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <ProfileSidebar
               user={user}

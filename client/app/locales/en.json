@@ -326,6 +326,7 @@
 			"torrentApprovals":"Torrent Approvals",
 			"torrentManagement":"Torrent Management",
 			"categories":"Categories",
+			"ranks":"Ranks",
 			"announcements":"Announcements",
 			"wiki":"Wiki",
 			"peerban":"Peer Bans",
@@ -1164,6 +1165,7 @@
 		},
 		"tabs":{
 			"overview":"Overview",
+			"ranks":"Ranks",
 			"activity":"Recent Activity",
 			"torrents":"My Torrents",
 			"invitations":"Invitations",

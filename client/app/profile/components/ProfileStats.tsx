@@ -16,6 +16,13 @@ interface ProfileStatsProps {
     downloaded: number;
     ratio: number;
     bonusPoints: number;
+    rank?: string | null;
+    rankData?: {
+      rank?: {
+        name: string;
+        color?: string;
+      };
+    };
   } | null;
   onCopyAnnounceUrl: () => void;
   onCopyRssUrl: () => void;

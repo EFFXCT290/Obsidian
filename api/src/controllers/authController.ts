@@ -11,6 +11,7 @@ import { saveFile, deleteFile } from '../services/fileStorageService.js';
 import path from 'path';
 import { getDisableAccountEmail } from '../utils/emailTemplates/disableAccountEmail.js';
 import { createNotification } from '../services/notificationService.js';
+import { calculateUserRank } from '../services/rankService.js';
 
 function normalizeS3Config(config: any) {
   return {
@@ -327,6 +328,9 @@ export async function getProfileHandler(request: FastifyRequest, reply: FastifyR
   // Count hit and runs
   const hitAndRunCount = await prisma.hitAndRun.count({ where: { userId: user.id, isHitAndRun: true } });
 
+  // Calculate user rank
+  const userRank = await calculateUserRank(user.id);
+
   return reply.send({
     id: prismaUser.id,
     email: prismaUser.email,
@@ -341,7 +345,9 @@ export async function getProfileHandler(request: FastifyRequest, reply: FastifyR
     emailVerified: prismaUser.emailVerified,
     passkey: prismaUser.passkey,
     avatarUrl: prismaUser.avatarUrl,
-    avatarFileId: prismaUser.avatarFileId
+    avatarFileId: prismaUser.avatarFileId,
+    rank: userRank.rank?.name || null,
+    rankData: userRank
   });
 }
 

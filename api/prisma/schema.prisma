@@ -202,6 +202,8 @@ model Config {
   // Invitations
   inviteExpiryHours Int @default(6)
   maxInvitesPerUser Int @default(5)
+  // Rank system config
+  ranksEnabled     Boolean @default(true)
 }
 
 enum RegMode {
@@ -503,4 +505,17 @@ model UserActivity {
   @@index([userId])
   @@index([userId, createdAt])
   @@index([type])
+}
+
+model Rank {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  order       Int      @unique // Lower number = higher rank
+  minUpload   BigInt   @default(0)
+  minDownload BigInt   @default(0)
+  minRatio    Float    @default(0.0)
+  color       String?  // Hex color for display
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

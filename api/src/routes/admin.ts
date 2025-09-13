@@ -20,6 +20,7 @@ import {
 import { getSmtpConfigHandler, updateSmtpConfigHandler, testSmtpHandler, getConfigHandler, updateConfigHandler } from '../controllers/configController.js';
 import { getOverviewStatsHandler } from '../controllers/admin/adminOverviewController.js';
 import { getAdminNotificationsHandler } from '../controllers/admin/adminNotificationController.js';
+import { listRanksHandler, createRankHandler, updateRankHandler, deleteRankHandler, getRankHandler, getRankSystemStatusHandler, toggleRankSystemHandler } from '../controllers/admin/adminRankController.js';
 
 export async function registerAdminRoutes(app: FastifyInstance) {
   app.post('/admin/user/:id/ban', { preHandler: requireAuth }, banUserHandler); //DONE
@@ -75,5 +76,12 @@ export async function registerAdminRoutes(app: FastifyInstance) {
   // Notifications
   app.get('/admin/notifications', { preHandler: requireAuth }, getAdminNotificationsHandler);
 
-
+  // Rank management routes
+  app.get('/admin/ranks', { preHandler: requireAuth }, listRanksHandler);
+  app.post('/admin/ranks', { preHandler: requireAuth }, createRankHandler);
+  app.get('/admin/ranks/:id', { preHandler: requireAuth }, getRankHandler);
+  app.put('/admin/ranks/:id', { preHandler: requireAuth }, updateRankHandler);
+  app.delete('/admin/ranks/:id', { preHandler: requireAuth }, deleteRankHandler);
+  app.get('/admin/ranks/status', { preHandler: requireAuth }, getRankSystemStatusHandler);
+  app.post('/admin/ranks/toggle', { preHandler: requireAuth }, toggleRankSystemHandler);
 } 

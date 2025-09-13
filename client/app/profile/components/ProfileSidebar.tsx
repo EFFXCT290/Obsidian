@@ -18,6 +18,13 @@ interface ProfileSidebarProps {
     downloaded: number;
     ratio: number;
     bonusPoints: number;
+    rank?: string | null;
+    rankData?: {
+      rank?: {
+        name: string;
+        color?: string;
+      };
+    };
   } | null;
   previewUrl: string | null;
   fileInputRef: React.RefObject<HTMLInputElement | null>;
@@ -76,7 +83,15 @@ export default function ProfileSidebar({ user, profile, previewUrl, fileInputRef
                 <div className="flex justify-between"><span className="text-text-secondary">{t('profile.fields.email', 'Email')}</span><span className="font-medium">{user?.email || ''}</span></div>
                 <div className="flex justify-between"><span className="text-text-secondary">{t('profile.fields.ratio', 'Ratio')}</span><span className="font-medium">{profile?.ratio?.toFixed(2) ?? '0.00'}</span></div>
                 <div className="flex justify-between"><span className="text-text-secondary">{t('profile.fields.points', 'Points')}</span><span className="font-medium">{profile?.bonusPoints ?? 0}</span></div>
-                <div className="flex justify-between"><span className="text-text-secondary">{t('profile.fields.rank', 'Rank')}</span><span className="font-medium">{''}</span></div>
+                <div className="flex justify-between">
+                  <span className="text-text-secondary">{t('profile.fields.rank', 'Rank')}</span>
+                  <span 
+                    className="font-medium"
+                    style={{ color: profile?.rankData?.rank?.color || '#8B5CF6' }}
+                  >
+                    {profile?.rank || 'No Rank'}
+                  </span>
+                </div>
                 <div className="flex justify-between"><span className="text-text-secondary">{t('profile.fields.userSince', 'Usuario desde')}</span><span className="font-medium">{formattedJoinDate}</span></div>
               </>
             )}

@@ -14,8 +14,9 @@ import { HelpCircle } from '@styled-icons/boxicons-regular/HelpCircle';
 import { CheckShield } from '@styled-icons/boxicons-regular/CheckShield';
 import { Folder } from '@styled-icons/boxicons-regular/Folder';
 import { Rss } from '@styled-icons/boxicons-regular/Rss';
+import { Award } from '@styled-icons/boxicons-regular/Award';
 
-const iconMap = { Home, Group, Cog, ListUl, News, BookOpen, Shield, HelpCircle, CheckShield, Folder, Rss } as const;
+const iconMap = { Home, Group, Cog, ListUl, News, BookOpen, Shield, HelpCircle, CheckShield, Folder, Rss, Award } as const;
 
 export interface AdminNavItem { href: string; label: string; icon: keyof typeof iconMap }
 

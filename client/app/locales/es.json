@@ -325,6 +325,7 @@
 			"torrentApprovals":"Aprobaciones de Torrents",
 			"torrentManagement":"Gestión de Torrents",
 			"categories":"Categorías",
+			"ranks":"Rangos",
 			"announcements":"Anuncios",
 			"wiki":"Wiki",
 			"peerban":"Bloqueos",
@@ -1163,6 +1164,7 @@
 		},
 		"tabs":{
 			"overview":"Resumen",
+			"ranks":"Rangos",
 			"activity":"Actividad Reciente",
 			"torrents":"Mis Torrents",
 			"invitations":"Invitaciones",

@@ -6,17 +6,49 @@ import RecentActivity from './RecentActivity';
 import UserTorrents from './UserTorrents';
 import ProfileInvitations from './ProfileInvitations';
 import ProfilePreferences from './ProfilePreferences';
+import RankTab from './RankTab';
 
 interface ProfileTabsProps {
   children: React.ReactNode;
+  profile?: {
+    id: string;
+    username?: string;
+    email: string;
+    avatarUrl?: string;
+    joinDate: string;
+    uploaded: number;
+    downloaded: number;
+    ratio: number;
+    bonusPoints: number;
+    rank?: string | null;
+    rankData?: {
+      rank?: {
+        name: string;
+        color?: string;
+      };
+      nextRank?: {
+        name: string;
+        color?: string;
+        minUpload: string;
+        minDownload: string;
+        minRatio: number;
+      };
+      progress?: {
+        upload: number;
+        download: number;
+        ratio: number;
+      };
+    };
+  } | null;
 }
 
-export default function ProfileTabs({ children }: ProfileTabsProps) {
+export default function ProfileTabs({ children, profile }: ProfileTabsProps) {
   const { t } = useI18n();
   const [activeTab, setActiveTab] = useState('overview');
 
   const tabs = [
     { id: 'overview', label: t('profile.tabs.overview', 'Overview') },
+    { id: 'ranks', label: t('profile.tabs.ranks', 'Ranks') },
     { id: 'activity', label: t('profile.tabs.activity', 'Recent Activity') },
     { id: 'torrents', label: t('profile.tabs.torrents', 'My Torrents') },
     { id: 'invitations', label: t('profile.tabs.invitations', 'Invitations') },
@@ -50,6 +82,9 @@ export default function ProfileTabs({ children }: ProfileTabsProps) {
           <div className="space-y-6">
             {children}
           </div>
+        )}
+        {activeTab === 'ranks' && (
+          <RankTab profile={profile} />
         )}
         {activeTab === 'activity' && (
           <RecentActivity />

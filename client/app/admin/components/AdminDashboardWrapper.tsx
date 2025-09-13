@@ -16,6 +16,7 @@ export default async function AdminDashboardWrapper({ children }: { children: Re
     { href: '/admin/torrent-approvals', label: serverT('admin.nav.torrentApprovals', language), icon: 'CheckShield' },
     { href: '/admin/torrent-management', label: serverT('admin.nav.torrentManagement', language), icon: 'Folder' },
     { href: '/admin/categories', label: serverT('admin.nav.categories', language), icon: 'ListUl' },
+    { href: '/admin/ranks', label: serverT('admin.nav.ranks', language), icon: 'Award' },
     { href: '/admin/announcements', label: serverT('admin.nav.announcements', language), icon: 'News' },
     { href: '/admin/wiki', label: serverT('admin.nav.wiki', language), icon: 'BookOpen' },
     { href: '/admin/peerban', label: serverT('admin.nav.peerban', language), icon: 'Shield' },

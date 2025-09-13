@@ -13,6 +13,13 @@ interface UserStats {
   ratio: number;
   bonusPoints: number;
   hitnrunCount: number;
+  rank?: string | null;
+  rankData?: {
+    rank?: {
+      name: string;
+      color?: string;
+    };
+  };
 }
 
 function formatBytes(bytes: number): string {
@@ -45,6 +52,8 @@ export default function UserStatsBar() {
             ratio: typeof data.ratio === 'number' ? data.ratio : 0,
             bonusPoints: Number(data.bonusPoints || 0),
             hitnrunCount: Number(data.hitAndRunCount || 0),
+            rank: data.rank || null,
+            rankData: data.rankData || null,
           });
         }
       } catch (error) {
