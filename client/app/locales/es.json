@@ -1220,6 +1220,20 @@
 			"invitations":"Invitaciones",
 			"preferences":"Preferencias"
 		},
+		"ranks":{
+			"currentRank":"Rango Actual",
+			"nextRankProgress":"Progreso al Siguiente Rango",
+			"yourCurrentRank":"Tu rango actual",
+			"nextRankToAchieve":"Siguiente rango a lograr",
+			"uploadProgress":"Progreso de Subida",
+			"downloadProgress":"Progreso de Descarga",
+			"ratioProgress":"Progreso de Ratio",
+			"overallProgress":"Progreso General",
+			"complete":"completo",
+			"noRankAssigned":"No se ha asignado rango aún",
+			"maximumRankAchieved":"¡Rango Máximo Alcanzado!",
+			"highestRankDescription":"Has alcanzado el rango más alto disponible."
+		},
 		"loading":"Cargando perfil...",
 		"activity":{
 			"comingSoon":"Actividad Reciente Próximamente",

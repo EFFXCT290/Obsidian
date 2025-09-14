@@ -70,7 +70,7 @@ export default function RankTab({ profile }: RankTabProps) {
       <div className="bg-surface rounded-lg border border-border p-6">
         <h3 className="text-lg font-semibold text-text mb-4 flex items-center gap-2">
           <Award size={20} />
-          Current Rank
+          {t('profile.ranks.currentRank')}
         </h3>
         
         {profile.rank ? (
@@ -89,14 +89,14 @@ export default function RankTab({ profile }: RankTabProps) {
                 >
                   {profile.rank}
                 </h4>
-                <p className="text-text-secondary">Your current rank</p>
+                <p className="text-text-secondary">{t('profile.ranks.yourCurrentRank')}</p>
               </div>
             </div>
           </div>
         ) : (
           <div className="text-center py-8">
             <Award size={48} className="mx-auto text-text-secondary/50 mb-4" />
-            <p className="text-text-secondary">No rank assigned yet</p>
+            <p className="text-text-secondary">{t('profile.ranks.noRankAssigned')}</p>
           </div>
         )}
       </div>
@@ -106,7 +106,7 @@ export default function RankTab({ profile }: RankTabProps) {
         <div className="bg-surface rounded-lg border border-border p-6">
           <h3 className="text-lg font-semibold text-text mb-4 flex items-center gap-2">
             <TrendingUp size={20} />
-            Next Rank Progress
+            {t('profile.ranks.nextRankProgress')}
           </h3>
           
           <div className="space-y-6">
@@ -125,7 +125,7 @@ export default function RankTab({ profile }: RankTabProps) {
                 >
                   {profile.rankData.nextRank.name}
                 </h4>
-                <p className="text-text-secondary">Next rank to achieve</p>
+                <p className="text-text-secondary">{t('profile.ranks.nextRankToAchieve')}</p>
               </div>
             </div>
 
@@ -134,7 +134,7 @@ export default function RankTab({ profile }: RankTabProps) {
               {/* Upload Progress */}
               <div>
                 <div className="flex justify-between text-sm mb-2">
-                  <span className="text-text-secondary">Upload Progress</span>
+                  <span className="text-text-secondary">{t('profile.ranks.uploadProgress')}</span>
                   <span className="text-text">
                     {formatBytes(profile.uploaded)} / {formatBytes(Number(profile.rankData.nextRank.minUpload))}
                   </span>
@@ -148,14 +148,14 @@ export default function RankTab({ profile }: RankTabProps) {
                   ></div>
                 </div>
                 <div className="text-xs text-text-secondary mt-1">
-                  {calculateProgress(profile.uploaded, Number(profile.rankData.nextRank.minUpload)).toFixed(1)}% complete
+                  {calculateProgress(profile.uploaded, Number(profile.rankData.nextRank.minUpload)).toFixed(1)}% {t('profile.ranks.complete')}
                 </div>
               </div>
 
               {/* Download Progress */}
               <div>
                 <div className="flex justify-between text-sm mb-2">
-                  <span className="text-text-secondary">Download Progress</span>
+                  <span className="text-text-secondary">{t('profile.ranks.downloadProgress')}</span>
                   <span className="text-text">
                     {formatBytes(profile.downloaded)} / {formatBytes(Number(profile.rankData.nextRank.minDownload))}
                   </span>
@@ -169,14 +169,14 @@ export default function RankTab({ profile }: RankTabProps) {
                   ></div>
                 </div>
                 <div className="text-xs text-text-secondary mt-1">
-                  {calculateProgress(profile.downloaded, Number(profile.rankData.nextRank.minDownload)).toFixed(1)}% complete
+                  {calculateProgress(profile.downloaded, Number(profile.rankData.nextRank.minDownload)).toFixed(1)}% {t('profile.ranks.complete')}
                 </div>
               </div>
 
               {/* Ratio Progress */}
               <div>
                 <div className="flex justify-between text-sm mb-2">
-                  <span className="text-text-secondary">Ratio Progress</span>
+                  <span className="text-text-secondary">{t('profile.ranks.ratioProgress')}</span>
                   <span className="text-text">
                     {profile.ratio.toFixed(2)} / {profile.rankData.nextRank.minRatio.toFixed(2)}
                   </span>
@@ -190,7 +190,7 @@ export default function RankTab({ profile }: RankTabProps) {
                   ></div>
                 </div>
                 <div className="text-xs text-text-secondary mt-1">
-                  {calculateProgress(profile.ratio, profile.rankData.nextRank.minRatio).toFixed(1)}% complete
+                  {calculateProgress(profile.ratio, profile.rankData.nextRank.minRatio).toFixed(1)}% {t('profile.ranks.complete')}
                 </div>
               </div>
             </div>
@@ -198,7 +198,7 @@ export default function RankTab({ profile }: RankTabProps) {
             {/* Overall Progress */}
             <div className="bg-background rounded-lg p-4">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-text">Overall Progress</span>
+                <span className="text-sm font-medium text-text">{t('profile.ranks.overallProgress')}</span>
                 <span className="text-sm text-text-secondary">
                   {profile.rankData.progress ? 
                     Math.round((profile.rankData.progress.upload + profile.rankData.progress.download + profile.rankData.progress.ratio) / 3) 
@@ -225,8 +225,8 @@ export default function RankTab({ profile }: RankTabProps) {
         <div className="bg-surface rounded-lg border border-border p-6">
           <div className="text-center py-8">
             <Award size={48} className="mx-auto text-yellow-500 mb-4" />
-            <h3 className="text-lg font-semibold text-text mb-2">Maximum Rank Achieved!</h3>
-            <p className="text-text-secondary">You have reached the highest available rank.</p>
+            <h3 className="text-lg font-semibold text-text mb-2">{t('profile.ranks.maximumRankAchieved')}</h3>
+            <p className="text-text-secondary">{t('profile.ranks.highestRankDescription')}</p>
           </div>
         </div>
       )}

@@ -1176,10 +1176,25 @@
 		},
 		"tabs": {
 			"overview": "概览",
+			"ranks": "等级",
 			"activity": "近期活动",
 			"torrents":"我的种子",
 			"invitations":"邀请",
 			"preferences":"偏好设置"
+		},
+		"ranks": {
+			"currentRank": "当前等级",
+			"nextRankProgress": "下一等级进度",
+			"yourCurrentRank": "您的当前等级",
+			"nextRankToAchieve": "要达成的下一等级",
+			"uploadProgress": "上传进度",
+			"downloadProgress": "下载进度",
+			"ratioProgress": "分享率进度",
+			"overallProgress": "总体进度",
+			"complete": "完成",
+			"noRankAssigned": "尚未分配等级",
+			"maximumRankAchieved": "已达到最高等级！",
+			"highestRankDescription": "您已达到可用的最高等级。"
 		},
 		"loading":"加载个人资料中...",
 		"activity": {

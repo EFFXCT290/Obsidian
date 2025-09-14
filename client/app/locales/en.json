@@ -1221,6 +1221,20 @@
 			"invitations":"Invitations",
 			"preferences":"Preferences"
 		},
+		"ranks":{
+			"currentRank":"Current Rank",
+			"nextRankProgress":"Next Rank Progress",
+			"yourCurrentRank":"Your current rank",
+			"nextRankToAchieve":"Next rank to achieve",
+			"uploadProgress":"Upload Progress",
+			"downloadProgress":"Download Progress",
+			"ratioProgress":"Ratio Progress",
+			"overallProgress":"Overall Progress",
+			"complete":"complete",
+			"noRankAssigned":"No rank assigned yet",
+			"maximumRankAchieved":"Maximum Rank Achieved!",
+			"highestRankDescription":"You have reached the highest available rank."
+		},
 		"loading":"Loading profile...",
 		"activity":{
 			"comingSoon":"Recent Activity Coming Soon",
