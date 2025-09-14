@@ -428,7 +428,11 @@
 			"requirements":"Requirements",
 			"uploaded":"Uploaded",
 			"downloaded":"Downloaded",
-			"ratio":"Ratio"
+			"ratio":"Ratio",
+			"units":{
+				"gb":"GB",
+				"tb":"TB"
+			}
 		},
 		"users":{
 			"title":"User Management",

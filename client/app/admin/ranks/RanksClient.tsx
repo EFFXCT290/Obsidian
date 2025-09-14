@@ -25,7 +25,9 @@ interface RankFormData {
   description: string;
   order: number;
   minUpload: string;
+  minUploadUnit: 'GB' | 'TB';
   minDownload: string;
+  minDownloadUnit: 'GB' | 'TB';
   minRatio: string;
   color: string;
 }
@@ -80,6 +82,10 @@ interface RanksClientProps {
     uploaded: string;
     downloaded: string;
     ratio: string;
+    units: {
+      gb: string;
+      tb: string;
+    };
   };
 }
 
@@ -99,7 +105,9 @@ export default function RanksClient({ translations }: RanksClientProps) {
     description: '',
     order: 1,
     minUpload: '0',
+    minUploadUnit: 'GB',
     minDownload: '0',
+    minDownloadUnit: 'GB',
     minRatio: '0',
     color: '#3B82F6'
   });
@@ -160,8 +168,8 @@ export default function RanksClient({ translations }: RanksClientProps) {
           name: formData.name,
           description: formData.description || null,
           order: Number(formData.order),
-          minUpload: Number(formData.minUpload),
-          minDownload: Number(formData.minDownload),
+          minUpload: convertToBytes(formData.minUpload, formData.minUploadUnit),
+          minDownload: convertToBytes(formData.minDownload, formData.minDownloadUnit),
           minRatio: Number(formData.minRatio),
           color: formData.color || null,
         }),
@@ -205,12 +213,19 @@ export default function RanksClient({ translations }: RanksClientProps) {
 
   const handleEdit = (rank: Rank) => {
     setEditingRank(rank);
+    
+    // Convert bytes to GB/TB for editing
+    const uploadConversion = convertFromBytes(Number(rank.minUpload));
+    const downloadConversion = convertFromBytes(Number(rank.minDownload));
+    
     setFormData({
       name: rank.name,
       description: rank.description || '',
       order: rank.order,
-      minUpload: rank.minUpload,
-      minDownload: rank.minDownload,
+      minUpload: uploadConversion.value.toString(),
+      minUploadUnit: uploadConversion.unit,
+      minDownload: downloadConversion.value.toString(),
+      minDownloadUnit: downloadConversion.unit,
       minRatio: rank.minRatio.toString(),
       color: rank.color || '#3B82F6'
     });
@@ -223,7 +238,9 @@ export default function RanksClient({ translations }: RanksClientProps) {
       description: '',
       order: 1,
       minUpload: '0',
+      minUploadUnit: 'GB',
       minDownload: '0',
+      minDownloadUnit: 'GB',
       minRatio: '0',
       color: '#3B82F6'
     });
@@ -253,6 +270,29 @@ export default function RanksClient({ translations }: RanksClientProps) {
     const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  };
+
+  // Convert GB/TB to bytes
+  const convertToBytes = (value: string, unit: 'GB' | 'TB'): number => {
+    const numValue = parseFloat(value) || 0;
+    if (unit === 'GB') {
+      return numValue * 1024 * 1024 * 1024; // 1 GB = 1024^3 bytes
+    } else if (unit === 'TB') {
+      return numValue * 1024 * 1024 * 1024 * 1024; // 1 TB = 1024^4 bytes
+    }
+    return 0;
+  };
+
+  // Convert bytes to GB/TB for display
+  const convertFromBytes = (bytes: number, preferredUnit: 'GB' | 'TB' = 'GB'): { value: number; unit: 'GB' | 'TB' } => {
+    const gb = bytes / (1024 * 1024 * 1024);
+    const tb = bytes / (1024 * 1024 * 1024 * 1024);
+    
+    if (preferredUnit === 'TB' && tb >= 1) {
+      return { value: Math.round(tb * 100) / 100, unit: 'TB' };
+    } else {
+      return { value: Math.round(gb * 100) / 100, unit: 'GB' };
+    }
   };
 
   if (loading) {
@@ -372,7 +412,7 @@ export default function RanksClient({ translations }: RanksClientProps) {
       {/* Create/Edit Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-surface rounded-lg border border-border p-6 w-full max-w-md mx-4">
+          <div className="bg-surface rounded-lg border border-border p-6 w-full max-w-lg mx-4">
             <h3 className="text-lg font-semibold text-text mb-4">
               {editingRank ? translations.editRank : translations.addRank}
             </h3>
@@ -420,32 +460,54 @@ export default function RanksClient({ translations }: RanksClientProps) {
                 <p className="text-xs text-text-secondary mt-1">{translations.order}</p>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-text mb-1">
                     {translations.minUpload} *
                   </label>
-                  <input
-                    type="number"
-                    value={formData.minUpload}
-                    onChange={(e) => setFormData({ ...formData, minUpload: e.target.value })}
-                    className="w-full p-2 border border-border/50 rounded-lg bg-background/50 text-text placeholder-text-secondary focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all duration-200"
-                    min="0"
-                    required
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      value={formData.minUpload}
+                      onChange={(e) => setFormData({ ...formData, minUpload: e.target.value })}
+                      className="flex-1 p-2 border border-border/50 rounded-lg bg-background/50 text-text placeholder-text-secondary focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all duration-200"
+                      min="0"
+                      step="0.1"
+                      required
+                    />
+                    <select
+                      value={formData.minUploadUnit}
+                      onChange={(e) => setFormData({ ...formData, minUploadUnit: e.target.value as 'GB' | 'TB' })}
+                      className="px-3 py-2 border border-border/50 rounded-lg bg-background/50 text-text focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all duration-200 min-w-[80px]"
+                    >
+                      <option value="GB">{translations.units.gb}</option>
+                      <option value="TB">{translations.units.tb}</option>
+                    </select>
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-text mb-1">
                     {translations.minDownload} *
                   </label>
-                  <input
-                    type="number"
-                    value={formData.minDownload}
-                    onChange={(e) => setFormData({ ...formData, minDownload: e.target.value })}
-                    className="w-full p-2 border border-border/50 rounded-lg bg-background/50 text-text placeholder-text-secondary focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all duration-200"
-                    min="0"
-                    required
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      value={formData.minDownload}
+                      onChange={(e) => setFormData({ ...formData, minDownload: e.target.value })}
+                      className="flex-1 p-2 border border-border/50 rounded-lg bg-background/50 text-text placeholder-text-secondary focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all duration-200"
+                      min="0"
+                      step="0.1"
+                      required
+                    />
+                    <select
+                      value={formData.minDownloadUnit}
+                      onChange={(e) => setFormData({ ...formData, minDownloadUnit: e.target.value as 'GB' | 'TB' })}
+                      className="px-3 py-2 border border-border/50 rounded-lg bg-background/50 text-text focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all duration-200 min-w-[80px]"
+                    >
+                      <option value="GB">{translations.units.gb}</option>
+                      <option value="TB">{translations.units.tb}</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 

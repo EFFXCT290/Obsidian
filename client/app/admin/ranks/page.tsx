@@ -76,6 +76,10 @@ export default async function AdminRanksPage() {
     uploaded: serverT('admin.ranks.uploaded', language),
     downloaded: serverT('admin.ranks.downloaded', language),
     ratio: serverT('admin.ranks.ratio', language),
+    units: {
+      gb: serverT('admin.ranks.units.gb', language),
+      tb: serverT('admin.ranks.units.tb', language),
+    },
   };
 
   return (

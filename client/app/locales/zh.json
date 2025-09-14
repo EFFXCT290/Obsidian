@@ -453,7 +453,11 @@
 			"requirements": "要求",
 			"uploaded": "上传量",
 			"downloaded": "下载量",
-			"ratio": "分享率"
+			"ratio": "分享率",
+			"units": {
+				"gb": "GB",
+				"tb": "TB"
+			}
 		},
 		"users": {
 			"title": "用户管理",
