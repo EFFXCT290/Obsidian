@@ -7,6 +7,7 @@ import { Edit } from '@styled-icons/boxicons-regular/Edit';
 import { Trash } from '@styled-icons/boxicons-regular/Trash';
 import { Award } from '@styled-icons/boxicons-regular/Award';
 import { ToggleSwitch } from '@/app/components/ui/ToggleSwitch';
+import { useI18n } from '@/app/hooks/useI18n';
 
 interface Rank {
   id: string;
@@ -29,7 +30,64 @@ interface RankFormData {
   color: string;
 }
 
-export default function RanksClient() {
+interface RanksClientProps {
+  translations: {
+    title: string;
+    description: string;
+    systemEnabled: string;
+    systemDisabled: string;
+    toggleSystem: string;
+    addNew: string;
+    addRank: string;
+    editRank: string;
+    list: string;
+    name: string;
+    descriptionField: string;
+    order: string;
+    minUpload: string;
+    minDownload: string;
+    minRatio: string;
+    color: string;
+    create: string;
+    update: string;
+    edit: string;
+    delete: string;
+    cancel: string;
+    nameRequired: string;
+    descriptionRequired: string;
+    orderRequired: string;
+    minUploadRequired: string;
+    minDownloadRequired: string;
+    minRatioRequired: string;
+    colorRequired: string;
+    confirmDelete: string;
+    noRanks: string;
+    created: string;
+    updated: string;
+    deleted: string;
+    errorLoading: string;
+    errorCreating: string;
+    errorUpdating: string;
+    errorDeleting: string;
+    errorToggleSystem: string;
+    dragToReorder: string;
+    reorderSuccess: string;
+    reorderError: string;
+    systemToggleSuccess: string;
+    systemToggleError: string;
+    rankPreview: string;
+    requirements: string;
+    uploaded: string;
+    downloaded: string;
+    ratio: string;
+  };
+}
+
+export default function RanksClient({ translations }: RanksClientProps) {
+  const { t } = useI18n();
+  
+  // Debug: Verificar que las traducciones se están pasando correctamente
+  console.log('RanksClient translations:', translations);
   const [ranks, setRanks] = useState<Rank[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -111,7 +169,7 @@ export default function RanksClient() {
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.error || 'Failed to save rank');
+        throw new Error(errorData.error || translations.errorCreating);
       }
 
       setShowCreateModal(false);
@@ -119,12 +177,12 @@ export default function RanksClient() {
       resetForm();
       fetchRanks();
     } catch (err: any) {
-      setError(err.message || 'Failed to save rank');
+      setError(err.message || translations.errorCreating);
     }
   };
 
   const handleDelete = async (rankId: string) => {
-    if (!confirm('Are you sure you want to delete this rank?')) return;
+    if (!confirm(translations.confirmDelete)) return;
     const token = localStorage.getItem('authToken');
     if (!token) return;
 
@@ -136,12 +194,12 @@ export default function RanksClient() {
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.error || 'Failed to delete rank');
+        throw new Error(errorData.error || translations.errorDeleting);
       }
 
       fetchRanks();
     } catch (err: any) {
-      setError(err.message || 'Failed to delete rank');
+      setError(err.message || translations.errorDeleting);
     }
   };
 
@@ -185,7 +243,7 @@ export default function RanksClient() {
         setRankSystemEnabled(!rankSystemEnabled);
       }
     } catch (err) {
-      setError('Failed to toggle rank system');
+      setError(translations.errorToggleSystem);
     }
   };
 
@@ -214,9 +272,9 @@ export default function RanksClient() {
       <div className="bg-surface rounded-lg border border-border p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-lg font-semibold text-text">Rank System</h3>
+            <h3 className="text-lg font-semibold text-text">{translations.title}</h3>
             <p className="text-sm text-text-secondary">
-              Enable or disable the rank system for all users
+              {translations.description}
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -225,7 +283,7 @@ export default function RanksClient() {
               onChange={handleToggleSystem}
             />
             <span className="text-sm text-text-secondary">
-              {rankSystemEnabled ? 'Enabled' : 'Disabled'}
+              {rankSystemEnabled ? translations.systemEnabled : translations.systemDisabled}
             </span>
           </div>
         </div>
@@ -242,7 +300,7 @@ export default function RanksClient() {
       <div className="bg-surface rounded-lg border border-border">
         <div className="p-6 border-b border-border">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-text">Ranks</h3>
+            <h3 className="text-lg font-semibold text-text">{translations.list}</h3>
             <button
               onClick={() => {
                 setEditingRank(null);
@@ -252,7 +310,7 @@ export default function RanksClient() {
               className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
             >
               <Plus size={16} />
-              Create Rank
+              {translations.addNew}
             </button>
           </div>
         </div>
@@ -261,7 +319,7 @@ export default function RanksClient() {
           {ranks.length === 0 ? (
             <div className="text-center py-8">
               <Award size={48} className="mx-auto text-text-secondary/50 mb-4" />
-              <p className="text-text-secondary">No ranks created yet</p>
+              <p className="text-text-secondary">{translations.noRanks}</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -283,10 +341,10 @@ export default function RanksClient() {
                           <p className="text-sm text-text-secondary">{rank.description}</p>
                         )}
                         <div className="flex items-center gap-4 mt-2 text-sm text-text-secondary">
-                          <span>Order: {rank.order}</span>
-                          <span>Min Upload: {formatBytes(Number(rank.minUpload))}</span>
-                          <span>Min Download: {formatBytes(Number(rank.minDownload))}</span>
-                          <span>Min Ratio: {rank.minRatio}</span>
+                          <span>{translations.order}: {rank.order}</span>
+                          <span>{translations.minUpload}: {formatBytes(Number(rank.minUpload))}</span>
+                          <span>{translations.minDownload}: {formatBytes(Number(rank.minDownload))}</span>
+                          <span>{translations.minRatio}: {rank.minRatio}</span>
                         </div>
                       </div>
                     </div>
@@ -316,40 +374,40 @@ export default function RanksClient() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-surface rounded-lg border border-border p-6 w-full max-w-md mx-4">
             <h3 className="text-lg font-semibold text-text mb-4">
-              {editingRank ? 'Edit Rank' : 'Create Rank'}
+              {editingRank ? translations.editRank : translations.addRank}
             </h3>
             
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-text mb-1">
-                  Name *
+                  {translations.name} *
                 </label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full p-2 border border-border/50 rounded-lg bg-background/50 text-text placeholder-text-secondary focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all duration-200"
-                  placeholder="Enter rank name"
+                  placeholder={translations.name}
                   required
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-text mb-1">
-                  Description
+                  {translations.descriptionField}
                 </label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   className="w-full p-2 border border-border/50 rounded-lg bg-background/50 text-text placeholder-text-secondary focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all duration-200 resize-none"
                   rows={2}
-                  placeholder="Optional description for this rank"
+                  placeholder={translations.descriptionField}
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-text mb-1">
-                  Order *
+                  {translations.order} *
                 </label>
                 <input
                   type="number"
@@ -359,13 +417,13 @@ export default function RanksClient() {
                   min="1"
                   required
                 />
-                <p className="text-xs text-text-secondary mt-1">Lower number = higher rank</p>
+                <p className="text-xs text-text-secondary mt-1">{translations.order}</p>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-sm font-medium text-text mb-1">
-                    Min Upload *
+                    {translations.minUpload} *
                   </label>
                   <input
                     type="number"
@@ -378,7 +436,7 @@ export default function RanksClient() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-text mb-1">
-                    Min Download *
+                    {translations.minDownload} *
                   </label>
                   <input
                     type="number"
@@ -394,7 +452,7 @@ export default function RanksClient() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-sm font-medium text-text mb-1">
-                    Min Ratio *
+                    {translations.minRatio} *
                   </label>
                   <input
                     type="number"
@@ -408,7 +466,7 @@ export default function RanksClient() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-text mb-1">
-                    Color
+                    {translations.color}
                   </label>
                   <div className="flex items-center gap-2">
                     <input
@@ -427,7 +485,7 @@ export default function RanksClient() {
                   type="submit"
                   className="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 font-medium transition-all duration-200"
                 >
-                  {editingRank ? 'Update Rank' : 'Create Rank'}
+                  {editingRank ? translations.update : translations.create}
                 </button>
                 <button
                   type="button"
@@ -438,7 +496,7 @@ export default function RanksClient() {
                   }}
                   className="flex-1 px-4 py-2 bg-surface/50 text-text border border-border/50 rounded-lg hover:bg-surface/70 font-medium transition-all duration-200"
                 >
-                  Cancel
+                  {translations.cancel}
                 </button>
               </div>
             </form>
