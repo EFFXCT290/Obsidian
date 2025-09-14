@@ -136,8 +136,8 @@ export async function calculateUserRank(userId: string): Promise<UserRank> {
       currentRank = rank;
       // Find the next rank in the proper hierarchy
       const currentRankIndex = ranksByOrder.findIndex(r => r.id === rank.id);
-      if (currentRankIndex > 0) {
-        nextRank = ranksByOrder[currentRankIndex - 1]; // Get the rank with lower order (higher rank)
+      if (currentRankIndex < ranksByOrder.length - 1) {
+        nextRank = ranksByOrder[currentRankIndex + 1]; // Get the rank with higher order (next rank)
       }
       
       console.log('[calculateUserRank] Found current rank:', currentRank.name, 'order:', currentRank.order);
