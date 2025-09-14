@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, User } from '@prisma/client';
 import bencode from 'bencode';
 import { getActivePeers, getSeederLeecherCounts, getCompletedCount } from '../announce_features/peerList.js';
 import { updateUserRatio, isUserBelowMinRatio } from '../announce_features/ratio.js';
@@ -12,6 +12,9 @@ import { extractRealClientIP, isCloudflareRequest, getCloudflareCountry } from '
 const prisma = new PrismaClient();
 
 type Peer = { ip: string; port: number; peerId: string };
+
+// Extended user type that includes the isVip field
+type UserWithVip = User & { isVip: boolean };
 
 export async function announceHandler(request: FastifyRequest, reply: FastifyReply) {
   const { passkey, info_hash, peer_id, port, uploaded, downloaded, left, event, compact } = request.query as any;
@@ -30,7 +33,7 @@ export async function announceHandler(request: FastifyRequest, reply: FastifyRep
   }
   
   // Validate user
-  const user = await prisma.user.findUnique({ where: { passkey } });
+  const user = await prisma.user.findUnique({ where: { passkey } }) as UserWithVip | null;
   if (!user || user.status !== 'ACTIVE') {
     reply.header('Content-Type', 'text/plain');
     return reply.send(bencode.encode({ 'failure reason': 'Invalid or banned user' }));
