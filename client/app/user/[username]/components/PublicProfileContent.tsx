@@ -31,6 +31,7 @@ interface PublicProfile {
   ratio: string;
   createdAt: string;
   avatarUrl: string | null;
+  isVip?: boolean;
   publicTorrents: PublicTorrent[];
 }
 
@@ -105,6 +106,11 @@ export default function PublicProfileContent({ profile }: PublicProfileContentPr
             <div className="flex items-center space-x-4 mb-3">
               <h1 className="text-3xl font-bold text-text">{profile.username}</h1>
               {getRoleBadge(profile.role)}
+              {profile.isVip && (
+                <span className="bg-yellow-500/10 text-yellow-500 px-2 py-1 rounded text-sm font-medium border border-yellow-500/20">
+                  {t('profile.vip.badge', 'VIP')}
+                </span>
+              )}
             </div>
             
             <div className="flex items-center text-text-secondary text-sm mb-4">

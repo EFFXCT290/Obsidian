@@ -437,6 +437,17 @@
 			"title":"Gestión de Usuarios",
 			"description":"Administra usuarios del tracker, roles y permisos.",
 			"search":"Buscar",
+			"vip":{
+				"title":"Estado VIP",
+				"grantVip":"Otorgar VIP",
+				"revokeVip":"Revocar VIP",
+				"vipGranted":"Estado VIP otorgado exitosamente",
+				"vipRevoked":"Estado VIP revocado exitosamente",
+				"confirmGrantVip":"¿Estás seguro de que quieres otorgar estado VIP a este usuario?",
+				"confirmRevokeVip":"¿Estás seguro de que quieres revocar el estado VIP de este usuario?",
+				"vipBenefits":"Los usuarios VIP pueden descargar sin límites y no se ven afectados por el ratio ni los hit & runs.",
+				"vipError":"Error al actualizar el estado VIP"
+			},
 			"searching":"Buscando...",
 			"searchPlaceholder":"Buscar por nombre de usuario o email...",
 			"users":"Usuarios",
@@ -567,6 +578,17 @@
 			"description":"Administrar torrents existentes, categorías y metadatos.",
 			"search":{
 				"placeholder":"Buscar torrents por nombre..."
+			},
+			"vip":{
+				"title":"Torrent VIP",
+				"makeVip":"Hacer VIP",
+				"removeVip":"Quitar VIP",
+				"vipTorrent":"Solo usuarios VIP pueden descargar este torrent",
+				"vipTorrentCreated":"Torrent VIP creado exitosamente",
+				"vipTorrentRemoved":"Torrent VIP removido exitosamente",
+				"confirmMakeVip":"¿Estás seguro de que quieres hacer este torrent VIP? Solo usuarios VIP podrán descargarlo.",
+				"confirmRemoveVip":"¿Estás seguro de que quieres quitar el estado VIP de este torrent?",
+				"vipError":"Error al actualizar el estado VIP del torrent"
 			},
 			"filters":{
 				"allCategories":"Todas las Categorías",
@@ -1188,6 +1210,7 @@
 		"uploaded":"Subido",
 		"downloadStarted":"Descarga iniciada",
 		"freeleech":"FL",
+		"vip":"VIP",
 		"yes":"Sí",
 		"no":"No",
 		"deleting":"Eliminando...",
@@ -1237,6 +1260,16 @@
 			"noRankAssigned":"No se ha asignado rango aún",
 			"maximumRankAchieved":"¡Rango Máximo Alcanzado!",
 			"highestRankDescription":"Has alcanzado el rango más alto disponible."
+		},
+		"vip":{
+			"badge":"VIP",
+			"status":"Estado VIP",
+			"benefits":"Beneficios VIP",
+			"unlimitedDownloads":"Descargas ilimitadas",
+			"noRatioAffected":"No afectado por el ratio",
+			"noHitRuns":"Sin hit & runs",
+			"vipTorrents":"Puedes subir torrents VIP",
+			"accessVipTorrents":"Acceso a torrents VIP exclusivos"
 		},
 		"loading":"Cargando perfil...",
 		"activity":{
@@ -1532,6 +1565,11 @@
 			"freeleech":{
 				"label":"Freeleech",
 				"desc":"El tráfico de descarga no cuenta"
+			},
+			"vipTorrent":{
+				"label":"Torrent VIP",
+				"desc":"Solo usuarios VIP podrán descargar este torrent",
+				"vipOnly":"Solo usuarios VIP"
 			}
 		},
 		"actions":{

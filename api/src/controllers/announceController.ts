@@ -248,11 +248,13 @@ export async function announceHandler(request: FastifyRequest, reply: FastifyRep
   // Update hit and run status
           await updateHitAndRun(user.id, torrent.id, Number(left || 0), event);
 
-  // ENFORCEMENT: Block if user has too many hit and runs
-  const hitAndRunCount = await prisma.hitAndRun.count({ where: { userId: user.id, isHitAndRun: true } });
-  if (hitAndRunCount > config.hitAndRunThreshold) {
-    reply.header('Content-Type', 'text/plain');
-    return reply.send(bencode.encode({ 'failure reason': 'Too many hit and runs. Please seed your torrents.' }));
+  // ENFORCEMENT: Block if user has too many hit and runs (VIP users are exempt)
+  if (!user.isVip) {
+    const hitAndRunCount = await prisma.hitAndRun.count({ where: { userId: user.id, isHitAndRun: true } });
+    if (hitAndRunCount > config.hitAndRunThreshold) {
+      reply.header('Content-Type', 'text/plain');
+      return reply.send(bencode.encode({ 'failure reason': 'Too many hit and runs. Please seed your torrents.' }));
+    }
   }
   // Get peer list for this torrent
   const peers: Peer[] = await getActivePeers(torrent.id, peer_id as string, 50);

@@ -184,7 +184,8 @@ export async function loginHandler(request: FastifyRequest, reply: FastifyReply)
       email: user.email, 
       username: user.username, 
       role: user.role,
-      emailVerified: user.emailVerified 
+      emailVerified: user.emailVerified,
+      isVip: user.isVip
     },
     JWT_SECRET,
     { expiresIn: '7d' }
@@ -197,7 +198,8 @@ export async function loginHandler(request: FastifyRequest, reply: FastifyReply)
       email: user.email, 
       username: user.username, 
       role: user.role,
-      emailVerified: user.emailVerified 
+      emailVerified: user.emailVerified,
+      isVip: user.isVip
     },
     emailVerified: user.emailVerified
   });
@@ -346,6 +348,7 @@ export async function getProfileHandler(request: FastifyRequest, reply: FastifyR
     passkey: prismaUser.passkey,
     avatarUrl: prismaUser.avatarUrl,
     avatarFileId: prismaUser.avatarFileId,
+    isVip: prismaUser.isVip,
     rank: userRank.rank?.name || null,
     rankData: userRank
   });
@@ -502,6 +505,7 @@ export async function deleteAvatarHandler(request: FastifyRequest, reply: Fastif
 
   return reply.send({ success: true });
 }
+
 
 export async function disableSelfHandler(request: FastifyRequest, reply: FastifyReply) {
   const user = (request as any).user;

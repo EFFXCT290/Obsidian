@@ -12,6 +12,8 @@ import { getSeederLeecherCounts, getCompletedCount } from '../announce_features/
 import crypto from 'crypto';
 import { createTorrentUploadActivity, createTorrentApprovedActivity, createSmartTorrentLikedActivity, createSmartTorrentDislikedActivity } from '../controllers/user/userActivityController.js';
 
+const prisma = new PrismaClient();
+
 // Torrent actions: vote and magnet
 export async function voteTorrentHandler(request: FastifyRequest, reply: FastifyReply) {
   const user = (request as any).user;
@@ -85,8 +87,6 @@ export async function createMagnetTokenHandler(request: FastifyRequest, reply: F
     token: token // Include token for debugging (remove in production)
   });
 }
-
-const prisma = new PrismaClient();
 
 // Helper function to detect the correct protocol (HTTP/HTTPS) from request
 function getBaseUrlFromRequest(request: FastifyRequest): string {
@@ -166,13 +166,20 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
     console.log('[uploadTorrentHandler] Unauthorized');
     return reply.status(401).send({ error: 'Unauthorized' });
   }
+  
+  console.log('[uploadTorrentHandler] User data from middleware:', { 
+    id: user.id, 
+    username: user.username, 
+    role: user.role, 
+    isVip: user.isVip 
+  });
 
   const config = normalizeS3Config(await getConfig());
   const parts = request.parts();
   let torrentBuffer = null, torrentFileMeta = null;
   let nfoBuffer = null, nfoFileMeta = null;
   let posterBuffer = null, posterFileMeta = null;
-  let name, description, categoryId, posterUrlField, tagsField, freeleechField, isAnonymousField;
+  let name, description, categoryId, posterUrlField, tagsField, freeleechField, isAnonymousField, isVipField;
 
   for await (const part of parts) {
     console.log('[uploadTorrentHandler] Received part:', part.fieldname, part.type);
@@ -197,10 +204,11 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
       if (part.fieldname === 'tags') tagsField = part.value;
       if (part.fieldname === 'freeleech') freeleechField = part.value;
       if (part.fieldname === 'isAnonymous') isAnonymousField = part.value;
+      if (part.fieldname === 'isVip') isVipField = part.value;
     }
   }
   console.log('[uploadTorrentHandler] Finished reading all parts');
-  console.log('[uploadTorrentHandler] Form data:', { name, description, categoryId, tagsField, freeleechField, isAnonymousField });
+  console.log('[uploadTorrentHandler] Form data:', { name, description, categoryId, tagsField, freeleechField, isAnonymousField, isVipField });
 
   if (!torrentBuffer) {
     console.log('[uploadTorrentHandler] .torrent file is required');
@@ -339,6 +347,14 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
 
   // Parse isAnonymous field (default to false if not provided)
   const isAnonymous = isAnonymousField === 'true' || isAnonymousField === true;
+  const isVip = isVipField === 'true' || isVipField === true;
+
+  // Check if user can upload VIP torrents (VIP users or admins can)
+  console.log('[uploadTorrentHandler] VIP validation - isVip:', isVip, 'user.isVip:', user.isVip, 'user.role:', user.role);
+  if (isVip && !user.isVip && !['ADMIN', 'OWNER', 'FOUNDER'].includes(user.role)) {
+    console.log('[uploadTorrentHandler] Rejected: only VIP users or admins can upload VIP torrents');
+    return reply.status(403).send({ error: 'Only VIP users or admins can upload VIP torrents' });
+  }
 
   const torrent = await prisma.torrent.create({
     data: {
@@ -355,6 +371,7 @@ export async function uploadTorrentHandler(request: FastifyRequest, reply: Fasti
       posterUrl: posterUrl || null,
       tags: tags,
       freeleech: freeleech,
+      isVip: isVip,
       isAnonymous: isAnonymous
     } as any
   });
@@ -417,6 +434,7 @@ export async function getTorrentHandler(request: FastifyRequest, reply: FastifyR
       rejectedAt: true,
       freeleech: true,
       isAnonymous: true,
+      isVip: true,
       posterUrl: true,
       tags: true,
       filePath: true,
@@ -1135,7 +1153,7 @@ export async function editTorrentHandler(request: FastifyRequest, reply: Fastify
   }
   
   const { id } = request.params as any;
-  const { name, description, categoryId } = request.body as any;
+  const { name, description, categoryId, isVip } = request.body as any;
   
   // Validate required fields
   if (!name || !name.trim()) {
@@ -1174,6 +1192,7 @@ export async function editTorrentHandler(request: FastifyRequest, reply: Fastify
         name: name.trim(),
         description: description?.trim() || null,
         categoryId,
+        ...(isVip !== undefined && { isVip }),
         updatedAt: new Date()
       },
       include: {

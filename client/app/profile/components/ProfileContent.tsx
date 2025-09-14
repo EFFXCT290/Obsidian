@@ -30,6 +30,7 @@ export default function ProfileContent() {
     ratio?: number;
     bonusPoints?: number;
     passkey?: string;
+    isVip?: boolean;
   } | null>(null);
   const [profile, setProfile] = useState<{
     id: string;
@@ -48,6 +49,7 @@ export default function ProfileContent() {
         color?: string;
       };
     };
+    isVip?: boolean;
   } | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [rssToken, setRssToken] = useState<string | null>(null);
@@ -94,6 +96,7 @@ export default function ProfileContent() {
         bonusPoints: currentUser.bonusPoints ?? 0,
         rank: currentUser.rank || null,
         rankData: currentUser.rankData || null,
+        isVip: currentUser.isVip || false,
       });
     }
     setLoading(false);

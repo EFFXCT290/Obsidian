@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Upload } from '@styled-icons/boxicons-regular/Upload';
 import toast from 'react-hot-toast';
+import useSWR from 'swr';
 import TorrentUploadArea from '@/app/torrent/upload/components/TorrentUploadArea';
 import ImageUploadArea from '@/app/torrent/upload/components/ImageUploadArea';
 import NfoUploadArea from '@/app/torrent/upload/components/NfoUploadArea';
@@ -25,6 +26,7 @@ const uploadSchema = z.object({
   tags: z.array(z.string()).min(1, 'At least one tag').max(10, 'Too many tags'),
   anonymous: z.boolean(),
   freeleech: z.boolean(),
+  isVip: z.boolean(),
 });
 
 type UploadFormData = z.infer<typeof uploadSchema>;
@@ -32,6 +34,15 @@ type UploadFormData = z.infer<typeof uploadSchema>;
 export default function UploadContent() {
   const router = useRouter();
   const { t } = useI18n();
+  
+  // Get current user data to check VIP status
+  const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
+  const { data: userData } = useSWR(token ? [`${API_BASE_URL}/auth/profile`, token] : null, async ([url, _token]) => {
+    const headers: HeadersInit = { 'Content-Type': 'application/json' };
+    if (_token) headers['Authorization'] = `Bearer ${_token as string}`;
+    const res = await fetch(url as string, { headers, cache: 'no-store' });
+    return res.json();
+  });
   const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
   const [isDragOver, setIsDragOver] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
@@ -49,7 +60,7 @@ export default function UploadContent() {
     reValidateMode: 'onChange',
     criteriaMode: 'all',
     shouldFocusError: false,
-    defaultValues: { name: '', description: '', category: '', source: '', tags: [], anonymous: false, freeleech: false },
+    defaultValues: { name: '', description: '', category: '', source: '', tags: [], anonymous: false, freeleech: false, isVip: false },
   });
 
   const watchedTags = watch('tags');
@@ -114,6 +125,7 @@ export default function UploadContent() {
       if (Array.isArray(data.tags)) formData.append('tags', JSON.stringify(data.tags));
       formData.append('freeleech', data.freeleech.toString());
       formData.append('isAnonymous', data.anonymous.toString());
+      formData.append('isVip', data.isVip.toString());
 
       const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
       const headers: HeadersInit = token ? { Authorization: `Bearer ${token}` } : {};
@@ -156,7 +168,17 @@ export default function UploadContent() {
         </div>
 
         <div className="lg:col-span-2">
-          <UploadOptions anonymous={watch('anonymous')} freeleech={watch('freeleech')} onAnonymousChange={(v: boolean) => setValue('anonymous', v, { shouldValidate: true, shouldDirty: true })} onFreeleechChange={(v: boolean) => setValue('freeleech', v, { shouldValidate: true, shouldDirty: true })} loading={loading} />
+          <UploadOptions 
+            anonymous={watch('anonymous')} 
+            freeleech={watch('freeleech')} 
+            isVip={watch('isVip')}
+            onAnonymousChange={(v: boolean) => setValue('anonymous', v, { shouldValidate: true, shouldDirty: true })} 
+            onFreeleechChange={(v: boolean) => setValue('freeleech', v, { shouldValidate: true, shouldDirty: true })}
+            onVipChange={(v: boolean) => setValue('isVip', v, { shouldValidate: true, shouldDirty: true })}
+            loading={loading}
+            userIsVip={userData?.isVip || false}
+            userRole={userData?.role}
+          />
         </div>
 
         <UploadActions isValid={isValid} hasFile={!!uploadedFile} isUploading={isUploading} disabledReasons={(() => {

@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Edit, Shield, Crown, User, Search, X, UserCheck, UserX, ShieldAlt } from '@styled-icons/boxicons-regular';
+import { Edit, Shield, Crown, User, Search, X, UserCheck, UserX, ShieldAlt, Star } from '@styled-icons/boxicons-regular';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '@/lib/api';
+import { ToggleSwitch } from '@/app/components/ui/ToggleSwitch';
 
 interface User {
   id: string;
@@ -13,6 +14,7 @@ interface User {
   status: 'ACTIVE' | 'BANNED' | 'DISABLED';
   createdAt: string;
   emailVerified: boolean;
+  isVip?: boolean;
 }
 
 interface UserFormData {
@@ -21,6 +23,7 @@ interface UserFormData {
   role: 'USER' | 'MOD' | 'ADMIN' | 'OWNER' | 'FOUNDER';
   status: 'ACTIVE' | 'BANNED' | 'DISABLED';
   emailVerified: boolean;
+  isVip: boolean;
 }
 
 interface UsersResponse {
@@ -164,6 +167,11 @@ function UserItem({
                   ✓
                 </span>
               )}
+              {user.isVip && (
+                <span className="bg-yellow-500/10 text-yellow-500 px-2 py-1 rounded text-xs font-medium border border-yellow-500/20">
+                  VIP
+                </span>
+              )}
             </div>
             <p className="text-sm text-text-secondary truncate">{user.email}</p>
           </div>
@@ -298,6 +306,7 @@ function UserItem({
                 <Shield size={16} />
               </button>
             )}
+            
           </div>
         </div>
       </div>
@@ -324,7 +333,8 @@ function EditUserModal({
     email: '',
     role: 'USER',
     status: 'ACTIVE',
-    emailVerified: false
+    emailVerified: false,
+    isVip: false
   });
   const [saving, setSaving] = useState(false);
 
@@ -335,7 +345,8 @@ function EditUserModal({
         email: user.email,
         role: user.role,
         status: user.status,
-        emailVerified: user.emailVerified
+        emailVerified: user.emailVerified,
+        isVip: user.isVip || false
       });
     }
   }, [user]);
@@ -434,17 +445,26 @@ function EditUserModal({
             </select>
           </div>
           
-          <div className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id="emailVerified"
-              checked={formData.emailVerified}
-              onChange={(e) => setFormData({ ...formData, emailVerified: e.target.checked })}
-              className="rounded border-border text-primary focus:ring-primary"
-            />
+          <div className="flex items-center justify-between">
             <label htmlFor="emailVerified" className="text-sm text-text">
               {translations.emailVerified}
             </label>
+            <ToggleSwitch
+              id="emailVerified"
+              checked={formData.emailVerified}
+              onChange={(e) => setFormData({ ...formData, emailVerified: e.target.checked })}
+            />
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <label htmlFor="isVip" className="text-sm text-text">
+              {translations.vip?.title || 'VIP Status'}
+            </label>
+            <ToggleSwitch
+              id="isVip"
+              checked={formData.isVip}
+              onChange={(e) => setFormData({ ...formData, isVip: e.target.checked })}
+            />
           </div>
           
           <div className="flex items-center space-x-3 pt-4">
@@ -572,11 +592,13 @@ export default function UsersClient({ translations }: UsersClientProps) {
         role?: string;
         status?: string;
         emailVerified?: boolean;
+        isVip?: boolean;
       } = {};
       if (userData.username !== editingUser.username) detailsPayload.username = userData.username;
       if (userData.role !== editingUser.role) detailsPayload.role = userData.role;
       if (userData.status !== editingUser.status) detailsPayload.status = userData.status;
       if (userData.emailVerified !== editingUser.emailVerified) detailsPayload.emailVerified = userData.emailVerified;
+      if (userData.isVip !== (editingUser.isVip || false)) detailsPayload.isVip = userData.isVip;
 
       // 1) Update email first (if changed), since backend also triggers verification flows
       if (emailChanged) {
@@ -740,6 +762,7 @@ export default function UsersClient({ translations }: UsersClientProps) {
       toast.error('Failed to transfer founder role');
     }
   };
+
 
   if (loading && !searchLoading) {
     return (

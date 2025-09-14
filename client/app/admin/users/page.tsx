@@ -77,6 +77,17 @@ export default async function AdminUsersPage() {
       OWNER: serverT('admin.users.roles.OWNER', language),
       FOUNDER: serverT('admin.users.roles.FOUNDER', language),
     },
+    vip: {
+      title: serverT('admin.users.vip.title', language),
+      grantVip: serverT('admin.users.vip.grantVip', language),
+      revokeVip: serverT('admin.users.vip.revokeVip', language),
+      vipGranted: serverT('admin.users.vip.vipGranted', language),
+      vipRevoked: serverT('admin.users.vip.vipRevoked', language),
+      confirmGrantVip: serverT('admin.users.vip.confirmGrantVip', language),
+      confirmRevokeVip: serverT('admin.users.vip.confirmRevokeVip', language),
+      vipBenefits: serverT('admin.users.vip.vipBenefits', language),
+      vipError: serverT('admin.users.vip.vipError', language),
+    },
     statuses: {
       ACTIVE: serverT('admin.users.statuses.ACTIVE', language),
       BANNED: serverT('admin.users.statuses.BANNED', language),

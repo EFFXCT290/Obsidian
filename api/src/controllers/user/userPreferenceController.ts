@@ -11,10 +11,11 @@ export async function getPreferencesHandler(request: FastifyRequest, reply: Fast
     select: { 
       preferredLanguage: true, 
       allowEmailNotifications: true,
-      publicProfile: true 
+      publicProfile: true,
+      isVip: true
     } 
   });
-  return reply.send(dbUser || { preferredLanguage: 'es', allowEmailNotifications: true, publicProfile: false });
+  return reply.send(dbUser || { preferredLanguage: 'es', allowEmailNotifications: true, publicProfile: false, isVip: false });
 }
 
 export async function updatePreferencesHandler(request: FastifyRequest, reply: FastifyReply) {
@@ -47,6 +48,7 @@ export async function getPublicProfileHandler(request: FastifyRequest, reply: Fa
       createdAt: true,
       avatarUrl: true,
       publicProfile: true,
+      isVip: true,
       torrents: {
         where: {
           isApproved: true,
@@ -92,6 +94,7 @@ export async function getPublicProfileHandler(request: FastifyRequest, reply: Fa
     ratio: ratio.toFixed(2),
     createdAt: user.createdAt,
     avatarUrl: user.avatarUrl,
+    isVip: user.isVip,
     publicTorrents: (user as any).torrents.map((torrent: any) => ({
       id: torrent.id,
       name: torrent.name,

@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 
 interface ProfileSidebarProps {
-  user?: { id: string; email: string; username?: string | null; avatarUrl?: string } | null;
+  user?: { id: string; email: string; username?: string | null; avatarUrl?: string; isVip?: boolean } | null;
   profile: {
     id: string;
     username?: string;
@@ -25,6 +25,7 @@ interface ProfileSidebarProps {
         color?: string;
       };
     };
+    isVip?: boolean;
   } | null;
   previewUrl: string | null;
   fileInputRef: React.RefObject<HTMLInputElement | null>;
@@ -92,6 +93,14 @@ export default function ProfileSidebar({ user, profile, previewUrl, fileInputRef
                     {profile?.rank || 'No Rank'}
                   </span>
                 </div>
+                {profile?.isVip && (
+                  <div className="flex justify-between">
+                    <span className="text-text-secondary">{t('profile.vip.status', 'Estado VIP')}</span>
+                    <span className="bg-yellow-500/10 text-yellow-500 px-2 py-1 rounded text-sm font-medium border border-yellow-500/20">
+                      {t('profile.vip.badge', 'VIP')}
+                    </span>
+                  </div>
+                )}
                 <div className="flex justify-between"><span className="text-text-secondary">{t('profile.fields.userSince', 'Usuario desde')}</span><span className="font-medium">{formattedJoinDate}</span></div>
               </>
             )}

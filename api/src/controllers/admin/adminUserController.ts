@@ -455,7 +455,8 @@ export async function listAllUsersHandler(request: FastifyRequest, reply: Fastif
         createdAt: true,
         emailVerified: true,
         rssEnabled: true,
-        rssToken: true
+        rssToken: true,
+        isVip: true
       }
     }),
     prisma.user.count({ where })
@@ -507,7 +508,7 @@ export async function updateUserHandler(request: FastifyRequest, reply: FastifyR
   const admin = (request as any).user;
   if (!isAdminOrOwner(admin)) return reply.status(403).send({ error: 'Forbidden' });
   const { id } = request.params as any;
-  const { username, role, status, emailVerified } = request.body as any;
+  const { username, role, status, emailVerified, isVip } = request.body as any;
   
   // Check if user exists
   const existingUser = await prisma.user.findUnique({ where: { id } });
@@ -572,6 +573,9 @@ export async function updateUserHandler(request: FastifyRequest, reply: FastifyR
   if (emailVerified !== undefined && emailVerified !== existingUser.emailVerified) {
     updateData.emailVerified = emailVerified;
   }
+  if (isVip !== undefined && isVip !== existingUser.isVip) {
+    updateData.isVip = isVip;
+  }
   
   // If no changes, return early
   if (Object.keys(updateData).length === 0) {
@@ -580,5 +584,75 @@ export async function updateUserHandler(request: FastifyRequest, reply: FastifyR
   
   // Update user
   const updated = await prisma.user.update({ where: { id }, data: updateData });
+  return reply.send({ success: true, user: convertBigInts(updated) });
+}
+
+export async function grantVipHandler(request: FastifyRequest, reply: FastifyReply) {
+  const admin = (request as any).user;
+  if (!isAdminOrOwner(admin)) return reply.status(403).send({ error: 'Forbidden' });
+  
+  const { id } = request.params as any;
+  
+  // Check if user exists
+  const existingUser = await prisma.user.findUnique({ where: { id } });
+  if (!existingUser) return reply.status(404).send({ error: 'User not found' });
+  
+  // Check if user is already VIP
+  if (existingUser.isVip) {
+    return reply.status(400).send({ error: 'User is already VIP' });
+  }
+  
+  // Grant VIP status
+  const updated = await prisma.user.update({ 
+    where: { id }, 
+    data: { isVip: true } 
+  });
+  
+  // Send notification to user
+  await createNotification({
+    userId: updated.id,
+    type: 'vip_granted',
+    message: 'You have been granted VIP status! You now have unlimited downloads and are exempt from ratio and hit & run restrictions.',
+    sendEmail: true,
+    email: updated.email,
+    emailSubject: 'VIP Status Granted',
+    emailText: `Hello ${updated.username},\n\nCongratulations! You have been granted VIP status on our tracker.\n\nVIP Benefits:\n- Unlimited downloads\n- No ratio restrictions\n- No hit & run penalties\n- Access to VIP-only torrents\n\nThank you for being a valuable member of our community!\n\nBest regards,\nThe Admin Team`
+  });
+  
+  return reply.send({ success: true, user: convertBigInts(updated) });
+}
+
+export async function revokeVipHandler(request: FastifyRequest, reply: FastifyReply) {
+  const admin = (request as any).user;
+  if (!isAdminOrOwner(admin)) return reply.status(403).send({ error: 'Forbidden' });
+  
+  const { id } = request.params as any;
+  
+  // Check if user exists
+  const existingUser = await prisma.user.findUnique({ where: { id } });
+  if (!existingUser) return reply.status(404).send({ error: 'User not found' });
+  
+  // Check if user is not VIP
+  if (!existingUser.isVip) {
+    return reply.status(400).send({ error: 'User is not VIP' });
+  }
+  
+  // Revoke VIP status
+  const updated = await prisma.user.update({ 
+    where: { id }, 
+    data: { isVip: false } 
+  });
+  
+  // Send notification to user
+  await createNotification({
+    userId: updated.id,
+    type: 'vip_revoked',
+    message: 'Your VIP status has been revoked. You will now be subject to normal ratio and hit & run restrictions.',
+    sendEmail: true,
+    email: updated.email,
+    emailSubject: 'VIP Status Revoked',
+    emailText: `Hello ${updated.username},\n\nYour VIP status has been revoked.\n\nYou will now be subject to:\n- Ratio requirements\n- Hit & run restrictions\n- Normal download limits\n\nIf you have any questions, please contact the admin team.\n\nBest regards,\nThe Admin Team`
+  });
+  
   return reply.send({ success: true, user: convertBigInts(updated) });
 } 

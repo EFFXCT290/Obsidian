@@ -17,6 +17,7 @@ interface Torrent {
   updatedAt: string;
   isApproved: boolean;
   freeleech?: boolean;
+  isVip?: boolean;
   uploader: {
     id: string;
     username: string;
@@ -52,7 +53,8 @@ export default function TorrentManagementClient() {
   const [editForm, setEditForm] = useState({
     name: '',
     description: '',
-    categoryId: ''
+    categoryId: '',
+    isVip: false
   });
 
   // Fetch approved torrents
@@ -124,7 +126,7 @@ export default function TorrentManagementClient() {
 
       showNotification(t('admin.torrentManagement.notifications.updated'), 'success');
       setEditingTorrent(null);
-      setEditForm({ name: '', description: '', categoryId: '' });
+      setEditForm({ name: '', description: '', categoryId: '', isVip: false });
       fetchTorrents();
     } catch (error) {
       console.error('Error updating torrent:', error);
@@ -180,7 +182,8 @@ export default function TorrentManagementClient() {
     setEditForm({
       name: torrent.name,
       description: torrent.description || '',
-      categoryId: torrent.category.id
+      categoryId: torrent.category.id,
+      isVip: torrent.isVip || false
     });
     setEditingTorrent(torrent.id);
   };
@@ -188,7 +191,7 @@ export default function TorrentManagementClient() {
   // Cancel editing
   const cancelEdit = () => {
     setEditingTorrent(null);
-    setEditForm({ name: '', description: '', categoryId: '' });
+    setEditForm({ name: '', description: '', categoryId: '', isVip: false });
   };
 
   // Format file size
@@ -309,6 +312,19 @@ export default function TorrentManagementClient() {
                     ))}
                   </select>
                 </div>
+                <div>
+                  <label className="flex items-center space-x-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={editForm.isVip}
+                      onChange={(e) => setEditForm({ ...editForm, isVip: e.target.checked })}
+                      className="rounded border-border text-primary focus:ring-primary/20"
+                    />
+                    <span className="text-sm text-text">
+                      {t('admin.torrentManagement.vip.title')}
+                    </span>
+                  </label>
+                </div>
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleEditTorrent(torrent.id)}
@@ -334,6 +350,11 @@ export default function TorrentManagementClient() {
                       {torrent.freeleech && (
                         <span className="bg-green-500/10 text-green-500 px-2 py-1 rounded text-sm font-medium border border-green-500/20">
                           FL
+                        </span>
+                      )}
+                      {torrent.isVip && (
+                        <span className="bg-yellow-500/10 text-yellow-500 px-2 py-1 rounded text-sm font-medium border border-yellow-500/20">
+                          VIP
                         </span>
                       )}
                     </div>

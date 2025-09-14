@@ -58,9 +58,12 @@ model User {
   downloadTokens DownloadToken[]
 
   // Preferences
-  preferredLanguage String? // 'es' | 'en'
+  preferredLanguage String? // 'es' | 'en' | 'zh'
   allowEmailNotifications Boolean @default(true)
   publicProfile Boolean @default(false) // If true, profile is visible at /user/:username
+  
+  // VIP Status
+  isVip Boolean @default(false)
 
   @@index([rssToken])
 }
@@ -129,6 +132,7 @@ model Torrent {
   tags        String[]   @default([])
   freeleech   Boolean    @default(false)
   isAnonymous Boolean    @default(false)
+  isVip       Boolean    @default(false)
 }
 
 model Announce {

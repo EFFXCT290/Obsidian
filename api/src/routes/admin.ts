@@ -3,7 +3,8 @@ import { requireAuth } from '../middleware/authMiddleware.js';
 import {
   banUserHandler, unbanUserHandler, promoteUserHandler, demoteUserHandler, transferFounderRoleHandler,
   listPeerBans, getPeerBan, addPeerBan, removePeerBan,
-  adminSetRssEnabledHandler, adminResetRssTokenHandler, listAllUsersHandler, updateUserEmailHandler, updateUserHandler
+  adminSetRssEnabledHandler, adminResetRssTokenHandler, listAllUsersHandler, updateUserEmailHandler, updateUserHandler,
+  grantVipHandler, revokeVipHandler
 } from '../controllers/admin/adminUserController.js';
 import {
   listCategoriesHandler, createCategoryHandler, updateCategoryHandler, deleteCategoryHandler, reorderCategoriesHandler, moveCategoryHandler, getCategorySourcesHandler, addCategorySourceHandler, deleteCategorySourceHandler, reorderCategorySourcesHandler
@@ -32,6 +33,8 @@ export async function registerAdminRoutes(app: FastifyInstance) {
   app.get('/admin/users', { preHandler: requireAuth }, listAllUsersHandler); //DONE
   app.put('/admin/user/:id/email', { preHandler: requireAuth }, updateUserEmailHandler); //DONE
   app.put('/admin/user/:id', { preHandler: requireAuth }, updateUserHandler); //DONE
+  app.post('/admin/user/:id/grant-vip', { preHandler: requireAuth }, grantVipHandler); //DONE
+  app.post('/admin/user/:id/revoke-vip', { preHandler: requireAuth }, revokeVipHandler); //DONE
   app.get('/admin/peerban', { preHandler: requireAuth }, listPeerBans); //DONE
   app.get('/admin/peerban/:id', { preHandler: requireAuth }, getPeerBan); //DONE
   app.post('/admin/peerban', { preHandler: requireAuth }, addPeerBan); //DONE

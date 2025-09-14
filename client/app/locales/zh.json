@@ -463,6 +463,17 @@
 			"title": "用户管理",
 			"description": "管理服务器用户、角色和权限。",
 			"search": "搜索",
+			"vip": {
+				"title": "VIP 状态",
+				"grantVip": "授予 VIP",
+				"revokeVip": "撤销 VIP",
+				"vipGranted": "VIP 状态授予成功",
+				"vipRevoked": "VIP 状态撤销成功",
+				"confirmGrantVip": "您确定要授予此用户 VIP 状态吗？",
+				"confirmRevokeVip": "您确定要撤销此用户的 VIP 状态吗？",
+				"vipBenefits": "VIP 用户可以无限制下载，不受分享率和 H&R 影响。",
+				"vipError": "更新 VIP 状态时出错"
+			},
 			"searching": "搜索中...",
 			"searchPlaceholder": "按用户名或电子邮件搜索...",
 			"users": "用户",
@@ -593,6 +604,17 @@
 			"description": "管理现有的 Torrent、分类和元数据。",
 			"search": {
 				"placeholder": "按名称搜索 Torrent..."
+			},
+			"vip": {
+				"title": "VIP 种子",
+				"makeVip": "设为 VIP",
+				"removeVip": "移除 VIP",
+				"vipTorrent": "只有 VIP 用户可以下载此种子",
+				"vipTorrentCreated": "VIP 种子创建成功",
+				"vipTorrentRemoved": "VIP 种子移除成功",
+				"confirmMakeVip": "您确定要将此种子设为 VIP 吗？只有 VIP 用户才能下载它。",
+				"confirmRemoveVip": "您确定要移除此种子的 VIP 状态吗？",
+				"vipError": "更新种子 VIP 状态时出错"
 			},
 			"filters": {
 				"allCategories": "所有分类",
@@ -1154,7 +1176,8 @@
 		"downloads": "下载",
 		"uploaded": "上传量",
 		"downloadStarted": "下载已开始",
-		"freeleech":"FL"
+		"freeleech":"FL",
+		"vip":"VIP"
 	},
 	"language": {
 		"selector": {
@@ -1199,6 +1222,16 @@
 			"noRankAssigned": "尚未分配等级",
 			"maximumRankAchieved": "已达到最高等级！",
 			"highestRankDescription": "您已达到可用的最高等级。"
+		},
+		"vip": {
+			"badge": "VIP",
+			"status": "VIP 状态",
+			"benefits": "VIP 特权",
+			"unlimitedDownloads": "无限制下载",
+			"noRatioAffected": "不受分享率影响",
+			"noHitRuns": "无 H&R",
+			"vipTorrents": "您可以上传 VIP 种子",
+			"accessVipTorrents": "访问专属 VIP 种子"
 		},
 		"loading":"加载个人资料中...",
 		"activity": {
@@ -1490,6 +1523,11 @@
 			"freeleech": {
 				"label": "免费下载",
 				"desc": "下载流量不计入统计"
+			},
+			"vipTorrent": {
+				"label": "VIP 种子",
+				"desc": "只有 VIP 用户才能下载此种子",
+				"vipOnly": "仅限 VIP 用户"
 			}
 		},
 		"actions": {

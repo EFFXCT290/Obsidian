@@ -40,6 +40,7 @@ interface TorrentResponse {
   rejectedAt?: string;
   freeleech?: boolean;
   isAnonymous?: boolean;
+  isVip?: boolean;
 }
 
 // Legacy comment types removed
@@ -183,6 +184,11 @@ export default function TorrentDetailContent({ torrentId }: { torrentId: string 
           {hasMounted && data && data.freeleech && (
             <span className="bg-green-500/10 text-green-500 px-2 py-1 rounded text-sm font-medium border border-green-500/20">
               {t('common.freeleech', 'FL')}
+            </span>
+          )}
+          {hasMounted && data && data.isVip && (
+            <span className="bg-yellow-500/10 text-yellow-500 px-2 py-1 rounded text-sm font-medium border border-yellow-500/20">
+              {t('common.vip', 'VIP')}
             </span>
           )}
         </div>
