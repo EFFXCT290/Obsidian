@@ -1,8 +1,9 @@
 /*
- * Prisma seed for default Categories and their Sources
+ * Prisma seed for default Categories, Sources, and Ranks
  * - Creates top-level categories if they don't exist
  * - Ensures sources exist (created if missing)
  * - Links sources to categories as own (non-inherited) with stable order
+ * - Creates default ranks for the rank system
  */
 import { PrismaClient } from '@prisma/client';
 
@@ -51,6 +52,84 @@ async function getOrCreateSourceIdByName(name: string): Promise<string> {
   if (existing) return existing.id;
   const created = await prisma.source.create({ data: { name } });
   return created.id;
+}
+
+async function seedRanks() {
+  console.log('Seeding default ranks...');
+
+  const defaultRanks = [
+    {
+      name: 'Newbie',
+      description: 'New to the tracker',
+      order: 1,
+      minUpload: 0,
+      minDownload: 0,
+      minRatio: 0.0,
+      color: '#6B7280' // Gray
+    },
+    {
+      name: 'Member',
+      description: 'Active tracker member',
+      order: 2,
+      minUpload: 10737418240, // 10 GB
+      minDownload: 5368709120, // 5 GB
+      minRatio: 0.5,
+      color: '#3B82F6' // Blue
+    },
+    {
+      name: 'Power User',
+      description: 'User with excellent ratio and activity',
+      order: 3,
+      minUpload: 107374182400, // 100 GB
+      minDownload: 53687091200, // 50 GB
+      minRatio: 1.0,
+      color: '#10B981' // Green
+    },
+    {
+      name: 'Elite',
+      description: 'Elite member with exceptional contributions',
+      order: 4,
+      minUpload: 536870912000, // 500 GB
+      minDownload: 268435456000, // 250 GB
+      minRatio: 1.5,
+      color: '#F59E0B' // Yellow/Orange
+    },
+    {
+      name: 'Torrent Master',
+      description: 'Torrent master with massive contributions',
+      order: 5,
+      minUpload: 1073741824000, // 1 TB
+      minDownload: 536870912000, // 500 GB
+      minRatio: 2.0,
+      color: '#EF4444' // Red
+    },
+    {
+      name: 'Legend',
+      description: 'Tracker legend with epic contributions',
+      order: 6,
+      minUpload: 5368709120000, // 5 TB
+      minDownload: 2684354560000, // 2.5 TB
+      minRatio: 2.5,
+      color: '#8B5CF6' // Purple
+    }
+  ];
+
+  for (const rankData of defaultRanks) {
+    await prisma.rank.upsert({
+      where: { name: rankData.name },
+      update: {
+        description: rankData.description,
+        order: rankData.order,
+        minUpload: rankData.minUpload,
+        minDownload: rankData.minDownload,
+        minRatio: rankData.minRatio,
+        color: rankData.color,
+      },
+      create: rankData,
+    });
+  }
+
+  console.log('Ranks seeding completed.');
 }
 
 async function main() {
@@ -149,6 +228,9 @@ async function main() {
     }
   }
 
+  // Seed ranks after categories
+  await seedRanks();
+
   console.log('Seeding completed.');
 }
 
@@ -160,5 +242,3 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
-
-
