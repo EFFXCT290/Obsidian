@@ -7,6 +7,11 @@
  */
 import { PrismaClient } from '@prisma/client';
 
+// Declare process for Node.js environment
+declare const process: {
+  exit: (code: number) => never;
+};
+
 const prisma = new PrismaClient();
 
 const categoriesWithSources: Record<string, string[]> = {
@@ -115,7 +120,7 @@ async function seedRanks() {
   ];
 
   for (const rankData of defaultRanks) {
-    await prisma.rank.upsert({
+    await (prisma as any).rank.upsert({
       where: { name: rankData.name },
       update: {
         description: rankData.description,
