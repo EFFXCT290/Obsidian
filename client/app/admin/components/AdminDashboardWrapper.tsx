@@ -5,6 +5,8 @@ import AdminHeader from './AdminHeader';
 import { API_BASE_URL } from '@/lib/api';
 import AdminSidebar from './AdminSidebar';
 import type { AdminNavItem } from './AdminSidebarClient';
+import { LanguageSelector } from '@/app/components/LanguageSelector';
+import { LanguageSync } from '@/app/components/LanguageSync';
 
 export default async function AdminDashboardWrapper({ children }: { children: React.ReactNode }) {
   const headersList = await headers();
@@ -35,12 +37,17 @@ export default async function AdminDashboardWrapper({ children }: { children: Re
 
   return (
     <div className="min-h-screen bg-background">
+      <LanguageSync serverLanguage={language} />
       <Suspense fallback={<div className="h-16 bg-surface border-b border-border fixed top-0 left-0 right-0 z-30" />}> 
         <AdminHeader language={language} brandingName={brandingName} />
       </Suspense>
       <Suspense fallback={<div className="w-64 bg-surface border-r border-border h-screen fixed left-0 top-16 z-20" />}> 
         <AdminSidebar items={items} />
       </Suspense>
+      {/* Language Selector - Fixed position bottom-left */}
+      <div className="fixed bottom-4 left-4 z-50">
+        <LanguageSelector currentLanguage={language} />
+      </div>
       <main className="flex-1 ml-64 pt-20 p-6">
         {children}
       </main>

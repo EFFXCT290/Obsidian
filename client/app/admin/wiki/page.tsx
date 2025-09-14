@@ -3,8 +3,6 @@ import { headers } from 'next/headers';
 import AdminDashboardWrapper from '../components/AdminDashboardWrapper';
 import { getPreferredLanguage, serverT } from '@/app/lib/server-i18n';
 import WikiClient from './WikiClient';
-import { LanguageSelector } from '@/app/components/LanguageSelector';
-import { LanguageSync } from '@/app/components/LanguageSync';
 
 function WikiSkeleton() {
   return (
@@ -80,10 +78,6 @@ export default async function AdminWikiPage() {
 
   return (
     <AdminDashboardWrapper>
-      <LanguageSync serverLanguage={language} />
-      <div className="fixed bottom-4 left-4 z-50">
-        <LanguageSelector currentLanguage={language} />
-      </div>
       <Suspense fallback={<WikiSkeleton />}> 
         <WikiClient translations={translations} />
       </Suspense>

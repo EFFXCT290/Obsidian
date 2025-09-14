@@ -3,8 +3,6 @@ import { headers } from 'next/headers';
 import AdminDashboardWrapper from '../components/AdminDashboardWrapper';
 import { getPreferredLanguage, serverT } from '@/app/lib/server-i18n';
 import RequestClient from './RequestClient';
-import { LanguageSelector } from '@/app/components/LanguageSelector';
-import { LanguageSync } from '@/app/components/LanguageSync';
 
 function RequestSkeleton() {
   return (
@@ -86,10 +84,6 @@ export default async function AdminRequestsPage() {
 
   return (
     <AdminDashboardWrapper>
-      <LanguageSync serverLanguage={language} />
-      <div className="fixed bottom-4 left-4 z-50">
-        <LanguageSelector currentLanguage={language} />
-      </div>
       <Suspense fallback={<RequestSkeleton />}> 
         <RequestClient translations={translations} />
       </Suspense>

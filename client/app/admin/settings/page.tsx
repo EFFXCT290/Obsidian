@@ -3,8 +3,6 @@ import { headers } from 'next/headers';
 import AdminDashboardWrapper from '@/app/admin/components/AdminDashboardWrapper';
 import { getPreferredLanguage, serverT } from '@/app/lib/server-i18n';
 import SettingsContent from './components/SettingsContent';
-import { LanguageSelector } from '@/app/components/LanguageSelector';
-import { LanguageSync } from '@/app/components/LanguageSync';
 
 function SettingsSkeleton() {
   return (
@@ -141,10 +139,6 @@ export default async function AdminSettingsPage() {
 
   return (
     <AdminDashboardWrapper>
-      <LanguageSync serverLanguage={language} />
-      <div className="fixed bottom-4 left-4 z-50">
-        <LanguageSelector currentLanguage={language} />
-      </div>
       <Suspense fallback={<SettingsSkeleton />}> 
         <SettingsContent translations={translations} />
       </Suspense>

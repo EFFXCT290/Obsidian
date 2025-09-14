@@ -3,8 +3,6 @@ import { headers } from 'next/headers';
 import AdminDashboardWrapper from '../components/AdminDashboardWrapper';
 import { getPreferredLanguage, serverT } from '@/app/lib/server-i18n';
 import PeerBanClient from './PeerBanClient';
-import { LanguageSelector } from '@/app/components/LanguageSelector';
-import { LanguageSync } from '@/app/components/LanguageSync';
 
 function PeerBanSkeleton() {
   return (
@@ -80,10 +78,6 @@ export default async function AdminPeerBanPage() {
 
   return (
     <AdminDashboardWrapper>
-      <LanguageSync serverLanguage={language} />
-      <div className="fixed bottom-4 left-4 z-50">
-        <LanguageSelector currentLanguage={language} />
-      </div>
       <Suspense fallback={<PeerBanSkeleton />}> 
         <PeerBanClient translations={translations} />
       </Suspense>
