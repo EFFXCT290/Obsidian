@@ -750,7 +750,20 @@ export async function listAllTorrentsHandler(request: FastifyRequest, reply: Fas
       skip,
       take,
       orderBy: { createdAt: 'desc' },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        size: true,
+        createdAt: true,
+        updatedAt: true,
+        isApproved: true,
+        isRejected: true,
+        rejectionReason: true,
+        rejectedAt: true,
+        freeleech: true,
+        isAnonymous: true,
+        isVip: true,
         uploader: {
           select: {
             id: true,
@@ -782,6 +795,9 @@ export async function listAllTorrentsHandler(request: FastifyRequest, reply: Fas
         getSeederLeecherCounts(torrent.id),
         getCompletedCount(torrent.id)
       ]);
+
+      // Debug log to check if isVip is present
+      console.log(`[listAllTorrentsHandler] Torrent ${torrent.name} - isVip:`, torrent.isVip);
 
       return {
         ...torrent,

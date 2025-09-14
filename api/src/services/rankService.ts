@@ -147,12 +147,12 @@ export async function calculateUserRank(userId: string): Promise<UserRank> {
   }
 
   // Calculate progress towards next rank
-  let progress = { upload: 0, download: 0, ratio: 0 };
+  const progress = { upload: 0, download: 0, ratio: 0 };
   
   if (nextRank) {
-    const uploadDiff = Number(nextRank.minUpload) - Number(currentRank?.minUpload || 0);
-    const downloadDiff = Number(nextRank.minDownload) - Number(currentRank?.minDownload || 0);
-    const ratioDiff = nextRank.minRatio - (currentRank?.minRatio || 0);
+    const _uploadDiff = Number(nextRank.minUpload) - Number(currentRank?.minUpload || 0);
+    const _downloadDiff = Number(nextRank.minDownload) - Number(currentRank?.minDownload || 0);
+    const _ratioDiff = nextRank.minRatio - (currentRank?.minRatio || 0);
 
     // Calculate upload progress: how much of the next rank's total requirement you've achieved
     if (Number(nextRank.minUpload) > 0) {

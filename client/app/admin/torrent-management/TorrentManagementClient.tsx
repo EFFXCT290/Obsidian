@@ -7,6 +7,7 @@ import { es } from 'date-fns/locale';
 import { Edit, Trash, Search } from '@styled-icons/boxicons-regular';
 import { API_BASE_URL } from '@/lib/api';
 import { useI18n } from '@/app/hooks/useI18n';
+import { ToggleSwitch } from '@/app/components/ui/ToggleSwitch';
 
 interface Torrent {
   id: string;
@@ -73,10 +74,15 @@ export default function TorrentManagementClient() {
         status: 'approved' // Only get approved torrents
       });
 
-      const response = await fetch(`${API_BASE_URL}/torrent/list?${params}`, { headers, cache: 'no-store' });
+      const response = await fetch(`${API_BASE_URL}/admin/torrents?${params}`, { headers, cache: 'no-store' });
       if (!response.ok) throw new Error('Failed to fetch torrents');
       
       const data = await response.json();
+      console.log('[fetchTorrents] API response:', data);
+      console.log('[fetchTorrents] Torrents data:', data.torrents);
+      if (data.torrents && data.torrents.length > 0) {
+        console.log('[fetchTorrents] First torrent isVip:', data.torrents[0].isVip);
+      }
       setTorrents(data.torrents || []);
       setTotalPages(Math.ceil((data.total || 0) / 20));
     } catch (error) {
@@ -179,12 +185,16 @@ export default function TorrentManagementClient() {
 
   // Start editing a torrent
   const startEdit = (torrent: Torrent) => {
-    setEditForm({
+    console.log('[startEdit] Torrent data:', torrent);
+    console.log('[startEdit] torrent.isVip:', torrent.isVip);
+    const formData = {
       name: torrent.name,
       description: torrent.description || '',
       categoryId: torrent.category.id,
       isVip: torrent.isVip || false
-    });
+    };
+    console.log('[startEdit] Form data:', formData);
+    setEditForm(formData);
     setEditingTorrent(torrent.id);
   };
 
@@ -313,17 +323,20 @@ export default function TorrentManagementClient() {
                   </select>
                 </div>
                 <div>
-                  <label className="flex items-center space-x-3 cursor-pointer">
-                    <input
-                      type="checkbox"
+                  <div className="flex items-center space-x-3">
+                    <ToggleSwitch
                       checked={editForm.isVip}
                       onChange={(e) => setEditForm({ ...editForm, isVip: e.target.checked })}
-                      className="rounded border-border text-primary focus:ring-primary/20"
                     />
-                    <span className="text-sm text-text">
-                      {t('admin.torrentManagement.vip.title')}
-                    </span>
-                  </label>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium text-text">
+                        {t('admin.torrentManagement.vip.title')}
+                      </span>
+                      <span className="text-xs text-text-secondary">
+                        {t('admin.torrentManagement.vip.vipTorrent')}
+                      </span>
+                    </div>
+                  </div>
                 </div>
                 <div className="flex gap-2">
                   <button
